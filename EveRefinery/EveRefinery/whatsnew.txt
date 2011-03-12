@@ -1,0 +1,82 @@
+1.0.3799.31742 [27may10]
+* You guess it: Tyrannis update. Let's hope CCP released correct DB :)
++ Since i was updating DB anyway, i also added Meta Levels column. Enjoy.
++ Clarified error message when Limited API key is provided instead of full one.
+
+1.0.3740.24868 [29mar10]
+* Bugfix: "Use quantities" icon shows correct state now (fixed from inverted).
++ "Volume" column displaying item's volume in m3. If you already used the program, 
+  column will be in the end. You can rearrange columns by dragging them.
+* Bugfix: Totals row no longer show "Loss %" value when prices are unknown
++ Added status bar timer showing when assets can be updated (CCP api-side limitation)
+* Added warning when trying to update assets.
+
+1.0.3739.21356 [28mar10]
+* Bugfix: Selecting new price type didn't have effect immediately
+
+1.0.3738.52 [26mar10]
++ A button to open whatsnew.txt - see it after the blue question icon on the main toolbar
+
+1.0.3737.43073 [26mar10]
++ A few controls to filter assets: no assembled items, no assembled ships,
+  no assembled containers. These are icons next to three combos in the Assets toolbar.
++ Containers are finally out. You can select a container in the third combobox of assets
+  toolbar.
+
+1.0.3736.34640 [25mar10]
+* Fixed sorting of item names containing quotes
+
+1.0.3736.34313 [25mar10]
++ Market price history period is now configurable in Settings-Other.
+* Column sorting time is optimized (it was pretty slow for price columns)
++ New "Loss %" column showing how much you lose when you refine. You can disable any
+  unwanted columns in Settings-Appearance.
++ For assets mode, the coloring is now different and is based on absolute ISK loss, not on
+  percent loss. This is now configurable in Settings-Appearance.
+* Some fixes to sorting columns
+* Some fixes to coloring
+
+1.0.3732.8514 [21mar10]
+* The app will now start much faster
+* Changed market price history from 3 to 14 days. 3 days is a pretty small period,
+  leaving too many prices as unknown (if the price wasn't reported in 3 days it was
+  not listed before, now the period is 14 days which should be ok). If you want,
+  Update prices using the button ot toolbar.
+* Column name change: Num -> Qty
+* Please note, there is - and has always been - a region named [All regions]
+  in the top of the list. Consider using it as neccessary, for example when
+  you have many unknown prices or want some overall estimations.
+
+1.0.3729.41761 [18mar10]
+* Bugfix: Mineral columns displayed insane values, not taking batch size into account
++ Force market prices update button (on the toolbar next to price type)
++ Totals row. Want to know how much for all of your assets?
+  Seen if you selected specific assets. If any of the market prices are invalid,
+  Market prices in Totals are displayed as "Unknown".
++ Type column. Most of you won't need it, so you can hide it in options.
+  You can also resize it and/or put between other columns by dragging it.
+
+1.0.3729.36045 [18mar10]
++ New column "Num" containing quantity of the item in your assets
++ You can now use quantities from assets
++ ISK cents are back
++ Toolbars can now be moved. Their locations are saved.
++ Program's window location and size is now saved
+* Empty space to the left of the text in the first column was removed
+
+1.0.3728.34324 [17mar10]
+* Bugfix: If you changed regions quickly agreeing to load prices, you could see prices from a different
+  region until all prices are loaded and region is changed again.
+
+1.0.3728.33115 [17mar10]
+* Some clarifications on the API Keys page of settings
+
+1.0.3728.30526 [17mar10]
+* [Internal] Added user-agent "EveRefinery" for all xml requests
+
+1.0.3728.23170 [17mar10]
++ Added descriptions for price types (seen when selecting)
+
+1.0.3728.4220 [17mar10]
++ Added non-perfect refining options and calculator, see "Refining" options page
++ Mineral prices can now be loaded from market, see "Refining" options page
