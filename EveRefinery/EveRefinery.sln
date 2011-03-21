@@ -8,8 +8,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EveRefinery", "EveRefinery\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EveRefineryUpdater", "EveRefineryUpdater\EveRefineryUpdater.csproj", "{42961491-5B3B-4084-A394-1D182AA1D896}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserIDDemo", "UserIDDemo\UserIDDemo.csproj", "{FEEA9B98-1252-4C8C-871F-8478F7794460}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdatePublisher", "UpdatePublisher\UpdatePublisher.csproj", "{E6EFCE35-166F-4240-8413-EA244D281991}"
 EndProject
 Global
@@ -26,10 +24,6 @@ Global
 		{42961491-5B3B-4084-A394-1D182AA1D896}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42961491-5B3B-4084-A394-1D182AA1D896}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42961491-5B3B-4084-A394-1D182AA1D896}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FEEA9B98-1252-4C8C-871F-8478F7794460}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FEEA9B98-1252-4C8C-871F-8478F7794460}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FEEA9B98-1252-4C8C-871F-8478F7794460}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FEEA9B98-1252-4C8C-871F-8478F7794460}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E6EFCE35-166F-4240-8413-EA244D281991}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E6EFCE35-166F-4240-8413-EA244D281991}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6EFCE35-166F-4240-8413-EA244D281991}.Release|Any CPU.ActiveCfg = Release|Any CPU
