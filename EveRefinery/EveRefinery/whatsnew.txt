@@ -1,3 +1,5 @@
+* Fixed MetaLevel reading from non-tailored DB's
+
 1.0.3799.31742 [27may10]
 * You guess it: Tyrannis update. Let's hope CCP released correct DB :)
 + Since i was updating DB anyway, i also added Meta Levels column. Enjoy.

@@ -40,11 +40,27 @@ namespace EveRefinery
 		Forge		= 10000002,
 	}
 
+	public enum EveAttributes
+	{
+		MetaLevel = 633,
+	}
+
 	public class EveDatabase
 	{
 		protected SQLiteConnection	m_DbConnection;
-		
-	
+
+		protected enum Tables
+		{
+			dgmTypeAttributes,
+			invCategories,
+			invGroups,
+			invTypeMaterials,
+			invTypes,
+			mapSolarSystems,
+			mapRegions,
+			staStations
+		}
+
 		private static Materials LookupMaterial(UInt32 a_MaterialTypeID)
 		{
 			switch ((EveTypeIDs)a_MaterialTypeID)
@@ -72,7 +88,7 @@ namespace EveRefinery
 
 		private void LoadMineralCompositions(Hashtable a_Items)
 		{
-			string sqlText = "SELECT * FROM invTypeMaterials";
+			string sqlText = "SELECT * FROM " + Tables.invTypeMaterials;
 			SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, m_DbConnection);
 			SQLiteDataReader dataReader = sqlCommand.ExecuteReader();
 
@@ -123,7 +139,7 @@ namespace EveRefinery
 
             // Load .ItemName, .IsPublished, .GroupID, .MarketGroupID, .BatchSize, .Volume
 			{
-				string sqlText				= "SELECT * FROM invTypes WHERE typeID in " + typeIdList;
+				string sqlText				= "SELECT * FROM " + Tables.invTypes + " WHERE typeID in " + typeIdList;
 				SQLiteCommand sqlCommand	= new SQLiteCommand(sqlText, m_DbConnection);
 				SQLiteDataReader dataReader	= sqlCommand.ExecuteReader();
 
@@ -159,11 +175,12 @@ namespace EveRefinery
 
             // Load Category and Group names for composing sort string
 			{
-				string sqlText= "SELECT invTypes.typeID, invCategories.CategoryName, invGroups.GroupName FROM " +
-							  "invCategories, invGroups, invTypes where " +
-							  "(invCategories.CategoryID = invGroups.CategoryID) and" +
-							  "(invGroups.GroupID = invTypes.GroupID) and " +
-							  "(invTypes.TypeID in " + typeIdList + ")";
+				string sqlText = 
+					"SELECT " + Tables.invTypes + ".typeID, " + Tables.invCategories + ".CategoryName, " + Tables.invGroups + ".GroupName FROM " +
+					Tables.invTypes + ", " + Tables.invCategories + ", " + Tables.invGroups + " where " +
+					"(" + Tables.invCategories + ".CategoryID = " + Tables.invGroups + ".CategoryID) and" +
+					"(" + Tables.invGroups + ".GroupID = " + Tables.invTypes + ".GroupID) and " +
+					"(" + Tables.invTypes + ".TypeID in " + typeIdList + ")";
 
 				SQLiteCommand sqlCommand	= new SQLiteCommand(sqlText, m_DbConnection);
 				SQLiteDataReader dataReader	= sqlCommand.ExecuteReader();
@@ -181,7 +198,11 @@ namespace EveRefinery
 
             // Load .MetaLevel
             {
-                string sqlText = "SELECT typeID, valueInt, valueFloat FROM dgmTypeAttributes WHERE TypeID in " + typeIdList;
+                string sqlText = 
+					"SELECT typeID, valueInt, valueFloat FROM " + 
+					Tables.dgmTypeAttributes + " WHERE " +
+					"(attributeID = " + (int)EveAttributes.MetaLevel + ") and " +
+					"(TypeID in " + typeIdList + ")";
 
                 SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, m_DbConnection);
                 SQLiteDataReader dataReader = sqlCommand.ExecuteReader();
@@ -193,7 +214,7 @@ namespace EveRefinery
 
                     if (!dataReader.IsDBNull(1))
                         currItem.MetaLevel  = (UInt32)dataReader.GetInt32(1);
-                    else if (dataReader.IsDBNull(1))
+                    else if (!dataReader.IsDBNull(2))
                         currItem.MetaLevel  = (UInt32)dataReader.GetFloat(2);
                 }
             }
@@ -203,7 +224,7 @@ namespace EveRefinery
 		{
 			List<EveRegion> result = new List<EveRegion>();
 
-			string sqlText = "SELECT regionID, regionName FROM mapRegions";
+			string sqlText = "SELECT regionID, regionName FROM " + Tables.mapRegions;
 			SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, m_DbConnection);
 			SQLiteDataReader dataReader = sqlCommand.ExecuteReader();
 			
@@ -225,14 +246,14 @@ namespace EveRefinery
 
 		public string GetLocationName(UInt32 a_LocationID)
 		{
-			string sqlText = String.Format("SELECT stationName FROM staStations WHERE stationID = {0:d}", a_LocationID);
+			string sqlText = String.Format("SELECT stationName FROM " + Tables.staStations + " WHERE stationID = {0:d}", a_LocationID);
 			SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, m_DbConnection);
 			SQLiteDataReader dataReader = sqlCommand.ExecuteReader();
 
 			if (dataReader.Read())
 				return Convert.ToString(dataReader["stationName"]);
 
-			sqlText		= String.Format("SELECT solarSystemName FROM mapSolarSystems WHERE solarSystemID = {0:d}", a_LocationID);
+			sqlText		= String.Format("SELECT solarSystemName FROM " + Tables.mapSolarSystems + " WHERE solarSystemID = {0:d}", a_LocationID);
 			sqlCommand	= new SQLiteCommand(sqlText, m_DbConnection);
 			dataReader	= sqlCommand.ExecuteReader();
 
@@ -244,7 +265,7 @@ namespace EveRefinery
 
 		public string GetTypeIdName(UInt32 a_TypeID)
 		{
-			string sqlText = String.Format("SELECT typeName FROM invTypes WHERE typeID = {0:d}", a_TypeID);
+			string sqlText = String.Format("SELECT typeName FROM " + Tables.invTypes + " WHERE typeID = {0:d}", a_TypeID);
 			SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, m_DbConnection);
 			SQLiteDataReader dataReader = sqlCommand.ExecuteReader();
 
@@ -256,10 +277,11 @@ namespace EveRefinery
 
 		public UInt32 GetTypeIdCategory(UInt32 a_TypeID)
 		{
-			string sqlText = String.Format("SELECT invGroups.CategoryID FROM " +
-							  "invGroups, invTypes where " +
-							  "(invGroups.GroupID = invTypes.GroupID) and " +
-							  "(invTypes.TypeID = {0:d})", a_TypeID);
+			string sqlText = 
+				"SELECT " + Tables.invGroups + ".CategoryID FROM " +
+				Tables.invGroups + ", " + Tables.invTypes + " where " +
+				"(" + Tables.invGroups + ".GroupID = " + Tables.invTypes + ".GroupID) and " +
+				"(" + Tables.invTypes + ".TypeID = " + a_TypeID + ")";
 
 			SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, m_DbConnection);
 			SQLiteDataReader dataReader = sqlCommand.ExecuteReader();
@@ -291,16 +313,17 @@ namespace EveRefinery
 				return false;
 			}
 
-            string[] requiredTables = new string[]{"dgmTypeAttributes", "invCategories", "invGroups", "invTypeMaterials", "invTypes", "mapSolarSystems", "mapRegions", "staStations"};
 			string errorMessage = "Your database is missing the following tables:\n";
 			bool hasAllTables = true;
 
-			foreach (string requiredTable in requiredTables)
+			foreach (Tables requiredTable in Enum.GetValues(typeof(Tables)))
 			{
-				if (!tableList.Contains(requiredTable))
+				String tableName = requiredTable.ToString();
+
+				if (!tableList.Contains(tableName))
 				{
 					hasAllTables = false;
-					errorMessage += (requiredTable + "\n");
+					errorMessage += (tableName + "\n");
 				}
 			}
 			
