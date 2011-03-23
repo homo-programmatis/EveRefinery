@@ -14,7 +14,7 @@ namespace EveRefinery
 	public class EveRegion
 	{
 		public UInt32	RegionID;
-		public string	Name;
+		public String	Name;
 	}
 	
 	public enum EveTypeIDs
@@ -88,7 +88,7 @@ namespace EveRefinery
 
 		private void LoadMineralCompositions(Hashtable a_Items)
 		{
-			string sqlText = "SELECT * FROM " + Tables.invTypeMaterials;
+			String sqlText = "SELECT * FROM " + Tables.invTypeMaterials;
 			SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, m_DbConnection);
 			SQLiteDataReader dataReader = sqlCommand.ExecuteReader();
 
@@ -127,19 +127,19 @@ namespace EveRefinery
 			//////////////////////////////////////////////////////////////////////////
 			// Optimization: do everything in one super-query (saves over 2.5 sec)
 			// unfortunately Data.SQLite has tremendous per-query overhead
-			string[] typeIDs		= new string[a_Items.Count];
+			String[] typeIDs		= new String[a_Items.Count];
 			int typeIdIndex			= 0;
 			foreach (Object currKey in a_Items.Keys)
 			{
 				typeIDs[typeIdIndex++] = ((UInt32)currKey).ToString();
 			}
 			
-			string typeIdList		= "(" + String.Join(", ", typeIDs) + ")";
+			String typeIdList		= "(" + String.Join(", ", typeIDs) + ")";
 			//////////////////////////////////////////////////////////////////////////
 
             // Load .ItemName, .IsPublished, .GroupID, .MarketGroupID, .BatchSize, .Volume
 			{
-				string sqlText				= "SELECT * FROM " + Tables.invTypes + " WHERE typeID in " + typeIdList;
+				String sqlText				= "SELECT * FROM " + Tables.invTypes + " WHERE typeID in " + typeIdList;
 				SQLiteCommand sqlCommand	= new SQLiteCommand(sqlText, m_DbConnection);
 				SQLiteDataReader dataReader	= sqlCommand.ExecuteReader();
 
@@ -164,7 +164,7 @@ namespace EveRefinery
 					UInt32 currTypeID		= (UInt32)dataReader.GetInt32(idx_typeID);
 					ItemRecord currItem		= (ItemRecord)a_Items[currTypeID];
 
-					currItem.ItemName		= (string)dataReader[idx_typeName];
+					currItem.ItemName		= (String)dataReader[idx_typeName];
 					currItem.IsPublished	= (0 != dataReader.GetInt32(idx_published));
 					currItem.GroupID		= (UInt32)dataReader.GetInt32(idx_groupID);
 					currItem.MarketGroupID	= dataReader.IsDBNull(idx_marketGroupID) ? 0 : (UInt32)dataReader.GetInt32(idx_marketGroupID);
@@ -175,7 +175,7 @@ namespace EveRefinery
 
             // Load Category and Group names for composing sort string
 			{
-				string sqlText = 
+				String sqlText = 
 					"SELECT " + Tables.invTypes + ".typeID, " + Tables.invCategories + ".CategoryName, " + Tables.invGroups + ".GroupName FROM " +
 					Tables.invTypes + ", " + Tables.invCategories + ", " + Tables.invGroups + " where " +
 					"(" + Tables.invCategories + ".CategoryID = " + Tables.invGroups + ".CategoryID) and" +
@@ -190,15 +190,15 @@ namespace EveRefinery
 					UInt32 currTypeID		= (UInt32)dataReader.GetInt32(0);
 					ItemRecord currItem		= (ItemRecord)a_Items[currTypeID];
 
-					string categoryName		= dataReader.GetString(1);
-					string groupName		= dataReader.GetString(2);
+					String categoryName		= dataReader.GetString(1);
+					String groupName		= dataReader.GetString(2);
 					currItem.TypeSortString = categoryName + " " + groupName + " " + currItem.ItemName;
 				}
 			}
 
             // Load .MetaLevel
             {
-                string sqlText = 
+                String sqlText = 
 					"SELECT typeID, valueInt, valueFloat FROM " + 
 					Tables.dgmTypeAttributes + " WHERE " +
 					"(attributeID = " + (int)EveAttributes.MetaLevel + ") and " +
@@ -224,7 +224,7 @@ namespace EveRefinery
 		{
 			List<EveRegion> result = new List<EveRegion>();
 
-			string sqlText = "SELECT regionID, regionName FROM " + Tables.mapRegions;
+			String sqlText = "SELECT regionID, regionName FROM " + Tables.mapRegions;
 			SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, m_DbConnection);
 			SQLiteDataReader dataReader = sqlCommand.ExecuteReader();
 			
@@ -244,9 +244,9 @@ namespace EveRefinery
 			return result;
 		}
 
-		public string GetLocationName(UInt32 a_LocationID)
+		public String GetLocationName(UInt32 a_LocationID)
 		{
-			string sqlText = String.Format("SELECT stationName FROM " + Tables.staStations + " WHERE stationID = {0:d}", a_LocationID);
+			String sqlText = String.Format("SELECT stationName FROM " + Tables.staStations + " WHERE stationID = {0:d}", a_LocationID);
 			SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, m_DbConnection);
 			SQLiteDataReader dataReader = sqlCommand.ExecuteReader();
 
@@ -263,9 +263,9 @@ namespace EveRefinery
 			return String.Format("Unknown location {0:d}", a_LocationID);
 		}
 
-		public string GetTypeIdName(UInt32 a_TypeID)
+		public String GetTypeIdName(UInt32 a_TypeID)
 		{
-			string sqlText = String.Format("SELECT typeName FROM " + Tables.invTypes + " WHERE typeID = {0:d}", a_TypeID);
+			String sqlText = String.Format("SELECT typeName FROM " + Tables.invTypes + " WHERE typeID = {0:d}", a_TypeID);
 			SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, m_DbConnection);
 			SQLiteDataReader dataReader = sqlCommand.ExecuteReader();
 
@@ -277,7 +277,7 @@ namespace EveRefinery
 
 		public UInt32 GetTypeIdCategory(UInt32 a_TypeID)
 		{
-			string sqlText = 
+			String sqlText = 
 				"SELECT " + Tables.invGroups + ".CategoryID FROM " +
 				Tables.invGroups + ", " + Tables.invTypes + " where " +
 				"(" + Tables.invGroups + ".GroupID = " + Tables.invTypes + ".GroupID) and " +
@@ -292,20 +292,29 @@ namespace EveRefinery
 			return 0;
 		}
 
+		private static List<String> GetDatabaseTables(SQLiteConnection a_Connection)
+		{
+			List<String> result = new List<String>();
+
+			String sqlText = "SELECT name FROM sqlite_master WHERE type='table';";
+			SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, a_Connection);
+			SQLiteDataReader dataReader = sqlCommand.ExecuteReader();
+
+			while (dataReader.Read())
+			{
+				result.Add(Convert.ToString(dataReader["name"]));
+			}
+
+			return result;
+		}
+
 		private Boolean TestEveDatabaseTables()
 		{
-			List<String> tableList = new List<String>();
+			List<String> tableList;
 
 			try
 			{
-				string sqlText = "SELECT name FROM sqlite_master WHERE type='table';";
-				SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, m_DbConnection);
-				SQLiteDataReader dataReader = sqlCommand.ExecuteReader();
-
-				while (dataReader.Read())
-				{
-					tableList.Add(Convert.ToString(dataReader["name"]));
-				}
+				tableList = GetDatabaseTables(m_DbConnection);
 			}
 			catch (System.Exception a_Exception)
 			{
@@ -313,17 +322,15 @@ namespace EveRefinery
 				return false;
 			}
 
-			string errorMessage = "Your database is missing the following tables:\n";
+			String errorMessage = "Your database is missing the following tables:\n";
 			bool hasAllTables = true;
 
-			foreach (Tables requiredTable in Enum.GetValues(typeof(Tables)))
+			foreach (String requiredTable in GetUsedTableNames())
 			{
-				String tableName = requiredTable.ToString();
-
-				if (!tableList.Contains(tableName))
+				if (!tableList.Contains(requiredTable))
 				{
 					hasAllTables = false;
-					errorMessage += (tableName + "\n");
+					errorMessage += (requiredTable + "\n");
 				}
 			}
 			
@@ -336,14 +343,19 @@ namespace EveRefinery
 			return true;
 		}
 		
-		public Hashtable LoadDatabase(string a_DBPath)
+		public Hashtable LoadDatabase(String a_DBPath)
 		{
 			Hashtable items = new Hashtable();
 		
 			try
 			{
+				SQLiteConnectionStringBuilder connBuilder = new SQLiteConnectionStringBuilder();
+				connBuilder.FailIfMissing = true;
+				connBuilder.DataSource = a_DBPath;
+				connBuilder.ReadOnly = true;
+
 				m_DbConnection = new SQLiteConnection();
-				m_DbConnection.ConnectionString = "FailIfMissing=True;Read Only=True;Data Source=" + a_DBPath;
+				m_DbConnection.ConnectionString = connBuilder.ToString();
 				m_DbConnection.Open();
 				
 				if (!TestEveDatabaseTables())
@@ -359,6 +371,66 @@ namespace EveRefinery
 			}
 
 			return items;
+		}
+
+		private static List<String> GetUsedTableNames()
+		{
+			List<String> result = new List<String>();
+
+			foreach (Tables requiredTable in Enum.GetValues(typeof(Tables)))
+			{
+				String tableName = requiredTable.ToString();
+				result.Add(tableName);
+			}
+
+			return result;
+		}
+
+		public static void StripDatabase(String a_DBPath)
+		{
+			try
+			{
+				SQLiteConnectionStringBuilder connBuilder = new SQLiteConnectionStringBuilder();
+				connBuilder.FailIfMissing = true;
+				connBuilder.DataSource = a_DBPath;
+				connBuilder.JournalMode = SQLiteJournalModeEnum.Off;
+
+				SQLiteConnection connection = new SQLiteConnection();
+				connection.ConnectionString = connBuilder.ToString();
+				connection.Open();
+
+				List<String> allTables = GetDatabaseTables(connection);
+				List<String> neededTables = GetUsedTableNames();
+
+				// Drop unwanted tables
+				foreach (String currentTable in allTables)
+				{
+					if (neededTables.Contains(currentTable))
+						continue;
+
+					String sqlText = "DROP TABLE " + currentTable;
+					SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, connection);
+					sqlCommand.ExecuteNonQuery();
+				}
+
+				// Leave only MetaLevel in attributes
+				{
+					String sqlText = "DELETE FROM " + Tables.dgmTypeAttributes + " WHERE attributeID != " + (int)EveAttributes.MetaLevel;
+					SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, connection);
+					sqlCommand.ExecuteNonQuery();
+				}
+
+				// Free emptied space in database
+				{
+					String sqlText = "VACUUM";
+					SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, connection);
+					sqlCommand.ExecuteNonQuery();
+				}
+			}
+			catch (System.Exception a_Exception)
+			{
+				MessageBox.Show(a_Exception.Message);
+			}
 		}
 	}
 }

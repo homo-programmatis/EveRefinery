@@ -101,6 +101,14 @@
 			this.TblOther = new System.Windows.Forms.TableLayoutPanel();
 			this.ChkCheckUpdates = new System.Windows.Forms.CheckBox();
 			this.LblDontDisableUpdates = new System.Windows.Forms.Label();
+			this.LblPriceDays = new System.Windows.Forms.Label();
+			this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+			this.LblPriceHistory = new System.Windows.Forms.Label();
+			this.TxtPriceHistory = new System.Windows.Forms.NumericUpDown();
+			this.LblPriceHistory1 = new System.Windows.Forms.Label();
+			this.TabDeveloper = new System.Windows.Forms.TabPage();
+			this.TblDeveloper = new System.Windows.Forms.TableLayoutPanel();
+			this.BtnStripDatabase = new System.Windows.Forms.Button();
 			this.TblSettings = new System.Windows.Forms.TableLayoutPanel();
 			this.SplTable2 = new System.Windows.Forms.TableLayoutPanel();
 			this.BtnCancel = new System.Windows.Forms.Button();
@@ -111,11 +119,6 @@
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.trackBar2 = new System.Windows.Forms.TrackBar();
 			this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
-			this.LblPriceDays = new System.Windows.Forms.Label();
-			this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-			this.LblPriceHistory = new System.Windows.Forms.Label();
-			this.TxtPriceHistory = new System.Windows.Forms.NumericUpDown();
-			this.LblPriceHistory1 = new System.Windows.Forms.Label();
 			this.TabMain.SuspendLayout();
 			this.TbpRefining.SuspendLayout();
 			this.TblMinerals.SuspendLayout();
@@ -148,6 +151,10 @@
 			((System.ComponentModel.ISupportInitialize)(this.TxtRedIskLoss)).BeginInit();
 			this.TabOther.SuspendLayout();
 			this.TblOther.SuspendLayout();
+			this.tableLayoutPanel5.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.TxtPriceHistory)).BeginInit();
+			this.TabDeveloper.SuspendLayout();
+			this.TblDeveloper.SuspendLayout();
 			this.TblSettings.SuspendLayout();
 			this.SplTable2.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
@@ -156,8 +163,6 @@
 			this.tableLayoutPanel3.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
-			this.tableLayoutPanel5.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.TxtPriceHistory)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// TabMain
@@ -166,6 +171,7 @@
 			this.TabMain.Controls.Add(this.TbpApiKeys);
 			this.TabMain.Controls.Add(this.TbpAppearance);
 			this.TabMain.Controls.Add(this.TabOther);
+			this.TabMain.Controls.Add(this.TabDeveloper);
 			this.TabMain.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TabMain.Location = new System.Drawing.Point(3, 3);
 			this.TabMain.Margin = new System.Windows.Forms.Padding(0);
@@ -1159,6 +1165,115 @@
 			this.LblDontDisableUpdates.TabIndex = 1;
 			this.LblDontDisableUpdates.Text = resources.GetString("LblDontDisableUpdates.Text");
 			// 
+			// LblPriceDays
+			// 
+			this.LblPriceDays.AutoSize = true;
+			this.LblPriceDays.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LblPriceDays.Location = new System.Drawing.Point(3, 120);
+			this.LblPriceDays.Name = "LblPriceDays";
+			this.LblPriceDays.Size = new System.Drawing.Size(349, 75);
+			this.LblPriceDays.TabIndex = 2;
+			this.LblPriceDays.Text = resources.GetString("LblPriceDays.Text");
+			// 
+			// tableLayoutPanel5
+			// 
+			this.tableLayoutPanel5.ColumnCount = 3;
+			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
+			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
+			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 195F));
+			this.tableLayoutPanel5.Controls.Add(this.LblPriceHistory, 0, 0);
+			this.tableLayoutPanel5.Controls.Add(this.TxtPriceHistory, 1, 0);
+			this.tableLayoutPanel5.Controls.Add(this.LblPriceHistory1, 2, 0);
+			this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 195);
+			this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(0);
+			this.tableLayoutPanel5.Name = "tableLayoutPanel5";
+			this.tableLayoutPanel5.RowCount = 1;
+			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel5.Size = new System.Drawing.Size(355, 25);
+			this.tableLayoutPanel5.TabIndex = 3;
+			// 
+			// LblPriceHistory
+			// 
+			this.LblPriceHistory.AutoSize = true;
+			this.LblPriceHistory.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LblPriceHistory.Location = new System.Drawing.Point(3, 0);
+			this.LblPriceHistory.Name = "LblPriceHistory";
+			this.LblPriceHistory.Size = new System.Drawing.Size(74, 25);
+			this.LblPriceHistory.TabIndex = 0;
+			this.LblPriceHistory.Text = "Price history :";
+			this.LblPriceHistory.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// TxtPriceHistory
+			// 
+			this.TxtPriceHistory.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.TxtPriceHistory.Location = new System.Drawing.Point(83, 3);
+			this.TxtPriceHistory.Maximum = new decimal(new int[] {
+            31,
+            0,
+            0,
+            0});
+			this.TxtPriceHistory.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.TxtPriceHistory.Name = "TxtPriceHistory";
+			this.TxtPriceHistory.Size = new System.Drawing.Size(74, 20);
+			this.TxtPriceHistory.TabIndex = 1;
+			this.TxtPriceHistory.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			// 
+			// LblPriceHistory1
+			// 
+			this.LblPriceHistory1.AutoSize = true;
+			this.LblPriceHistory1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LblPriceHistory1.Location = new System.Drawing.Point(163, 0);
+			this.LblPriceHistory1.Name = "LblPriceHistory1";
+			this.LblPriceHistory1.Size = new System.Drawing.Size(189, 25);
+			this.LblPriceHistory1.TabIndex = 2;
+			this.LblPriceHistory1.Text = "days";
+			this.LblPriceHistory1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// TabDeveloper
+			// 
+			this.TabDeveloper.Controls.Add(this.TblDeveloper);
+			this.TabDeveloper.Location = new System.Drawing.Point(4, 22);
+			this.TabDeveloper.Name = "TabDeveloper";
+			this.TabDeveloper.Padding = new System.Windows.Forms.Padding(3);
+			this.TabDeveloper.Size = new System.Drawing.Size(361, 364);
+			this.TabDeveloper.TabIndex = 4;
+			this.TabDeveloper.Text = "Developer";
+			this.TabDeveloper.UseVisualStyleBackColor = true;
+			// 
+			// TblDeveloper
+			// 
+			this.TblDeveloper.ColumnCount = 1;
+			this.TblDeveloper.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.TblDeveloper.Controls.Add(this.BtnStripDatabase, 0, 0);
+			this.TblDeveloper.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.TblDeveloper.Location = new System.Drawing.Point(3, 3);
+			this.TblDeveloper.Name = "TblDeveloper";
+			this.TblDeveloper.RowCount = 2;
+			this.TblDeveloper.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+			this.TblDeveloper.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.TblDeveloper.Size = new System.Drawing.Size(355, 358);
+			this.TblDeveloper.TabIndex = 0;
+			// 
+			// BtnStripDatabase
+			// 
+			this.BtnStripDatabase.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.BtnStripDatabase.Location = new System.Drawing.Point(3, 3);
+			this.BtnStripDatabase.Name = "BtnStripDatabase";
+			this.BtnStripDatabase.Size = new System.Drawing.Size(349, 24);
+			this.BtnStripDatabase.TabIndex = 0;
+			this.BtnStripDatabase.Text = "Strip database...";
+			this.BtnStripDatabase.UseVisualStyleBackColor = true;
+			this.BtnStripDatabase.Click += new System.EventHandler(this.BtnStripDatabase_Click);
+			// 
 			// TblSettings
 			// 
 			this.TblSettings.ColumnCount = 1;
@@ -1298,79 +1413,6 @@
 			this.numericUpDown2.Size = new System.Drawing.Size(56, 20);
 			this.numericUpDown2.TabIndex = 5;
 			// 
-			// LblPriceDays
-			// 
-			this.LblPriceDays.AutoSize = true;
-			this.LblPriceDays.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LblPriceDays.Location = new System.Drawing.Point(3, 120);
-			this.LblPriceDays.Name = "LblPriceDays";
-			this.LblPriceDays.Size = new System.Drawing.Size(349, 75);
-			this.LblPriceDays.TabIndex = 2;
-			this.LblPriceDays.Text = resources.GetString("LblPriceDays.Text");
-			// 
-			// tableLayoutPanel5
-			// 
-			this.tableLayoutPanel5.ColumnCount = 3;
-			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 179F));
-			this.tableLayoutPanel5.Controls.Add(this.LblPriceHistory, 0, 0);
-			this.tableLayoutPanel5.Controls.Add(this.TxtPriceHistory, 1, 0);
-			this.tableLayoutPanel5.Controls.Add(this.LblPriceHistory1, 2, 0);
-			this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 195);
-			this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-			this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-			this.tableLayoutPanel5.RowCount = 1;
-			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel5.Size = new System.Drawing.Size(355, 25);
-			this.tableLayoutPanel5.TabIndex = 3;
-			// 
-			// LblPriceHistory
-			// 
-			this.LblPriceHistory.AutoSize = true;
-			this.LblPriceHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LblPriceHistory.Location = new System.Drawing.Point(3, 0);
-			this.LblPriceHistory.Name = "LblPriceHistory";
-			this.LblPriceHistory.Size = new System.Drawing.Size(74, 25);
-			this.LblPriceHistory.TabIndex = 0;
-			this.LblPriceHistory.Text = "Price history :";
-			this.LblPriceHistory.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// TxtPriceHistory
-			// 
-			this.TxtPriceHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.TxtPriceHistory.Location = new System.Drawing.Point(83, 3);
-			this.TxtPriceHistory.Maximum = new decimal(new int[] {
-            31,
-            0,
-            0,
-            0});
-			this.TxtPriceHistory.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.TxtPriceHistory.Name = "TxtPriceHistory";
-			this.TxtPriceHistory.Size = new System.Drawing.Size(74, 20);
-			this.TxtPriceHistory.TabIndex = 1;
-			this.TxtPriceHistory.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			// 
-			// LblPriceHistory1
-			// 
-			this.LblPriceHistory1.AutoSize = true;
-			this.LblPriceHistory1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LblPriceHistory1.Location = new System.Drawing.Point(163, 0);
-			this.LblPriceHistory1.Name = "LblPriceHistory1";
-			this.LblPriceHistory1.Size = new System.Drawing.Size(189, 25);
-			this.LblPriceHistory1.TabIndex = 2;
-			this.LblPriceHistory1.Text = "days";
-			this.LblPriceHistory1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// FrmSettings
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1425,6 +1467,11 @@
 			this.TabOther.ResumeLayout(false);
 			this.TblOther.ResumeLayout(false);
 			this.TblOther.PerformLayout();
+			this.tableLayoutPanel5.ResumeLayout(false);
+			this.tableLayoutPanel5.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.TxtPriceHistory)).EndInit();
+			this.TabDeveloper.ResumeLayout(false);
+			this.TblDeveloper.ResumeLayout(false);
 			this.TblSettings.ResumeLayout(false);
 			this.SplTable2.ResumeLayout(false);
 			this.tableLayoutPanel1.ResumeLayout(false);
@@ -1435,9 +1482,6 @@
 			this.tableLayoutPanel3.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
-			this.tableLayoutPanel5.ResumeLayout(false);
-			this.tableLayoutPanel5.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.TxtPriceHistory)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -1531,5 +1575,8 @@
 		private System.Windows.Forms.Label LblPriceHistory;
 		private System.Windows.Forms.NumericUpDown TxtPriceHistory;
 		private System.Windows.Forms.Label LblPriceHistory1;
+		private System.Windows.Forms.TabPage TabDeveloper;
+		private System.Windows.Forms.TableLayoutPanel TblDeveloper;
+		private System.Windows.Forms.Button BtnStripDatabase;
 	}
 }

@@ -40,6 +40,7 @@ namespace EveRefinery
 			InitPage_Minerals();
 			InitPage_Appearance();
 			InitPage_Other();
+			InitPage_Developer();
 			
 			CmbMineralPriceType.DrawItem += Engine.DrawPriceTypeItem;
 			TabMain.SelectedIndex = (Int32)m_StartPage;
@@ -220,7 +221,22 @@ namespace EveRefinery
 			m_Engine.m_Settings.Options[0].PriceHistoryDays		= (UInt32)TxtPriceHistory.Value;
 			return true;
 		}
-		
+
+		private void InitPage_Developer()
+		{
+			Boolean isPageShown = false;
+
+			#if (DEBUG)
+				isPageShown = true;
+			#endif
+
+			if (Environment.GetCommandLineArgs().Contains("/dev"))
+				isPageShown = true;
+
+			if (!isPageShown)
+				TabMain.TabPages.Remove(TabDeveloper);
+		}
+
 		private void BtnAddApiKey_Click(object sender, EventArgs e)
 		{
 			FrmAddNewApiKey frmAddNewApiKey = new FrmAddNewApiKey();
@@ -494,6 +510,19 @@ namespace EveRefinery
 		private void ChkOverrideColorsISK_CheckedChanged(object sender, EventArgs e)
 		{
 			Update_OverrideColorsControls_Enabled();
+		}
+
+		private void BtnStripDatabase_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog fileDialog = new OpenFileDialog();
+			fileDialog.Title = "Browse for EVE database";
+			fileDialog.Filter = "All files (*.*)|*.*|Databases (*.db)|*.db";
+			fileDialog.FilterIndex = 2;
+			fileDialog.RestoreDirectory = true;
+			if (DialogResult.OK != fileDialog.ShowDialog())
+				return;
+
+			EveDatabase.StripDatabase(fileDialog.FileName);
 		}
 	}
 }
