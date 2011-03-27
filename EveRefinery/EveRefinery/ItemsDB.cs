@@ -36,9 +36,9 @@ namespace EveRefinery
 			TypeID = a_TypeID;
 		}
 		
-		public Boolean IsPricesOk()
+		public Boolean IsPricesOk(UInt32 a_PriceExpiryDays)
 		{
-			DateTime limitTime = PricesDate.AddMonths(1);
+			DateTime limitTime = PricesDate.AddDays(a_PriceExpiryDays);
 			if (limitTime < DateTime.UtcNow)
 				return false;
 			
@@ -91,6 +91,7 @@ namespace EveRefinery
 		public TristateFilter	HasMarketGroup	= TristateFilter.Any;
 		public TristateFilter	IsPricesOk		= TristateFilter.Any;
 		public AssetsMap		AssetsFilter;
+		public UInt32			PriceExpiryDays;
 		
 		private Boolean TestTristate(TristateFilter a_Filter, Boolean a_Value)
 		{
@@ -114,7 +115,7 @@ namespace EveRefinery
 			if (!TestTristate(HasMarketGroup, (0 != a_Item.MarketGroupID)))
 				return false;
 
-			if (!TestTristate(IsPricesOk, a_Item.IsPricesOk()))
+			if (!TestTristate(IsPricesOk, a_Item.IsPricesOk(PriceExpiryDays)))
 				return false;
 
 			if ((AssetsFilter != null) && !AssetsFilter.ContainsKey(a_Item.TypeID))

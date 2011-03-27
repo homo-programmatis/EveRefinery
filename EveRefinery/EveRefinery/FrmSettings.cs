@@ -146,12 +146,32 @@ namespace EveRefinery
 			Init_CmbMineralPriceType();
 			Init_CmbMineralRegion();
 
-			TxtRefineryEfficiency.Value = (decimal)m_Engine.m_Settings.Options[0].RefineryEfficiency * 100;
-			TxtRefineryTax.Value		= (decimal)m_Engine.m_Settings.Options[0].RefineryTax * 100;
+			Settings.OptionsRow options = m_Engine.m_Settings.Options[0];
+
+			TxtRefineryEfficiency.Value = (decimal)options.RefineryEfficiency * 100;
+			TxtRefineryTax.Value		= (decimal)options.RefineryTax * 100;
+		}
+
+		private void HandleMineralPricesChange(double[] a_OldPrices)
+		{
+			Boolean mineralPricesChanged = false;
+			for (int i = 0; i < a_OldPrices.Length; i++)
+			{
+				if (a_OldPrices[i] != m_Engine.m_MaterialPrices[i])
+				{
+					mineralPricesChanged = true;
+					break;
+				}
+			}
+
+			if (mineralPricesChanged)
+				m_Engine.m_Settings.Stats[0].LastMineralPricesEdit = DateTime.UtcNow;
 		}
 
 		private bool SavePage_Minerals()
 		{
+			double[] oldMaterialPrices = (double[])m_Engine.m_MaterialPrices.Clone();
+
 			m_Engine.m_MaterialPrices[(UInt32)Materials.Tritanium]	= (double)TxtTritanium.Value;
 			m_Engine.m_MaterialPrices[(UInt32)Materials.Pyerite]	= (double)TxtPyerite.Value;
 			m_Engine.m_MaterialPrices[(UInt32)Materials.Mexallon]	= (double)TxtMexallon.Value;
@@ -161,8 +181,15 @@ namespace EveRefinery
 			m_Engine.m_MaterialPrices[(UInt32)Materials.Megacyte]	= (double)TxtMegacyte.Value;
 			m_Engine.m_MaterialPrices[(UInt32)Materials.Morphite]	= (double)TxtMorphite.Value;
 
-			m_Engine.m_Settings.Options[0].RefineryEfficiency		= (double)(TxtRefineryEfficiency.Value / 100);
-			m_Engine.m_Settings.Options[0].RefineryTax				= (double)(TxtRefineryTax.Value / 100);
+			Settings.OptionsRow options		= m_Engine.m_Settings.Options[0];
+
+			options.MineralPricesRegion		= TextItemWithUInt32.GetData(CmbMineralRegion.SelectedItem);
+			options.MineralPricesType		= TextItemWithUInt32.GetData(CmbMineralPriceType.SelectedItem);
+
+			options.RefineryEfficiency		= (double)(TxtRefineryEfficiency.Value / 100);
+			options.RefineryTax				= (double)(TxtRefineryTax.Value / 100);
+
+			HandleMineralPricesChange(oldMaterialPrices);
 			return true;
 		}
 		
@@ -176,13 +203,15 @@ namespace EveRefinery
 				newItem.Tag = (Object)column.Index;
 				LstColumns.Items.Add(newItem);
 			}
+
+			Settings.OptionsRow options = m_Engine.m_Settings.Options[0];
+
+			TxtRedPrice.Value				= (int)(options.RedPrice * 100);
+			TxtGreenPrice.Value				= (int)(options.GreenPrice * 100);
 			
-			TxtRedPrice.Value	= (int)(m_Engine.m_Settings.Options[0].RedPrice * 100);
-			TxtGreenPrice.Value = (int)(m_Engine.m_Settings.Options[0].GreenPrice * 100);
-			
-			ChkOverrideColorsISK.Checked	= m_Engine.m_Settings.Options[0].OverrideAssetsColors;
-			TxtGreenIskLoss.Value			= (decimal)m_Engine.m_Settings.Options[0].GreenIskLoss;
-			TxtRedIskLoss.Value				= (decimal)m_Engine.m_Settings.Options[0].RedIskLoss;
+			ChkOverrideColorsISK.Checked	= options.OverrideAssetsColors;
+			TxtGreenIskLoss.Value			= (decimal)options.GreenIskLoss;
+			TxtRedIskLoss.Value				= (decimal)options.RedIskLoss;
 			Update_OverrideColorsControls_Enabled();
 		}
 		
@@ -198,27 +227,37 @@ namespace EveRefinery
 				else
 					ListViewEx.HideColumn(m_ListColumns[columnIndex]);
 			}
+
+			Settings.OptionsRow options = m_Engine.m_Settings.Options[0];
+
+			options.RedPrice				= ((double)TxtRedPrice.Value) / 100;
+			options.GreenPrice				= ((double)TxtGreenPrice.Value) / 100;
 			
-			m_Engine.m_Settings.Options[0].RedPrice				= ((double)TxtRedPrice.Value) / 100;
-			m_Engine.m_Settings.Options[0].GreenPrice			= ((double)TxtGreenPrice.Value) / 100;
-			
-			m_Engine.m_Settings.Options[0].OverrideAssetsColors	= ChkOverrideColorsISK.Checked;
-			m_Engine.m_Settings.Options[0].GreenIskLoss			= (double)TxtGreenIskLoss.Value;
-			m_Engine.m_Settings.Options[0].RedIskLoss			= (double)TxtRedIskLoss.Value;
+			options.OverrideAssetsColors	= ChkOverrideColorsISK.Checked;
+			options.GreenIskLoss			= (double)TxtGreenIskLoss.Value;
+			options.RedIskLoss				= (double)TxtRedIskLoss.Value;
 			
 			return true;
 		}
 		
 		private void InitPage_Other()
 		{
-			ChkCheckUpdates.Checked = m_Engine.m_Settings.Options[0].CheckUpdates;
-			TxtPriceHistory.Value	= m_Engine.m_Settings.Options[0].PriceHistoryDays;
+			Settings.OptionsRow options = m_Engine.m_Settings.Options[0];
+
+			ChkCheckUpdates.Checked			= options.CheckUpdates;
+			TxtPriceHistory.Value			= options.PriceHistoryDays;
+			TxtPricesExpiryDays.Value		= options.PriceExpiryDays;
+			TxtMineralPricesExpiryDays.Value = options.MineralPriceExpiryDays;
 		}
 		
 		private bool SavePage_Other()
 		{
-			m_Engine.m_Settings.Options[0].CheckUpdates			= ChkCheckUpdates.Checked;
-			m_Engine.m_Settings.Options[0].PriceHistoryDays		= (UInt32)TxtPriceHistory.Value;
+			Settings.OptionsRow options = m_Engine.m_Settings.Options[0];
+
+			options.CheckUpdates			= ChkCheckUpdates.Checked;
+			options.PriceHistoryDays		= (UInt32)TxtPriceHistory.Value;
+			options.PriceExpiryDays			= (UInt32)TxtPricesExpiryDays.Value;
+			options.MineralPriceExpiryDays	= (UInt32)TxtMineralPricesExpiryDays.Value;
 			return true;
 		}
 
@@ -414,7 +453,7 @@ namespace EveRefinery
 				TextItemWithUInt32 newItem = new TextItemWithUInt32(enumName, i);
 				currCombo.Items.Add(newItem);
 				
-				if (i == (UInt32)PriceTypes.SellMedian)
+				if (i == m_Engine.m_Settings.Options[0].MineralPricesType)
 					currCombo.SelectedItem = newItem;
 			}
 		}
@@ -430,7 +469,7 @@ namespace EveRefinery
 				TextItemWithUInt32 newItem = new TextItemWithUInt32(currRegion.Name, currRegion.RegionID);
 				currCombo.Items.Add(newItem);
 
-				if (currRegion.RegionID == (UInt32)EveRegions.Forge)
+				if (currRegion.RegionID == m_Engine.m_Settings.Options[0].MineralPricesRegion)
 					currCombo.SelectedItem = newItem;
 			}
 		}

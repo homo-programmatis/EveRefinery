@@ -552,6 +552,7 @@ namespace EveRefinery
 			LoadSettings_Generic();
 			
 			LoadMarketPrices(false);
+			CheckMineralPricesExpiry();
 			MakeRefineryItemList();
 			UpdateStatus();
 			
@@ -562,7 +563,7 @@ namespace EveRefinery
 		{
 			try
 			{
-				m_MarketPrices.LoadPrices(m_Engine.m_Settings.Options[0].PricesRegion, a_Silent, m_Engine.m_Settings.Options[0].PriceHistoryDays);
+				m_MarketPrices.LoadPrices(m_Engine.m_Settings.Options[0].PricesRegion, a_Silent, m_Engine.m_OptionsCache.PriceExpiryDays, m_Engine.m_Settings.Options[0].PriceHistoryDays);
 			}
 			catch (System.Exception a_Exception)
 			{
@@ -574,6 +575,15 @@ namespace EveRefinery
 			
 			if (0 != m_MarketPrices.GetQueueSize())
 				m_RunningListUpdates = ListUpdates.Prices;
+		}
+
+		private void CheckMineralPricesExpiry()
+		{
+			DateTime expiryDate = m_Engine.m_Settings.Stats[0].LastMineralPricesEdit.AddDays(m_Engine.m_Settings.Options[0].MineralPriceExpiryDays);
+			if (DateTime.UtcNow < expiryDate)
+				return;
+
+			MessageBox.Show("Your mineral prices are outdated.\nThis can make all calculations made by this program incorrect.\nPlease go to settings and edit mineral prices.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 		}
 		
 		private Columns Columns_EnumFromString(string a_ItemName)
@@ -927,7 +937,7 @@ namespace EveRefinery
 					m_TotalsItem.Quantity			+= listItem.Quantity;
 					m_TotalsItem.ItemData.Volume	+= currRecord.Volume;
 
-					if (!currRecord.IsPricesOk())
+					if (!currRecord.IsPricesOk(m_Engine.m_OptionsCache.PriceExpiryDays))
 						allPricesInvalid = true;
 					else
 					{

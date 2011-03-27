@@ -1,3 +1,7 @@
++ You can now set maximum prices age in Settings -> Other.
++ Mineral prices age is now tested. Maximum age is set in Settings -> Other.
++ The region and price type you use for loading mineral prices are now saved.
+
 1.0.4103.5781 [27mar11]
 * Database update: Incursion 1.1.0
 + Exporting feature. Can export as CSV or HTML so far.

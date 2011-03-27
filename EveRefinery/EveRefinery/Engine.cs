@@ -70,6 +70,7 @@ namespace EveRefinery
 		public double		RefineryTax;
 		public double		RefineryEfficiency;
 		public UInt32		PriceType;
+		public UInt32		PriceExpiryDays;
 	}
 
 	public class Engine
@@ -158,6 +159,18 @@ namespace EveRefinery
 				
 			if (options.IsPriceHistoryDaysNull())
 				options.PriceHistoryDays = 14;
+
+			if (options.IsPriceExpiryDaysNull())
+				options.PriceExpiryDays = 7;
+
+			if (options.IsMineralPriceExpiryDaysNull())
+				options.MineralPriceExpiryDays = 7;
+
+			if (options.IsMineralPricesRegionNull())
+				options.MineralPricesRegion = (UInt32)EveRegions.Forge;
+
+			if (options.IsMineralPricesTypeNull())
+				options.MineralPricesType = (UInt32)PriceTypes.SellMedian;
 		}
 
 		private void LoadSettings_TestPrices()
@@ -168,31 +181,31 @@ namespace EveRefinery
 			Settings.PricesRow prices = m_Settings.Prices[0];
 
 			if (prices.IsTritaniumNull())
-				prices.Tritanium = 2.9;
+				prices.Tritanium = 0;
 
 			if (prices.IsPyeriteNull())
-				prices.Pyerite = 7.5;
+				prices.Pyerite = 0;
 
 			if (prices.IsTritaniumNull())
-				prices.Tritanium = 2.9;
+				prices.Tritanium = 0;
 
 			if (prices.IsMexallonNull())
-				prices.Mexallon = 28.5;
+				prices.Mexallon = 0;
 
 			if (prices.IsIsogenNull())
-				prices.Isogen = 52.6;
+				prices.Isogen = 0;
 
 			if (prices.IsNoxciumNull())
-				prices.Noxcium = 90.0;
+				prices.Noxcium = 0;
 
 			if (prices.IsZydrineNull())
-				prices.Zydrine = 1300.0;
+				prices.Zydrine = 0;
 
 			if (prices.IsMegacyteNull())
-				prices.Megacyte = 2648.0;
+				prices.Megacyte = 0;
 
 			if (prices.IsMorphiteNull())
-				prices.Morphite = 7300.0;
+				prices.Morphite = 0;
 		}
 		
 		private void LoadSettings_TestAccounts()
@@ -295,12 +308,24 @@ namespace EveRefinery
 				}
 			}
 		}
+
+		private void LoadSettings_TestStats()
+		{
+			if (m_Settings.Stats.Count == 0)
+				m_Settings.Stats.Rows.Add();
+
+			Settings.StatsRow stats = m_Settings.Stats[0];
+
+			if (stats.IsLastMineralPricesEditNull())
+				stats.LastMineralPricesEdit = DateTime.FromFileTime(0);
+		}
 		
 		public void UpdateSettingsCache()
 		{
 			m_OptionsCache.PriceType			= m_Settings.Options[0].PriceType;
 			m_OptionsCache.RefineryEfficiency	= m_Settings.Options[0].RefineryEfficiency;
 			m_OptionsCache.RefineryTax			= m_Settings.Options[0].RefineryTax;
+			m_OptionsCache.PriceExpiryDays		= m_Settings.Options[0].PriceExpiryDays;
 		}
 		
 		protected void OnUpdateOptionsRow(object sender, Settings.OptionsRowChangeEvent e)
@@ -318,6 +343,7 @@ namespace EveRefinery
 			LoadSettings_TestLocations();
 			LoadSettings_TestViewColumns();
 			LoadSettings_TestToolbars();
+			LoadSettings_TestStats();
 			
 			UpdateSettingsCache();
 			m_Settings.Options.OptionsRowChanged += OnUpdateOptionsRow;
@@ -472,7 +498,7 @@ namespace EveRefinery
 				result.MarketPrice	= ItemPrice.Unknown;
 				isError = true;
 			}
-			else if (!a_Item.IsPricesOk())
+			else if (!a_Item.IsPricesOk(m_OptionsCache.PriceExpiryDays))
 			{
 				result.MarketPrice	= ItemPrice.Outdated;
 				isError = true;

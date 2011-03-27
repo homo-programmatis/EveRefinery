@@ -106,6 +106,14 @@
 			this.LblPriceHistory = new System.Windows.Forms.Label();
 			this.TxtPriceHistory = new System.Windows.Forms.NumericUpDown();
 			this.LblPriceHistory1 = new System.Windows.Forms.Label();
+			this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+			this.label12 = new System.Windows.Forms.Label();
+			this.label14 = new System.Windows.Forms.Label();
+			this.TxtPricesExpiryDays = new System.Windows.Forms.NumericUpDown();
+			this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
+			this.label13 = new System.Windows.Forms.Label();
+			this.label15 = new System.Windows.Forms.Label();
+			this.TxtMineralPricesExpiryDays = new System.Windows.Forms.NumericUpDown();
 			this.TabDeveloper = new System.Windows.Forms.TabPage();
 			this.TblDeveloper = new System.Windows.Forms.TableLayoutPanel();
 			this.BtnStripDatabase = new System.Windows.Forms.Button();
@@ -153,6 +161,10 @@
 			this.TblOther.SuspendLayout();
 			this.tableLayoutPanel5.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.TxtPriceHistory)).BeginInit();
+			this.tableLayoutPanel6.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.TxtPricesExpiryDays)).BeginInit();
+			this.tableLayoutPanel7.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.TxtMineralPricesExpiryDays)).BeginInit();
 			this.TabDeveloper.SuspendLayout();
 			this.TblDeveloper.SuspendLayout();
 			this.TblSettings.SuspendLayout();
@@ -1131,16 +1143,21 @@
 			this.TblOther.Controls.Add(this.LblDontDisableUpdates, 0, 0);
 			this.TblOther.Controls.Add(this.LblPriceDays, 0, 3);
 			this.TblOther.Controls.Add(this.tableLayoutPanel5, 0, 4);
+			this.TblOther.Controls.Add(this.tableLayoutPanel6, 0, 6);
+			this.TblOther.Controls.Add(this.tableLayoutPanel7, 0, 7);
 			this.TblOther.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TblOther.Location = new System.Drawing.Point(3, 3);
 			this.TblOther.Name = "TblOther";
-			this.TblOther.RowCount = 6;
+			this.TblOther.RowCount = 9;
 			this.TblOther.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 75F));
 			this.TblOther.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
 			this.TblOther.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.TblOther.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 75F));
 			this.TblOther.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-			this.TblOther.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.TblOther.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.TblOther.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+			this.TblOther.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+			this.TblOther.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.TblOther.Size = new System.Drawing.Size(355, 358);
 			this.TblOther.TabIndex = 0;
 			// 
@@ -1237,6 +1254,132 @@
 			this.LblPriceHistory1.TabIndex = 2;
 			this.LblPriceHistory1.Text = "days";
 			this.LblPriceHistory1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// tableLayoutPanel6
+			// 
+			this.tableLayoutPanel6.ColumnCount = 3;
+			this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160F));
+			this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
+			this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 115F));
+			this.tableLayoutPanel6.Controls.Add(this.label12, 2, 0);
+			this.tableLayoutPanel6.Controls.Add(this.label14, 0, 0);
+			this.tableLayoutPanel6.Controls.Add(this.TxtPricesExpiryDays, 1, 0);
+			this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel6.Location = new System.Drawing.Point(0, 240);
+			this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
+			this.tableLayoutPanel6.Name = "tableLayoutPanel6";
+			this.tableLayoutPanel6.RowCount = 1;
+			this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel6.Size = new System.Drawing.Size(355, 25);
+			this.tableLayoutPanel6.TabIndex = 4;
+			// 
+			// label12
+			// 
+			this.label12.AutoSize = true;
+			this.label12.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label12.Location = new System.Drawing.Point(243, 0);
+			this.label12.Name = "label12";
+			this.label12.Size = new System.Drawing.Size(109, 25);
+			this.label12.TabIndex = 0;
+			this.label12.Text = "days";
+			this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// label14
+			// 
+			this.label14.AutoSize = true;
+			this.label14.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label14.Location = new System.Drawing.Point(3, 0);
+			this.label14.Name = "label14";
+			this.label14.Size = new System.Drawing.Size(154, 25);
+			this.label14.TabIndex = 1;
+			this.label14.Text = "Maximum prices age :";
+			this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// TxtPricesExpiryDays
+			// 
+			this.TxtPricesExpiryDays.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.TxtPricesExpiryDays.Location = new System.Drawing.Point(163, 3);
+			this.TxtPricesExpiryDays.Maximum = new decimal(new int[] {
+            31,
+            0,
+            0,
+            0});
+			this.TxtPricesExpiryDays.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.TxtPricesExpiryDays.Name = "TxtPricesExpiryDays";
+			this.TxtPricesExpiryDays.Size = new System.Drawing.Size(74, 20);
+			this.TxtPricesExpiryDays.TabIndex = 2;
+			this.TxtPricesExpiryDays.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			// 
+			// tableLayoutPanel7
+			// 
+			this.tableLayoutPanel7.ColumnCount = 3;
+			this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160F));
+			this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
+			this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 115F));
+			this.tableLayoutPanel7.Controls.Add(this.label13, 2, 0);
+			this.tableLayoutPanel7.Controls.Add(this.label15, 0, 0);
+			this.tableLayoutPanel7.Controls.Add(this.TxtMineralPricesExpiryDays, 1, 0);
+			this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel7.Location = new System.Drawing.Point(0, 265);
+			this.tableLayoutPanel7.Margin = new System.Windows.Forms.Padding(0);
+			this.tableLayoutPanel7.Name = "tableLayoutPanel7";
+			this.tableLayoutPanel7.RowCount = 1;
+			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel7.Size = new System.Drawing.Size(355, 25);
+			this.tableLayoutPanel7.TabIndex = 5;
+			// 
+			// label13
+			// 
+			this.label13.AutoSize = true;
+			this.label13.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label13.Location = new System.Drawing.Point(243, 0);
+			this.label13.Name = "label13";
+			this.label13.Size = new System.Drawing.Size(109, 25);
+			this.label13.TabIndex = 0;
+			this.label13.Text = "days";
+			this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// label15
+			// 
+			this.label15.AutoSize = true;
+			this.label15.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label15.Location = new System.Drawing.Point(3, 0);
+			this.label15.Name = "label15";
+			this.label15.Size = new System.Drawing.Size(154, 25);
+			this.label15.TabIndex = 1;
+			this.label15.Text = "Maximum mineral prices age :";
+			this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// TxtMineralPricesExpiryDays
+			// 
+			this.TxtMineralPricesExpiryDays.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.TxtMineralPricesExpiryDays.Location = new System.Drawing.Point(163, 3);
+			this.TxtMineralPricesExpiryDays.Maximum = new decimal(new int[] {
+            31,
+            0,
+            0,
+            0});
+			this.TxtMineralPricesExpiryDays.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.TxtMineralPricesExpiryDays.Name = "TxtMineralPricesExpiryDays";
+			this.TxtMineralPricesExpiryDays.Size = new System.Drawing.Size(74, 20);
+			this.TxtMineralPricesExpiryDays.TabIndex = 2;
+			this.TxtMineralPricesExpiryDays.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
 			// 
 			// TabDeveloper
 			// 
@@ -1470,6 +1613,12 @@
 			this.tableLayoutPanel5.ResumeLayout(false);
 			this.tableLayoutPanel5.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.TxtPriceHistory)).EndInit();
+			this.tableLayoutPanel6.ResumeLayout(false);
+			this.tableLayoutPanel6.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.TxtPricesExpiryDays)).EndInit();
+			this.tableLayoutPanel7.ResumeLayout(false);
+			this.tableLayoutPanel7.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.TxtMineralPricesExpiryDays)).EndInit();
 			this.TabDeveloper.ResumeLayout(false);
 			this.TblDeveloper.ResumeLayout(false);
 			this.TblSettings.ResumeLayout(false);
@@ -1578,5 +1727,13 @@
 		private System.Windows.Forms.TabPage TabDeveloper;
 		private System.Windows.Forms.TableLayoutPanel TblDeveloper;
 		private System.Windows.Forms.Button BtnStripDatabase;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
+		private System.Windows.Forms.Label label12;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
+		private System.Windows.Forms.Label label13;
+		private System.Windows.Forms.Label label14;
+		private System.Windows.Forms.Label label15;
+		private System.Windows.Forms.NumericUpDown TxtPricesExpiryDays;
+		private System.Windows.Forms.NumericUpDown TxtMineralPricesExpiryDays;
 	}
 }
