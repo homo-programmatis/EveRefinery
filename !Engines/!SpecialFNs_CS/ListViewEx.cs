@@ -50,5 +50,12 @@ namespace SpecialFNs
 			ColumnHideInfo hideInfo = (ColumnHideInfo)a_Column.Tag;
 			return (UInt32)hideInfo.RealWidth;
 		}
+
+		// summary:
+		// Checks whether column is hidden
+		public static Boolean IsColumnVisible(ColumnHeader a_Column)
+		{
+			return (0 != a_Column.Width);
+		}
 	}
 }

@@ -28,11 +28,11 @@ namespace UpdatePublisher
 		static void DoWork()
 		{
 			List<string> publishedFiles = new List<string>();
-			publishedFiles.Add(@"C:\Users\HOMO_PROGRAMMATIS\Desktop\EveRefineryTask\DB\Tailored\EveDatabase.db");
 			publishedFiles.Add(@"C:\Program Files (x86)\SQLite.NET\bin\System.Data.SQLite.dll");
-			publishedFiles.Add(@"Q:\MyProgramming\EveRefinery\bin\Release\EveRefinery.exe");
-			publishedFiles.Add(@"Q:\MyProgramming\EveRefinery\bin\Release\EveRefineryUpdater.exe");
-			publishedFiles.Add(@"Q:\MyProgramming\EveRefinery\EveRefinery\whatsnew.txt");
+			publishedFiles.Add(@"Q:\SourceForge\everefinery\EveRefinery\bin\Release\EveDatabase.db");
+			publishedFiles.Add(@"Q:\SourceForge\everefinery\EveRefinery\bin\Release\EveRefinery.exe");
+			publishedFiles.Add(@"Q:\SourceForge\everefinery\EveRefinery\bin\Release\EveRefineryUpdater.exe");
+			publishedFiles.Add(@"Q:\SourceForge\everefinery\EveRefinery\EveRefinery\whatsnew.txt");
 
 			Publisher publisher = new Publisher();
 			foreach (string currFile in publishedFiles)
@@ -52,7 +52,7 @@ namespace UpdatePublisher
 		public string	m_AttribName_Url		= "url";
 
 		public string		m_7z_Location		= @"C:\Program Files (x86)\7-Zip\7z.exe";
-		public string		m_OutputDir			= @"C:\Users\HOMO_PROGRAMMATIS\Desktop\EveRefineryTask\WebSite\EveRefinery\Files\";
+		public string		m_OutputDir			= @"Q:\SourceForge\EveRefinery_Package\";
 		public string		m_DownloadUrl		= "http://www.homo-programmatis.com/EveRefinery/Files/";
 		public string		m_UpdatesXmlName	= "updates.xml";
 		public XmlDocument	m_UpdatesXml		= new XmlDocument();

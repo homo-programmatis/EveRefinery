@@ -388,48 +388,41 @@ namespace EveRefinery
 
 		public static void StripDatabase(String a_DBPath)
 		{
-			try
+			SQLiteConnectionStringBuilder connBuilder = new SQLiteConnectionStringBuilder();
+			connBuilder.FailIfMissing = true;
+			connBuilder.DataSource = a_DBPath;
+			connBuilder.JournalMode = SQLiteJournalModeEnum.Off;
+
+			SQLiteConnection connection = new SQLiteConnection();
+			connection.ConnectionString = connBuilder.ToString();
+			connection.Open();
+
+			List<String> allTables = GetDatabaseTables(connection);
+			List<String> neededTables = GetUsedTableNames();
+
+			// Drop unwanted tables
+			foreach (String currentTable in allTables)
 			{
-				SQLiteConnectionStringBuilder connBuilder = new SQLiteConnectionStringBuilder();
-				connBuilder.FailIfMissing = true;
-				connBuilder.DataSource = a_DBPath;
-				connBuilder.JournalMode = SQLiteJournalModeEnum.Off;
+				if (neededTables.Contains(currentTable))
+					continue;
 
-				SQLiteConnection connection = new SQLiteConnection();
-				connection.ConnectionString = connBuilder.ToString();
-				connection.Open();
-
-				List<String> allTables = GetDatabaseTables(connection);
-				List<String> neededTables = GetUsedTableNames();
-
-				// Drop unwanted tables
-				foreach (String currentTable in allTables)
-				{
-					if (neededTables.Contains(currentTable))
-						continue;
-
-					String sqlText = "DROP TABLE " + currentTable;
-					SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, connection);
-					sqlCommand.ExecuteNonQuery();
-				}
-
-				// Leave only MetaLevel in attributes
-				{
-					String sqlText = "DELETE FROM " + Tables.dgmTypeAttributes + " WHERE attributeID != " + (int)EveAttributes.MetaLevel;
-					SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, connection);
-					sqlCommand.ExecuteNonQuery();
-				}
-
-				// Free emptied space in database
-				{
-					String sqlText = "VACUUM";
-					SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, connection);
-					sqlCommand.ExecuteNonQuery();
-				}
+				String sqlText = "DROP TABLE " + currentTable;
+				SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, connection);
+				sqlCommand.ExecuteNonQuery();
 			}
-			catch (System.Exception a_Exception)
+
+			// Leave only MetaLevel in attributes
 			{
-				MessageBox.Show(a_Exception.Message);
+				String sqlText = "DELETE FROM " + Tables.dgmTypeAttributes + " WHERE attributeID != " + (int)EveAttributes.MetaLevel;
+				SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, connection);
+				sqlCommand.ExecuteNonQuery();
+			}
+
+			// Free emptied space in database
+			{
+				String sqlText = "VACUUM";
+				SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, connection);
+				sqlCommand.ExecuteNonQuery();
 			}
 		}
 	}

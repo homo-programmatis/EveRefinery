@@ -10,6 +10,7 @@ using SpecialFNs;
 using System.Diagnostics;
 using System.Reflection;
 using System.Drawing.Drawing2D;
+using System.IO;
 
 namespace EveRefinery
 {
@@ -746,7 +747,7 @@ namespace EveRefinery
 				Settings.ViewColumnsRow newRow = m_Engine.m_Settings.ViewColumns.NewViewColumnsRow();
 				newRow.Name		= currColumnID.ToString();
 				newRow.Index	= (UInt32)currColumn.DisplayIndex;
-				newRow.Visible	= (0 != currColumn.Width);
+				newRow.Visible	= ListViewEx.IsColumnVisible(currColumn);
 				newRow.Width	= ListViewEx.GetHideableColumnWidth(currColumn);
 				m_Engine.m_Settings.ViewColumns.Rows.Add(newRow);
 			}
@@ -816,18 +817,6 @@ namespace EveRefinery
 		private void TlbBtnSettings_Click(object sender, EventArgs e)
 		{
 			ShowSettings(FrmSettings.Pages.Minerals);
-		}
-
-		private void TlbBtnSortByName_Click(object sender, EventArgs e)
-		{
-			m_SortType = Columns.Name;
-			MakeRefineryItemList();
-		}
-
-		private void TlbBtnSortByType_Click(object sender, EventArgs e)
-		{
-			m_SortType = Columns.Type;
-			MakeRefineryItemList();
 		}
 
 		private void SetColumnSortMark(Int32 a_Column)
@@ -1035,6 +1024,123 @@ namespace EveRefinery
 		private void TlbBtnWhatsnew_Click(object sender, EventArgs e)
 		{
 			System.Diagnostics.Process.Start("whatsnew.txt");
+		}
+
+		class CompareColumnIndices : IComparer<int>
+		{
+			private ListView.ColumnHeaderCollection m_Headers;
+
+			public CompareColumnIndices(ListView.ColumnHeaderCollection a_Headers)
+			{
+				m_Headers = a_Headers;
+			}
+
+			public int Compare(int a_Object1, int a_Object2)
+			{
+				ColumnHeader header1 = m_Headers[a_Object1];
+				ColumnHeader header2 = m_Headers[a_Object2];
+
+				return header1.DisplayIndex - header2.DisplayIndex;
+			}
+		}
+
+		private List<int> GetVisibleColumnOrder()
+		{
+			List<int> result = new List<int>();
+
+			for (int i = 0; i < LstRefinery.Columns.Count; i++)
+			{
+				if (!ListViewEx.IsColumnVisible(LstRefinery.Columns[i]))
+					continue;
+
+				result.Add(i);
+			}
+
+			CompareColumnIndices comparer = new CompareColumnIndices(LstRefinery.Columns);
+			result.Sort(comparer);
+
+			return result;
+		}
+
+		private Exporter.ExportedData GetExportedData()
+		{
+			List<int> columnOrder = GetVisibleColumnOrder();
+
+			int numHeaderItems = 1;
+
+			Exporter.ExportedData result = new Exporter.ExportedData();
+			result.Aligns = new HorizontalAlignment[columnOrder.Count];
+			result.Rows = new Exporter.ExportedRow[m_ItemList.Length + numHeaderItems];
+
+			// Aligns
+			for (int j = 0; j < columnOrder.Count; j++)
+			{
+				int actualColumn = columnOrder[j];
+				result.Aligns[j] = LstRefinery.Columns[actualColumn].TextAlign;
+			}
+
+			// Header
+			Exporter.ExportedRow currRow = new Exporter.ExportedRow();
+			result.Rows[0] = currRow;
+			
+			currRow.Color = Color.LightGray;
+			currRow.Cells = new String[columnOrder.Count];
+			for (int j = 0; j < currRow.Cells.Length; j++)
+			{
+				int actualColumn = columnOrder[j];
+				currRow.Cells[j] = LstRefinery.Columns[actualColumn].Text;
+			}
+
+			// Visible items
+			for (int i = 0; i < m_ItemList.Length; i++)
+			{
+				RetrieveVirtualItemEventArgs itemData = new RetrieveVirtualItemEventArgs(i);
+				Refinery_RetrieveVirtualItem(this, itemData);
+
+				currRow = new Exporter.ExportedRow();
+				result.Rows[i + numHeaderItems] = currRow;
+
+				currRow.Color = itemData.Item.BackColor;
+				currRow.Cells = new String[columnOrder.Count];
+
+				for (int j = 0; j < currRow.Cells.Length; j++)
+				{
+					int actualColumn = columnOrder[j];
+					currRow.Cells[j] = itemData.Item.SubItems[actualColumn].Text;
+				}
+			}
+
+			return result;
+		}
+
+		private void TlbBtnExport_Click(object sender, EventArgs e)
+		{
+			SaveFileDialog fileDialog = new SaveFileDialog();
+			fileDialog.Title = "Select location for exported file";
+			fileDialog.Filter = "Comma-separated values (*.csv)|*.csv|Html (*.htm)|*.htm";
+			fileDialog.FilterIndex = 2;
+			fileDialog.RestoreDirectory = true;
+			if (DialogResult.OK != fileDialog.ShowDialog())
+				return;
+
+			try
+			{
+				Exporter.ExportedData data = GetExportedData();
+
+				switch (fileDialog.FilterIndex)
+				{
+					case 1:
+						Exporter.ExportAsCsv(fileDialog.FileName, data);
+						break;
+					case 2:
+						Exporter.ExportAsHtml(fileDialog.FileName, data);
+						break;
+				}
+			}
+			catch (System.Exception a_Exception)
+			{
+				ErrorMessageBox.Show("Failed to export data:\n" + a_Exception.Message);
+			}
 		}
     }
     

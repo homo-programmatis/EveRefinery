@@ -522,7 +522,14 @@ namespace EveRefinery
 			if (DialogResult.OK != fileDialog.ShowDialog())
 				return;
 
-			EveDatabase.StripDatabase(fileDialog.FileName);
+			try
+			{
+				EveDatabase.StripDatabase(fileDialog.FileName);
+			}
+			catch (System.Exception a_Exception)
+			{
+				ErrorMessageBox.Show("Failed to strip database:\n" + a_Exception.Message);
+			}
 		}
 	}
 }
