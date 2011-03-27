@@ -181,4 +181,12 @@ namespace EveRefinery
 			return (ItemRecord)m_Items[a_TypeID];
 		}
 	}
+
+	public class MaterialsInfo
+	{
+		public static double GetMaterialVolume(Materials a_Material)
+		{
+			return 0.01;
+		}
+	}
 }

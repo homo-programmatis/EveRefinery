@@ -33,6 +33,7 @@ namespace EveRefinery
 		Type,
 		LossPercent,
 		Volume,
+		RefinedVolume,
 		
 		MaxColumns,
 	}
@@ -262,17 +263,22 @@ namespace EveRefinery
 				result[(int)Columns.MarketPrice]	= prices.MarketPrice;
 				result[(int)Columns.PriceDelta]		= prices.PriceDelta;
 
+				double		refinedVolume	= 0;
 				Columns[]	materialColumns = new Columns[] { Columns.Tritanium, Columns.Pyerite, Columns.Mexallon, Columns.Isogen, Columns.Noxcium, Columns.Zydrine, Columns.Megacyte, Columns.Morphite };
 				Materials[] columnMaterials = new Materials[] { Materials.Tritanium, Materials.Pyerite, Materials.Mexallon, Materials.Isogen, Materials.Noxcium, Materials.Zydrine, Materials.Megacyte, Materials.Morphite };
 				for (int i = 0; i < materialColumns.Length; i++)
 				{
 					Columns currColumn = materialColumns[i];
 					Materials currMaterial = columnMaterials[i];
+					double materialAmount = 0;
 
 					if (isTotals)
-						result[(int)currColumn]		= a_ListItem.ItemData.MaterialAmount[(UInt32)currMaterial];
+						materialAmount = a_ListItem.ItemData.MaterialAmount[(UInt32)currMaterial];
 					else
-						result[(int)currColumn]		= m_Engine.GetItemRefinedQuota(a_ListItem.ItemData, quantity, currMaterial);
+						materialAmount = m_Engine.GetItemRefinedQuota(a_ListItem.ItemData, quantity, currMaterial);
+
+					refinedVolume += materialAmount * MaterialsInfo.GetMaterialVolume(currMaterial);
+					result[(int)currColumn] = materialAmount;
 				}
 
 				result[(int)Columns.Quantity]		= a_ListItem.Quantity;
@@ -286,6 +292,7 @@ namespace EveRefinery
 				
 				result[(int)Columns.LossPercent]	= lossPercent;
 				result[(int)Columns.Volume]			= quantity * a_ListItem.ItemData.Volume;
+				result[(int)Columns.RefinedVolume]	= refinedVolume;
 			}
 			
 			return result;
@@ -342,6 +349,7 @@ namespace EveRefinery
 			bool isInvalidLossPercent				= isInvalidPrice || double.IsInfinity(lossPercent);
 			subitems[(int)Columns.LossPercent].Text	= isInvalidLossPercent ? "" : String.Format("{0:d}%", (int)(100 * lossPercent));
 			subitems[(int)Columns.Volume].Text		= Engine.FormatDouble((double)columnData[(int)Columns.Volume]);
+			subitems[(int)Columns.RefinedVolume].Text = Engine.FormatDouble((double)columnData[(int)Columns.RefinedVolume]);
 		}
 		
 		private void SilentSetSelectedItem(ToolStripComboBox a_Combo, Object a_Item, EventHandler a_EventChanged)

@@ -1,3 +1,5 @@
+1.0.4103.10400 [27mar11]
++ "Refined Volume" column added
 + You can now set maximum prices age in Settings -> Other.
 + Mineral prices age is now tested. Maximum age is set in Settings -> Other.
 + The region and price type you use for loading mineral prices are now saved.

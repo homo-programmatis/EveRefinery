@@ -77,6 +77,7 @@
 			this.TlbChkIgnoreAssembled = new System.Windows.Forms.ToolStripButton();
 			this.TlbChkUseQuantities = new System.Windows.Forms.ToolStripButton();
 			this.ImlToolbarButtons = new System.Windows.Forms.ImageList(this.components);
+			this.ClmRefinedVolume = new System.Windows.Forms.ColumnHeader();
 			this.TlcToolContainer.ContentPanel.SuspendLayout();
 			this.TlcToolContainer.TopToolStripPanel.SuspendLayout();
 			this.TlcToolContainer.SuspendLayout();
@@ -156,7 +157,8 @@
             this.ClmQuantity,
             this.ClmItemType,
             this.ClmLossPercent,
-            this.ClmVolume});
+            this.ClmVolume,
+            this.ClmRefinedVolume});
 			this.LstRefinery.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LstRefinery.FullRowSelect = true;
 			this.LstRefinery.HideSelection = false;
@@ -184,64 +186,76 @@
 			// 
 			// ClmRefinedCost
 			// 
+			this.ClmRefinedCost.DisplayIndex = 3;
 			this.ClmRefinedCost.Text = "Refined Cost";
 			this.ClmRefinedCost.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.ClmRefinedCost.Width = 80;
 			// 
 			// ClmSellPrice
 			// 
+			this.ClmSellPrice.DisplayIndex = 4;
 			this.ClmSellPrice.Text = "Sell Price";
 			this.ClmSellPrice.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.ClmSellPrice.Width = 80;
 			// 
 			// ClmDeltaPrice
 			// 
+			this.ClmDeltaPrice.DisplayIndex = 5;
 			this.ClmDeltaPrice.Text = "Delta";
 			this.ClmDeltaPrice.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.ClmDeltaPrice.Width = 80;
 			// 
 			// ClmTritanium
 			// 
+			this.ClmTritanium.DisplayIndex = 6;
 			this.ClmTritanium.Text = "Tritanium";
 			this.ClmTritanium.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
 			// ClmPyerite
 			// 
+			this.ClmPyerite.DisplayIndex = 7;
 			this.ClmPyerite.Text = "Pyerite";
 			this.ClmPyerite.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
 			// ClmMexallon
 			// 
+			this.ClmMexallon.DisplayIndex = 8;
 			this.ClmMexallon.Text = "Mexallon";
 			this.ClmMexallon.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
 			// ClmIsogen
 			// 
+			this.ClmIsogen.DisplayIndex = 9;
 			this.ClmIsogen.Text = "Isogen";
 			this.ClmIsogen.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
 			// ClmNocxium
 			// 
+			this.ClmNocxium.DisplayIndex = 10;
 			this.ClmNocxium.Text = "Nocxium";
 			this.ClmNocxium.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
 			// ClmZydrine
 			// 
+			this.ClmZydrine.DisplayIndex = 11;
 			this.ClmZydrine.Text = "Zydrine";
 			this.ClmZydrine.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
 			// ClmMegacyte
 			// 
+			this.ClmMegacyte.DisplayIndex = 12;
 			this.ClmMegacyte.Text = "Megacyte";
 			this.ClmMegacyte.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
 			// ClmMorphite
 			// 
+			this.ClmMorphite.DisplayIndex = 13;
 			this.ClmMorphite.Text = "Morphite";
 			this.ClmMorphite.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
 			// ClmQuantity
 			// 
+			this.ClmQuantity.DisplayIndex = 2;
 			this.ClmQuantity.Text = "Qty";
 			this.ClmQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.ClmQuantity.Width = 50;
@@ -532,6 +546,11 @@
 			this.ImlToolbarButtons.Images.SetKeyName(3, "Box");
 			this.ImlToolbarButtons.Images.SetKeyName(4, "Number");
 			// 
+			// ClmRefinedVolume
+			// 
+			this.ClmRefinedVolume.Text = "Refined Volume";
+			this.ClmRefinedVolume.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			// 
 			// FrmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -611,6 +630,7 @@
 		private System.Windows.Forms.Label LblAssetsCache;
 		private System.Windows.Forms.ColumnHeader ClmVolume;
         private System.Windows.Forms.ColumnHeader ClmMetaLevel;
+		private System.Windows.Forms.ColumnHeader ClmRefinedVolume;
 
     }
 }
