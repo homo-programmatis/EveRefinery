@@ -38,17 +38,17 @@ namespace EveRefinery
 		
 		public Boolean IsPricesOk(UInt32 a_PriceExpiryDays)
 		{
-			DateTime limitTime = PricesDate.AddDays(a_PriceExpiryDays);
+			DateTime limitTime = PriceDate.AddDays(a_PriceExpiryDays);
 			if (limitTime < DateTime.UtcNow)
 				return false;
 			
 			return true;
 		}
 		
-		public void ResetPrices()
+		public void ResetPrice()
 		{
-			PricesDate = new DateTime();
-			Prices = new double[(UInt32)PriceTypes.MaxPriceTypes];
+			PriceDate	= new DateTime();
+			Price		= 0;
 		}
 		
 		public Boolean IsListItem()
@@ -72,8 +72,8 @@ namespace EveRefinery
 		public double[]		MaterialAmount	= new double[(UInt32)Materials.MaxMaterials];
 		public UInt32		BatchSize;
 		public double		Volume;
-		public DateTime		PricesDate;
-		public double[]		Prices			= new double[(UInt32)PriceTypes.MaxPriceTypes];
+		public DateTime		PriceDate;
+		public double		Price			= 0;
         public UInt32       MetaLevel       = 0;
     }
     
@@ -135,7 +135,7 @@ namespace EveRefinery
 			while (mapItem.MoveNext())
 			{
 				ItemRecord currItem = (ItemRecord)mapItem.Value;
-				currItem.ResetPrices();
+				currItem.ResetPrice();
 			}
 		}
 

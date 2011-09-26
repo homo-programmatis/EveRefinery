@@ -484,7 +484,7 @@ namespace EveRefinery
 			ItemPrice result = new ItemPrice();
 
 			result.RefinedCost		= GetItemRefinedPrice(a_Item, a_Quantity);
-			result.MarketPrice		= a_Quantity * a_Item.Prices[m_OptionsCache.PriceType];
+			result.MarketPrice		= a_Quantity * a_Item.Price;
 
 			bool isError = false;
 

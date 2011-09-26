@@ -489,37 +489,47 @@ namespace EveRefinery
 			loadPricesFor.Add((UInt32)EveTypeIDs.Megacyte);
 			loadPricesFor.Add((UInt32)EveTypeIDs.Morphite);
 
-			ItemPrices.PricesDataTable prices = MarketPricesDB.QueryEveCentralPrices(loadPricesFor, regionID, m_Engine.m_Settings.Options[0].PriceHistoryDays);
-			foreach (ItemPrices.PricesRow currRow in prices.Rows)
+			IPriceProvider provider = MarketPricesDB.CreateEveCentralProvider(m_Engine.m_Settings.Options[0].PriceHistoryDays);
+
+			PriceSettings settings	= new PriceSettings();
+			settings.Provider		= PriceProviders.EveCentral;
+			settings.RegionID		= regionID;
+			settings.SolarID		= 0;
+			settings.StationID		= 0;
+			settings.Type			= (PriceTypes)priceType;
+
+			// @@@@ Check for exceptions?
+			List<PriceRecord> prices = provider.GetPrices(loadPricesFor, settings);
+			foreach (PriceRecord currRecord in prices)
 			{
-				ItemRecord currItem = new ItemRecord(currRow.TypeID);
-				MarketPricesDB.ParsePricesRow(currRow, currItem);
-			
-				switch ((EveTypeIDs)currRow.TypeID)
+				if (!currRecord.Settings.Matches(settings))
+					continue;
+
+				switch ((EveTypeIDs)currRecord.TypeID)
 				{
 				case EveTypeIDs.Tritanium:
-					TxtTritanium.Value	= (decimal)currItem.Prices[priceType];
+					TxtTritanium.Value	= (decimal)currRecord.Price;
 					break;
 				case EveTypeIDs.Pyerite:
-					TxtPyerite.Value	= (decimal)currItem.Prices[priceType];
+					TxtPyerite.Value	= (decimal)currRecord.Price;
 					break;
 				case EveTypeIDs.Mexallon:
-					TxtMexallon.Value	= (decimal)currItem.Prices[priceType];
+					TxtMexallon.Value	= (decimal)currRecord.Price;
 					break;
 				case EveTypeIDs.Isogen:
-					TxtIsogen.Value		= (decimal)currItem.Prices[priceType];
+					TxtIsogen.Value		= (decimal)currRecord.Price;
 					break;
 				case EveTypeIDs.Noxcium:
-					TxtNoxcium.Value	= (decimal)currItem.Prices[priceType];
+					TxtNoxcium.Value	= (decimal)currRecord.Price;
 					break;
 				case EveTypeIDs.Zydrine:
-					TxtZydrine.Value	= (decimal)currItem.Prices[priceType];
+					TxtZydrine.Value	= (decimal)currRecord.Price;
 					break;
 				case EveTypeIDs.Megacyte:
-					TxtMegacyte.Value	= (decimal)currItem.Prices[priceType];
+					TxtMegacyte.Value	= (decimal)currRecord.Price;
 					break;
 				case EveTypeIDs.Morphite:
-					TxtMorphite.Value	= (decimal)currItem.Prices[priceType];
+					TxtMorphite.Value	= (decimal)currRecord.Price;
 					break;
 				}
 			}

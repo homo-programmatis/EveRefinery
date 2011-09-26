@@ -15,35 +15,28 @@
         <xs:element name="Prices" msdata:Locale="en-US" msprop:Generator_UserTableName="Prices" msprop:Generator_RowDeletedName="PricesRowDeleted" msprop:Generator_RowChangedName="PricesRowChanged" msprop:Generator_RowClassName="PricesRow" msprop:Generator_RowChangingName="PricesRowChanging" msprop:Generator_RowEvArgName="PricesRowChangeEvent" msprop:Generator_RowEvHandlerName="PricesRowChangeEventHandler" msprop:Generator_TableClassName="PricesDataTable" msprop:Generator_TableVarName="tablePrices" msprop:Generator_RowDeletingName="PricesRowDeleting" msprop:Generator_TablePropName="Prices">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="TypeID" msprop:Generator_UserColumnName="TypeID" msprop:Generator_ColumnVarNameInTable="columnTypeID" msprop:Generator_ColumnPropNameInRow="TypeID" msprop:Generator_ColumnPropNameInTable="TypeIDColumn" type="xs:unsignedInt" />
+              <xs:element name="ProviderID" msprop:Generator_UserColumnName="ProviderID" msprop:Generator_ColumnVarNameInTable="columnProviderID" msprop:Generator_ColumnPropNameInRow="ProviderID" msprop:Generator_ColumnPropNameInTable="ProviderIDColumn" type="xs:unsignedInt" />
               <xs:element name="RegionID" msprop:Generator_UserColumnName="RegionID" msprop:Generator_ColumnVarNameInTable="columnRegionID" msprop:Generator_ColumnPropNameInRow="RegionID" msprop:Generator_ColumnPropNameInTable="RegionIDColumn" type="xs:unsignedInt" />
-              <xs:element name="AllAvg" msprop:Generator_UserColumnName="AllAvg" msprop:Generator_ColumnVarNameInTable="columnAllAvg" msprop:Generator_ColumnPropNameInRow="AllAvg" msprop:Generator_ColumnPropNameInTable="AllAvgColumn" type="xs:double" minOccurs="0" />
-              <xs:element name="AllMax" msprop:Generator_UserColumnName="AllMax" msprop:Generator_ColumnVarNameInTable="columnAllMax" msprop:Generator_ColumnPropNameInRow="AllMax" msprop:Generator_ColumnPropNameInTable="AllMaxColumn" type="xs:double" minOccurs="0" />
-              <xs:element name="AllMin" msprop:Generator_UserColumnName="AllMin" msprop:Generator_ColumnVarNameInTable="columnAllMin" msprop:Generator_ColumnPropNameInRow="AllMin" msprop:Generator_ColumnPropNameInTable="AllMinColumn" type="xs:double" minOccurs="0" />
-              <xs:element name="AllMedian" msprop:Generator_UserColumnName="AllMedian" msprop:Generator_ColumnVarNameInTable="columnAllMedian" msprop:Generator_ColumnPropNameInRow="AllMedian" msprop:Generator_ColumnPropNameInTable="AllMedianColumn" type="xs:double" minOccurs="0" />
-              <xs:element name="AllStdDev" msprop:Generator_UserColumnName="AllStdDev" msprop:Generator_ColumnVarNameInTable="columnAllStdDev" msprop:Generator_ColumnPropNameInRow="AllStdDev" msprop:Generator_ColumnPropNameInTable="AllStdDevColumn" type="xs:double" minOccurs="0" />
-              <xs:element name="AllVolume" msprop:Generator_UserColumnName="AllVolume" msprop:Generator_ColumnVarNameInTable="columnAllVolume" msprop:Generator_ColumnPropNameInRow="AllVolume" msprop:Generator_ColumnPropNameInTable="AllVolumeColumn" type="xs:unsignedLong" minOccurs="0" />
-              <xs:element name="BuyAvg" msprop:Generator_UserColumnName="BuyAvg" msprop:Generator_ColumnVarNameInTable="columnBuyAvg" msprop:Generator_ColumnPropNameInRow="BuyAvg" msprop:Generator_ColumnPropNameInTable="BuyAvgColumn" type="xs:double" minOccurs="0" />
-              <xs:element name="BuyMax" msprop:Generator_UserColumnName="BuyMax" msprop:Generator_ColumnVarNameInTable="columnBuyMax" msprop:Generator_ColumnPropNameInRow="BuyMax" msprop:Generator_ColumnPropNameInTable="BuyMaxColumn" type="xs:double" minOccurs="0" />
-              <xs:element name="BuyMin" msprop:Generator_UserColumnName="BuyMin" msprop:Generator_ColumnVarNameInTable="columnBuyMin" msprop:Generator_ColumnPropNameInRow="BuyMin" msprop:Generator_ColumnPropNameInTable="BuyMinColumn" type="xs:double" minOccurs="0" />
-              <xs:element name="BuyMedian" msprop:Generator_UserColumnName="BuyMedian" msprop:Generator_ColumnVarNameInTable="columnBuyMedian" msprop:Generator_ColumnPropNameInRow="BuyMedian" msprop:Generator_ColumnPropNameInTable="BuyMedianColumn" type="xs:double" minOccurs="0" />
-              <xs:element name="BuyStdDev" msprop:Generator_UserColumnName="BuyStdDev" msprop:Generator_ColumnVarNameInTable="columnBuyStdDev" msprop:Generator_ColumnPropNameInRow="BuyStdDev" msprop:Generator_ColumnPropNameInTable="BuyStdDevColumn" type="xs:double" minOccurs="0" />
-              <xs:element name="BuyVolume" msprop:Generator_UserColumnName="BuyVolume" msprop:Generator_ColumnVarNameInTable="columnBuyVolume" msprop:Generator_ColumnPropNameInRow="BuyVolume" msprop:Generator_ColumnPropNameInTable="BuyVolumeColumn" type="xs:unsignedLong" minOccurs="0" />
-              <xs:element name="SellAvg" msprop:Generator_UserColumnName="SellAvg" msprop:Generator_ColumnVarNameInTable="columnSellAvg" msprop:Generator_ColumnPropNameInRow="SellAvg" msprop:Generator_ColumnPropNameInTable="SellAvgColumn" type="xs:double" minOccurs="0" />
-              <xs:element name="SellMax" msprop:Generator_UserColumnName="SellMax" msprop:Generator_ColumnVarNameInTable="columnSellMax" msprop:Generator_ColumnPropNameInRow="SellMax" msprop:Generator_ColumnPropNameInTable="SellMaxColumn" type="xs:double" minOccurs="0" />
-              <xs:element name="SellMin" msprop:Generator_UserColumnName="SellMin" msprop:Generator_ColumnVarNameInTable="columnSellMin" msprop:Generator_ColumnPropNameInRow="SellMin" msprop:Generator_ColumnPropNameInTable="SellMinColumn" type="xs:double" minOccurs="0" />
-              <xs:element name="SellMedian" msprop:Generator_UserColumnName="SellMedian" msprop:Generator_ColumnVarNameInTable="columnSellMedian" msprop:Generator_ColumnPropNameInRow="SellMedian" msprop:Generator_ColumnPropNameInTable="SellMedianColumn" type="xs:double" minOccurs="0" />
-              <xs:element name="SellStdDev" msprop:Generator_UserColumnName="SellStdDev" msprop:Generator_ColumnVarNameInTable="columnSellStdDev" msprop:Generator_ColumnPropNameInRow="SellStdDev" msprop:Generator_ColumnPropNameInTable="SellStdDevColumn" type="xs:double" minOccurs="0" />
-              <xs:element name="SellVolume" msprop:Generator_UserColumnName="SellVolume" msprop:Generator_ColumnVarNameInTable="columnSellVolume" msprop:Generator_ColumnPropNameInRow="SellVolume" msprop:Generator_ColumnPropNameInTable="SellVolumeColumn" type="xs:unsignedLong" minOccurs="0" />
+              <xs:element name="SolarID" msprop:Generator_UserColumnName="SolarID" msprop:Generator_ColumnVarNameInTable="columnSolarID" msprop:Generator_ColumnPropNameInRow="SolarID" msprop:Generator_ColumnPropNameInTable="SolarIDColumn" type="xs:unsignedInt" />
+              <xs:element name="StationID" msprop:Generator_UserColumnName="StationID" msprop:Generator_ColumnVarNameInTable="columnStationID" msprop:Generator_ColumnPropNameInRow="StationID" msprop:Generator_ColumnPropNameInTable="StationIDColumn" type="xs:unsignedInt" />
+              <xs:element name="TypeID" msprop:Generator_UserColumnName="TypeID" msprop:Generator_ColumnVarNameInTable="columnTypeID" msprop:Generator_ColumnPropNameInRow="TypeID" msprop:Generator_ColumnPropNameInTable="TypeIDColumn" type="xs:unsignedInt" />
+              <xs:element name="Price" msprop:Generator_UserColumnName="Price" msprop:Generator_ColumnVarNameInTable="columnPrice" msprop:Generator_ColumnPropNameInRow="Price" msprop:Generator_ColumnPropNameInTable="PriceColumn" type="xs:double" minOccurs="0" />
               <xs:element name="UpdateTime" msprop:Generator_UserColumnName="UpdateTime" msprop:Generator_ColumnPropNameInRow="UpdateTime" msprop:Generator_ColumnVarNameInTable="columnUpdateTime" msprop:Generator_ColumnPropNameInTable="UpdateTimeColumn" type="xs:unsignedLong" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
       </xs:choice>
     </xs:complexType>
+    <xs:unique name="Constraint111">
+      <xs:selector xpath=".//mstns:Prices" />
+      <xs:field xpath="mstns:RegionID" />
+    </xs:unique>
     <xs:unique name="Constraint1" msdata:PrimaryKey="true">
       <xs:selector xpath=".//mstns:Prices" />
+      <xs:field xpath="mstns:ProviderID" />
       <xs:field xpath="mstns:TypeID" />
+      <xs:field xpath="mstns:StationID" />
+      <xs:field xpath="mstns:SolarID" />
       <xs:field xpath="mstns:RegionID" />
     </xs:unique>
   </xs:element>

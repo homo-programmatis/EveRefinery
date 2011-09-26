@@ -64,7 +64,7 @@ namespace EveRefinery
 		Int32			m_SortDirection	= 1;
 		MainListItem[]	m_ItemList;
 		MainListItem	m_TotalsItem;
-		bool[]			m_TotalsItem_InvalidPrices;
+		bool			m_TotalsItem_BadPrices	= false;
 		AssetsMap		m_SelectedAssets;
 		ListUpdates		m_RunningListUpdates;
 		
@@ -146,7 +146,7 @@ namespace EveRefinery
 			itemRecord.MarketGroupID	= 1;
 			itemRecord.HasUnknownMaterials = false;
 			itemRecord.BatchSize		= 1;
-			itemRecord.PricesDate		= DateTime.UtcNow;
+			itemRecord.PriceDate		= DateTime.UtcNow;
 			
 			return itemRecord;
 		}
@@ -312,16 +312,10 @@ namespace EveRefinery
 				subitems.Add(new ListViewItem.ListViewSubItem());
 			}
 			
-			bool isInvalidPrice = false;
-			if (listItem.TypeID == SpecialTypeID_Totals)
-			{
-				UInt32 priceType = m_Engine.m_Settings.Options[0].PriceType;
-				if (m_TotalsItem_InvalidPrices[priceType])
-				{
-					isInvalidPrice = true;
-					columnData[(int)Columns.PriceDelta] = ItemPrice.Empty;
-				}
-			}
+			bool isTotals		= (listItem.TypeID == SpecialTypeID_Totals);
+			bool isInvalidPrice = isTotals && m_TotalsItem_BadPrices;
+			if (isInvalidPrice)
+				columnData[(int)Columns.PriceDelta] = ItemPrice.Empty;
 
 			if (isInvalidPrice || !ItemPrice.IsValidPrice((double)columnData[(int)Columns.MarketPrice]))
 				a_QueryArgs.Item.BackColor = Color.White;
@@ -559,7 +553,7 @@ namespace EveRefinery
 			LoadSettings_Toolbars();
 			LoadSettings_Generic();
 			
-			LoadMarketPrices(false);
+			LoadMarketPrices(false, false);
 			CheckMineralPricesExpiry();
 			MakeRefineryItemList();
 			UpdateStatus();
@@ -567,11 +561,21 @@ namespace EveRefinery
 			TmrUpdate.Enabled = true;
 		}
 		
-		private void LoadMarketPrices(bool a_Silent)
+		private void LoadMarketPrices(bool a_Silent, bool a_DeleteOld)
 		{
 			try
 			{
-				m_MarketPrices.LoadPrices(m_Engine.m_Settings.Options[0].PricesRegion, a_Silent, m_Engine.m_OptionsCache.PriceExpiryDays, m_Engine.m_Settings.Options[0].PriceHistoryDays);
+				PriceSettings settings	= new PriceSettings();
+				settings.Provider		= PriceProviders.EveCentral;
+				settings.RegionID		= m_Engine.m_Settings.Options[0].PricesRegion;
+				settings.SolarID		= 0;
+				settings.StationID		= 0;
+				settings.Type			= 0;
+
+				if (a_DeleteOld)
+					m_MarketPrices.DropPrices(settings);
+
+				m_MarketPrices.LoadPrices(settings, m_Engine.m_OptionsCache.PriceExpiryDays, m_Engine.m_Settings.Options[0].PriceHistoryDays, a_Silent);
 			}
 			catch (System.Exception a_Exception)
 			{
@@ -879,7 +883,7 @@ namespace EveRefinery
 		private void TlbCmbPriceRegion_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_Engine.m_Settings.Options[0].PricesRegion = ((TextItemWithUInt32)TlbCmbPriceRegion.SelectedItem).Data;
-			LoadMarketPrices(false);
+			LoadMarketPrices(false, false);
 		}
 
 		private void TlbCmbCharacter_SelectedIndexChanging(object sender, CancelEventArgs e)
@@ -929,9 +933,7 @@ namespace EveRefinery
 			m_TotalsItem.Quantity	= 0;
 			
 			ItemRecord totalRecord	= m_TotalsItem.ItemData;
-
-			bool allPricesInvalid	= false;
-			m_TotalsItem_InvalidPrices = new bool[(UInt32)PriceTypes.MaxPriceTypes];
+			m_TotalsItem_BadPrices	= false;
 			
 			foreach (MainListItem listItem in m_ItemList)
 			{
@@ -945,35 +947,19 @@ namespace EveRefinery
 					m_TotalsItem.Quantity			+= listItem.Quantity;
 					m_TotalsItem.ItemData.Volume	+= currRecord.Volume;
 
-					if (!currRecord.IsPricesOk(m_Engine.m_OptionsCache.PriceExpiryDays))
-						allPricesInvalid = true;
-					else
-					{
-						for (int i = 0; i < currRecord.Prices.Count(); i++)
-						{
-							if (currRecord.Prices[i] == 0)
-							{
-								m_TotalsItem_InvalidPrices[i] = true;
-								continue;
-							}
+					bool isPriceExpired	= !currRecord.IsPricesOk(m_Engine.m_OptionsCache.PriceExpiryDays);
+					bool isZeroPrice	= (currRecord.Price == 0);
 
-							totalRecord.Prices[i] += listItem.Quantity * currRecord.Prices[i];
-						}
-					}
+					if (isPriceExpired || !isZeroPrice)
+						m_TotalsItem_BadPrices = true;
+					else
+						totalRecord.Price += listItem.Quantity * currRecord.Price;
 					
 					for (int i = 0; i < currRecord.MaterialAmount.Count(); i++)
 					{
 						double currAmount = m_Engine.GetItemRefinedMaterial(currRecord, listItem.Quantity, (Materials)i);
 						totalRecord.MaterialAmount[i] += currAmount;
 					}
-				}
-			}
-			
-			if (allPricesInvalid)
-			{
-				for (int i = 0; i < m_TotalsItem_InvalidPrices.Count(); i++)
-				{
-					m_TotalsItem_InvalidPrices[i] = true;
 				}
 			}
 		}
@@ -983,9 +969,7 @@ namespace EveRefinery
 			if (DialogResult.Yes != MessageBox.Show("Do you really want to reset and update prices for that region?", Application.ProductName, MessageBoxButtons.YesNo))
 				return;
 		
-			UInt32 regionID = m_Engine.m_Settings.Options[0].PricesRegion;
-			m_MarketPrices.DropPrices(regionID);
-			LoadMarketPrices(true);
+			LoadMarketPrices(true, true);
 		}
 
 		private void TlbCmbContainer_SelectedIndexChanged(object sender, EventArgs e)

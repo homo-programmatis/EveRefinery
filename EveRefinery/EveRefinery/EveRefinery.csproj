@@ -136,6 +136,7 @@
     <Compile Include="FrmSettings.Designer.cs">
       <DependentUpon>FrmSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="IPriceProvider.cs" />
     <Compile Include="ItemPrices.cs">
       <DependentUpon>ItemPrices.xsd</DependentUpon>
       <SubType>Component</SubType>
@@ -153,6 +154,7 @@
     </Compile>
     <Compile Include="ItemsDB.cs" />
     <Compile Include="MarketPricesDB.cs" />
+    <Compile Include="PriceProviderEveCentral.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AboutBox.resx">
