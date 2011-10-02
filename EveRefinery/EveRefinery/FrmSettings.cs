@@ -466,10 +466,10 @@ namespace EveRefinery
 			List<EveRegion> regions = m_EveDatabase.GetRegions();
 			foreach (EveRegion currRegion in regions)
 			{
-				TextItemWithUInt32 newItem = new TextItemWithUInt32(currRegion.Name, currRegion.RegionID);
+				TextItemWithUInt32 newItem = new TextItemWithUInt32(currRegion.Name, currRegion.ID);
 				currCombo.Items.Add(newItem);
 
-				if (currRegion.RegionID == m_Engine.m_Settings.Options[0].MineralPricesRegion)
+				if (currRegion.ID == m_Engine.m_Settings.Options[0].MineralPricesRegion)
 					currCombo.SelectedItem = newItem;
 			}
 		}

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace EveRefinery
 {
-	enum PriceProviders
+	public enum PriceProviders
 	{
 		EveCentral,
 	}
 
-	struct PriceSettings
+	public struct PriceSettings
 	{
 		public PriceProviders		Provider;
 		public UInt32				RegionID;
@@ -27,7 +27,7 @@ namespace EveRefinery
 		}
 	}
 
-	class PriceRecord
+	public class PriceRecord
 	{
 		public PriceSettings		Settings;
 		public UInt32				TypeID;
@@ -35,7 +35,7 @@ namespace EveRefinery
 		public UInt64				UpdateTime;
 	}
 
-	interface IPriceProvider
+	public interface IPriceProvider
 	{
 		List<PriceRecord>			GetPrices(List<UInt32> a_TypeIDs, PriceSettings a_Settings);
 	}

@@ -124,6 +124,12 @@
     <Compile Include="FrmInvalidDB.Designer.cs">
       <DependentUpon>FrmInvalidDB.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmPriceType.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmPriceType.Designer.cs">
+      <DependentUpon>FrmPriceType.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmRefineCalc.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -165,6 +171,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmInvalidDB.resx">
       <DependentUpon>FrmInvalidDB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmPriceType.resx">
+      <DependentUpon>FrmPriceType.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmRefineCalc.resx">
       <DependentUpon>FrmRefineCalc.cs</DependentUpon>

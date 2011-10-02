@@ -407,7 +407,7 @@ namespace EveRefinery
 			List<EveRegion> regions = m_EveDatabase.GetRegions();
 			foreach (EveRegion currRegion in regions)
 			{
-				newItem = new TextItemWithUInt32(currRegion.Name, currRegion.RegionID);
+				newItem = new TextItemWithUInt32(currRegion.Name, currRegion.ID);
 				currCombo.Items.Add(newItem);
 
 				if (newItem.Data == m_Engine.m_Settings.Options[0].PricesRegion)

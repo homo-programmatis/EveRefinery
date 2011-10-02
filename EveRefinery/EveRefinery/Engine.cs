@@ -593,15 +593,17 @@ namespace EveRefinery
 				return;
 			}
 			
-			string itemText = comboBox.Items[a_Args.Index].ToString();
-			string[] substrings = itemText.Split(new Char[]{'\t'}, 2);
+			string itemText		= comboBox.Items[a_Args.Index].ToString();
+			string[] substrings	= itemText.Split(new Char[]{'\t'}, 2);
+			SizeF tabSize		= a_Args.Graphics.MeasureString("SellMedian___", a_Args.Font);
 
-			Rectangle rect1 = Rectangle.FromLTRB(a_Args.Bounds.Left, a_Args.Bounds.Top, a_Args.Bounds.Left + comboBox.Width, a_Args.Bounds.Bottom);
+			Rectangle rect1 = Rectangle.FromLTRB(a_Args.Bounds.Left, a_Args.Bounds.Top, a_Args.Bounds.Left + (int)tabSize.Width, a_Args.Bounds.Bottom);
 			Rectangle rect2 = Rectangle.FromLTRB(rect1.Right, a_Args.Bounds.Top, a_Args.Bounds.Right, a_Args.Bounds.Bottom);
-
 			a_Args.Graphics.DrawString(substrings[0], a_Args.Font, new SolidBrush(a_Args.ForeColor), rect1);
-			
-			if (substrings.Count() > 1)
+
+			bool isEditPart = (a_Args.State & DrawItemState.ComboBoxEdit) == DrawItemState.ComboBoxEdit;
+			bool hasHint	= (substrings.Count() > 1);
+			if (hasHint && !isEditPart)
 				a_Args.Graphics.DrawString(substrings[1], a_Args.Font, new SolidBrush(a_Args.ForeColor), rect2);
 		}
 		

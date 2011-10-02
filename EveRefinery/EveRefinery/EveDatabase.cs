@@ -13,10 +13,16 @@ namespace EveRefinery
 {
 	public class EveRegion
 	{
-		public UInt32	RegionID;
+		public UInt32	ID;
 		public String	Name;
 	}
-	
+
+	public class EveSolarSystem
+	{
+		public UInt32	ID;
+		public String	Name;
+	}
+
 	public enum EveTypeIDs
 	{
 		Tritanium	= 34,
@@ -231,8 +237,8 @@ namespace EveRefinery
 			while (dataReader.Read())
 			{
 				EveRegion newRegion = new EveRegion();
-				newRegion.RegionID	= Convert.ToUInt32(dataReader["regionID"]);
-				newRegion.Name		= Convert.ToString(dataReader["regionName"]);
+				newRegion.ID		= (UInt32)dataReader.GetInt32(0);
+				newRegion.Name		= dataReader.GetString(1);
 
 				// There's a bunch of "Unknown" regions in DB, just skip them
 				if (newRegion.Name == "Unknown")
@@ -241,6 +247,27 @@ namespace EveRefinery
 				result.Add(newRegion);
 			}
 			
+			return result;
+		}
+
+		public List<EveSolarSystem> GetSolarSystems(UInt32 a_RegionID)
+		{
+			List<EveSolarSystem> result = new List<EveSolarSystem>();
+
+			String sqlText = "SELECT solarSystemID, solarSystemName FROM " + Tables.mapSolarSystems + " WHERE regionID=@RegionID";
+			SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, m_DbConnection);
+			sqlCommand.Parameters.AddWithValue("@RegionID", a_RegionID);
+			
+			SQLiteDataReader dataReader = sqlCommand.ExecuteReader();
+			while (dataReader.Read())
+			{
+				EveSolarSystem newSystem = new EveSolarSystem();
+				newSystem.ID		= (UInt32)dataReader.GetInt32(0);
+				newSystem.Name		= dataReader.GetString(1);
+
+				result.Add(newSystem);
+			}
+
 			return result;
 		}
 
