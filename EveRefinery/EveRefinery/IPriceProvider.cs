@@ -14,7 +14,7 @@ namespace EveRefinery
 		public UInt32				RegionID;
 		public UInt32				SolarID;
 		public UInt32				StationID;
-		public PriceTypes			Type;
+		public PriceTypes			PriceType;
 
 		public bool Matches(PriceSettings a_Rhs)
 		{
@@ -23,7 +23,7 @@ namespace EveRefinery
 				(RegionID	== a_Rhs.RegionID) && 
 				(SolarID	== a_Rhs.SolarID) &&
 				(StationID	== a_Rhs.StationID) &&
-				(Type		== a_Rhs.Type);
+				(PriceType	== a_Rhs.PriceType);
 		}
 	}
 

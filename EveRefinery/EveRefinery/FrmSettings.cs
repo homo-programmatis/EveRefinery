@@ -496,7 +496,7 @@ namespace EveRefinery
 			settings.RegionID		= regionID;
 			settings.SolarID		= 0;
 			settings.StationID		= 0;
-			settings.Type			= (PriceTypes)priceType;
+			settings.PriceType		= (PriceTypes)priceType;
 
 			// @@@@ Check for exceptions?
 			List<PriceRecord> prices = provider.GetPrices(loadPricesFor, settings);

@@ -570,7 +570,7 @@ namespace EveRefinery
 				settings.RegionID		= m_Engine.m_Settings.Options[0].PricesRegion;
 				settings.SolarID		= 0;
 				settings.StationID		= 0;
-				settings.Type			= 0;
+				settings.PriceType		= 0;
 
 				if (a_DeleteOld)
 					m_MarketPrices.DropPrices(settings);

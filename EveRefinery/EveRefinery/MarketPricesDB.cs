@@ -48,13 +48,15 @@ namespace EveRefinery
 				"(" + pricesTable.ProviderIDColumn.ColumnName	+ " = @ProviderID) AND " +
 				"(" + pricesTable.RegionIDColumn.ColumnName		+ " = @RegionID) AND " +
 				"(" + pricesTable.SolarIDColumn.ColumnName		+ " = @SolarID) AND " +
-				"(" + pricesTable.StationIDColumn.ColumnName	+ " = @StationID)";
+				"(" + pricesTable.StationIDColumn.ColumnName	+ " = @StationID) AND" +
+				"(" + pricesTable.PriceTypeColumn.ColumnName	+ " = @PriceType)";
 
 			SQLiteCommand sqlCommand = new SQLiteCommand(selectSQL, m_DbConnection);
 			sqlCommand.Parameters.AddWithValue("@ProviderID",	(UInt32)a_Settings.Provider);
 			sqlCommand.Parameters.AddWithValue("@RegionID",		a_Settings.RegionID);
 			sqlCommand.Parameters.AddWithValue("@SolarID",		a_Settings.SolarID);
 			sqlCommand.Parameters.AddWithValue("@StationID",	a_Settings.StationID);
+			sqlCommand.Parameters.AddWithValue("@PriceType",	(UInt32)a_Settings.PriceType);
 
 			SQLiteDataAdapter adapter = new SQLiteDataAdapter(sqlCommand);
 			adapter.Fill(pricesTable);
@@ -74,16 +76,18 @@ namespace EveRefinery
 			ItemPrices.PricesDataTable pricesTable = new ItemPrices.PricesDataTable();
 
 			string selectSQL = "Delete from " + pricesTable.TableName + " where " + 
-				"(" + pricesTable.ProviderIDColumn.ColumnName	+ " = @ProviderID) AND" +
-				"(" + pricesTable.RegionIDColumn.ColumnName		+ " = @RegionID) AND" +
-				"(" + pricesTable.SolarIDColumn.ColumnName		+ " = @SolarID) AND" +
-				"(" + pricesTable.StationIDColumn.ColumnName	+ " = @StationID)";
+				"(" + pricesTable.ProviderIDColumn.ColumnName	+ " = @ProviderID) AND " +
+				"(" + pricesTable.RegionIDColumn.ColumnName		+ " = @RegionID) AND " +
+				"(" + pricesTable.SolarIDColumn.ColumnName		+ " = @SolarID) AND " +
+				"(" + pricesTable.StationIDColumn.ColumnName	+ " = @StationID) AND" +
+				"(" + pricesTable.PriceTypeColumn.ColumnName	+ " = @PriceType)";
 
 			SQLiteCommand sqlCommand = new SQLiteCommand(selectSQL, m_DbConnection);
 			sqlCommand.Parameters.AddWithValue("@ProviderID",	(UInt32)a_Settings.Provider);
 			sqlCommand.Parameters.AddWithValue("@RegionID",		a_Settings.RegionID);
 			sqlCommand.Parameters.AddWithValue("@SolarID",		a_Settings.SolarID);
 			sqlCommand.Parameters.AddWithValue("@StationID",	a_Settings.StationID);
+			sqlCommand.Parameters.AddWithValue("@PriceType",	(UInt32)a_Settings.PriceType);
 
 			sqlCommand.ExecuteNonQuery();
 		}
@@ -112,7 +116,8 @@ namespace EveRefinery
 			a_DbRecord.RegionID		= a_PriceRecord.Settings.RegionID;
 			a_DbRecord.SolarID		= a_PriceRecord.Settings.SolarID;
 			a_DbRecord.StationID	= a_PriceRecord.Settings.StationID;
-			a_DbRecord.TypeID		= (UInt32)a_PriceRecord.Settings.Type;
+			a_DbRecord.PriceType	= (UInt32)a_PriceRecord.Settings.PriceType;
+			a_DbRecord.TypeID		= a_PriceRecord.TypeID;
 			a_DbRecord.Price		= a_PriceRecord.Price;
 			a_DbRecord.UpdateTime	= a_PriceRecord.UpdateTime;
 		}

@@ -19,6 +19,7 @@
               <xs:element name="RegionID" msprop:Generator_UserColumnName="RegionID" msprop:Generator_ColumnVarNameInTable="columnRegionID" msprop:Generator_ColumnPropNameInRow="RegionID" msprop:Generator_ColumnPropNameInTable="RegionIDColumn" type="xs:unsignedInt" />
               <xs:element name="SolarID" msprop:Generator_UserColumnName="SolarID" msprop:Generator_ColumnVarNameInTable="columnSolarID" msprop:Generator_ColumnPropNameInRow="SolarID" msprop:Generator_ColumnPropNameInTable="SolarIDColumn" type="xs:unsignedInt" />
               <xs:element name="StationID" msprop:Generator_UserColumnName="StationID" msprop:Generator_ColumnVarNameInTable="columnStationID" msprop:Generator_ColumnPropNameInRow="StationID" msprop:Generator_ColumnPropNameInTable="StationIDColumn" type="xs:unsignedInt" />
+              <xs:element name="PriceType" msprop:Generator_UserColumnName="PriceType" msprop:Generator_ColumnVarNameInTable="columnPriceType" msprop:Generator_ColumnPropNameInRow="PriceType" msprop:Generator_ColumnPropNameInTable="PriceTypeColumn" type="xs:unsignedInt" />
               <xs:element name="TypeID" msprop:Generator_UserColumnName="TypeID" msprop:Generator_ColumnVarNameInTable="columnTypeID" msprop:Generator_ColumnPropNameInRow="TypeID" msprop:Generator_ColumnPropNameInTable="TypeIDColumn" type="xs:unsignedInt" />
               <xs:element name="Price" msprop:Generator_UserColumnName="Price" msprop:Generator_ColumnVarNameInTable="columnPrice" msprop:Generator_ColumnPropNameInRow="Price" msprop:Generator_ColumnPropNameInTable="PriceColumn" type="xs:double" minOccurs="0" />
               <xs:element name="UpdateTime" msprop:Generator_UserColumnName="UpdateTime" msprop:Generator_ColumnPropNameInRow="UpdateTime" msprop:Generator_ColumnVarNameInTable="columnUpdateTime" msprop:Generator_ColumnPropNameInTable="UpdateTimeColumn" type="xs:unsignedLong" minOccurs="0" />
@@ -27,14 +28,11 @@
         </xs:element>
       </xs:choice>
     </xs:complexType>
-    <xs:unique name="Constraint111">
-      <xs:selector xpath=".//mstns:Prices" />
-      <xs:field xpath="mstns:RegionID" />
-    </xs:unique>
     <xs:unique name="Constraint1" msdata:PrimaryKey="true">
       <xs:selector xpath=".//mstns:Prices" />
       <xs:field xpath="mstns:ProviderID" />
       <xs:field xpath="mstns:TypeID" />
+      <xs:field xpath="mstns:PriceType" />
       <xs:field xpath="mstns:StationID" />
       <xs:field xpath="mstns:SolarID" />
       <xs:field xpath="mstns:RegionID" />

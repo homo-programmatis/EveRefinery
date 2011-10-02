@@ -271,6 +271,8 @@ namespace EveRefinery {
             
             private global::System.Data.DataColumn columnStationID;
             
+            private global::System.Data.DataColumn columnPriceType;
+            
             private global::System.Data.DataColumn columnTypeID;
             
             private global::System.Data.DataColumn columnPrice;
@@ -336,6 +338,13 @@ namespace EveRefinery {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn PriceTypeColumn {
+                get {
+                    return this.columnPriceType;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             public global::System.Data.DataColumn TypeIDColumn {
                 get {
                     return this.columnTypeID;
@@ -385,13 +394,14 @@ namespace EveRefinery {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public PricesRow AddPricesRow(uint ProviderID, uint RegionID, uint SolarID, uint StationID, uint TypeID, double Price, ulong UpdateTime) {
+            public PricesRow AddPricesRow(uint ProviderID, uint RegionID, uint SolarID, uint StationID, uint PriceType, uint TypeID, double Price, ulong UpdateTime) {
                 PricesRow rowPricesRow = ((PricesRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ProviderID,
                         RegionID,
                         SolarID,
                         StationID,
+                        PriceType,
                         TypeID,
                         Price,
                         UpdateTime};
@@ -401,10 +411,11 @@ namespace EveRefinery {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public PricesRow FindByProviderIDTypeIDStationIDSolarIDRegionID(uint ProviderID, uint TypeID, uint StationID, uint SolarID, uint RegionID) {
+            public PricesRow FindByProviderIDTypeIDPriceTypeStationIDSolarIDRegionID(uint ProviderID, uint TypeID, uint PriceType, uint StationID, uint SolarID, uint RegionID) {
                 return ((PricesRow)(this.Rows.Find(new object[] {
                             ProviderID,
                             TypeID,
+                            PriceType,
                             StationID,
                             SolarID,
                             RegionID})));
@@ -428,6 +439,7 @@ namespace EveRefinery {
                 this.columnRegionID = base.Columns["RegionID"];
                 this.columnSolarID = base.Columns["SolarID"];
                 this.columnStationID = base.Columns["StationID"];
+                this.columnPriceType = base.Columns["PriceType"];
                 this.columnTypeID = base.Columns["TypeID"];
                 this.columnPrice = base.Columns["Price"];
                 this.columnUpdateTime = base.Columns["UpdateTime"];
@@ -443,25 +455,26 @@ namespace EveRefinery {
                 base.Columns.Add(this.columnSolarID);
                 this.columnStationID = new global::System.Data.DataColumn("StationID", typeof(uint), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnStationID);
+                this.columnPriceType = new global::System.Data.DataColumn("PriceType", typeof(uint), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPriceType);
                 this.columnTypeID = new global::System.Data.DataColumn("TypeID", typeof(uint), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnTypeID);
                 this.columnPrice = new global::System.Data.DataColumn("Price", typeof(double), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnPrice);
                 this.columnUpdateTime = new global::System.Data.DataColumn("UpdateTime", typeof(ulong), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnUpdateTime);
-                this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint111", new global::System.Data.DataColumn[] {
-                                this.columnRegionID}, false));
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnProviderID,
                                 this.columnTypeID,
+                                this.columnPriceType,
                                 this.columnStationID,
                                 this.columnSolarID,
                                 this.columnRegionID}, true));
                 this.columnProviderID.AllowDBNull = false;
                 this.columnRegionID.AllowDBNull = false;
-                this.columnRegionID.Unique = true;
                 this.columnSolarID.AllowDBNull = false;
                 this.columnStationID.AllowDBNull = false;
+                this.columnPriceType.AllowDBNull = false;
                 this.columnTypeID.AllowDBNull = false;
                 this.Locale = new global::System.Globalization.CultureInfo("en-US");
             }
@@ -632,6 +645,16 @@ namespace EveRefinery {
                 }
                 set {
                     this[this.tablePrices.StationIDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public uint PriceType {
+                get {
+                    return ((uint)(this[this.tablePrices.PriceTypeColumn]));
+                }
+                set {
+                    this[this.tablePrices.PriceTypeColumn] = value;
                 }
             }
             

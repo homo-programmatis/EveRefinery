@@ -44,12 +44,12 @@ namespace EveRefinery
 
 		protected static PriceRecord ComposePrice(XmlNode a_ItemNode, PriceRecord a_Template, PriceTypes a_Type)
 		{
-			PriceRecord result	= new PriceRecord();
-			result.Settings		= a_Template.Settings;
-			result.Settings.Type	= a_Type;
-			result.Price		= ReadInnerDouble(a_ItemNode);
-			result.TypeID		= a_Template.TypeID;
-			result.UpdateTime	= a_Template.UpdateTime;
+			PriceRecord result			= new PriceRecord();
+			result.Settings				= a_Template.Settings;
+			result.Settings.PriceType	= a_Type;
+			result.Price				= ReadInnerDouble(a_ItemNode);
+			result.TypeID				= a_Template.TypeID;
+			result.UpdateTime			= a_Template.UpdateTime;
 
 			return result;
 		}
