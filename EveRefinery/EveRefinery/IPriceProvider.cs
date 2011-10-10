@@ -25,6 +25,11 @@ namespace EveRefinery
 				(StationID	== a_Rhs.StationID) &&
 				(PriceType	== a_Rhs.PriceType);
 		}
+
+		public String GetHintText(EveDatabase a_Database)
+		{
+			return PriceType.ToString() + " - " + a_Database.GetLocationName(RegionID, SolarID, StationID);
+		}
 	}
 
 	public class PriceRecord

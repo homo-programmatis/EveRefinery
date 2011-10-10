@@ -271,23 +271,88 @@ namespace EveRefinery
 			return result;
 		}
 
+		public String GetRegionName(UInt32 a_ID)
+		{
+			String sqlText = "SELECT regionName FROM " + Tables.mapRegions + " WHERE regionID=@ID";
+			SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, m_DbConnection);
+			sqlCommand.Parameters.AddWithValue("@ID", a_ID);
+
+			SQLiteDataReader dataReader = sqlCommand.ExecuteReader();
+			if (dataReader.Read())
+				return Convert.ToString(dataReader.GetString(0));
+
+			return null;
+		}
+
+		public String GetSolarName(UInt32 a_ID)
+		{
+			String sqlText = "SELECT solarSystemName FROM " + Tables.mapSolarSystems + " WHERE solarSystemID=@ID";
+			SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, m_DbConnection);
+			sqlCommand.Parameters.AddWithValue("@ID", a_ID);
+
+			SQLiteDataReader dataReader = sqlCommand.ExecuteReader();
+			if (dataReader.Read())
+				return Convert.ToString(dataReader.GetString(0));
+
+			return null;
+		}
+
+		public String GetStationName(UInt32 a_ID)
+		{
+			String sqlText = "SELECT stationName FROM " + Tables.staStations + " WHERE stationID=@ID";
+			SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, m_DbConnection);
+			sqlCommand.Parameters.AddWithValue("@ID", a_ID);
+
+			SQLiteDataReader dataReader = sqlCommand.ExecuteReader();
+			if (dataReader.Read())
+				return Convert.ToString(dataReader.GetString(0));
+
+			return null;
+		}
+
 		public String GetLocationName(UInt32 a_LocationID)
 		{
-			String sqlText = String.Format("SELECT stationName FROM " + Tables.staStations + " WHERE stationID = {0:d}", a_LocationID);
-			SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, m_DbConnection);
-			SQLiteDataReader dataReader = sqlCommand.ExecuteReader();
+			String result = GetStationName(a_LocationID);
+			if (result != null)
+				return result;
 
-			if (dataReader.Read())
-				return Convert.ToString(dataReader["stationName"]);
+			result = GetSolarName(a_LocationID);
+			if (result != null)
+				return result;
 
-			sqlText		= String.Format("SELECT solarSystemName FROM " + Tables.mapSolarSystems + " WHERE solarSystemID = {0:d}", a_LocationID);
-			sqlCommand	= new SQLiteCommand(sqlText, m_DbConnection);
-			dataReader	= sqlCommand.ExecuteReader();
-
-			if (dataReader.Read())
-				return Convert.ToString(dataReader["solarSystemName"] + " (space)");
-			
 			return String.Format("Unknown location {0:d}", a_LocationID);
+		}
+
+		public String GetLocationName(UInt32 a_RegionID, UInt32 a_SolarID, UInt32 a_StationID)
+		{
+			if (a_StationID != 0)
+			{
+				String result = GetStationName(a_StationID);
+				if (result != null)
+					return result;
+
+				return String.Format("Station {0:d}", a_StationID);
+			}
+
+			if (a_SolarID != 0)
+			{
+				String result = GetSolarName(a_SolarID);
+				if (result != null)
+					return result;
+
+				return String.Format("System {0:d}", a_SolarID);
+			}
+
+			if (a_RegionID != 0)
+			{
+				String result = GetRegionName(a_RegionID);
+				if (result != null)
+					return result;
+
+				return String.Format("Region {0:d}", a_RegionID);
+			}
+
+			return "All locations";
 		}
 
 		public String GetTypeIdName(UInt32 a_TypeID)

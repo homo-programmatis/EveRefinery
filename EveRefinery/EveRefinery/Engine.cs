@@ -69,7 +69,6 @@ namespace EveRefinery
 	{
 		public double		RefineryTax;
 		public double		RefineryEfficiency;
-		public UInt32		PriceType;
 		public UInt32		PriceExpiryDays;
 	}
 
@@ -111,13 +110,31 @@ namespace EveRefinery
 			Settings.OptionsRow options = m_Settings.Options[0];
 			if (options.IsDBPathNull())
 				options.DBPath = "EveDatabase.db";
-				
-			if (options.IsPriceTypeNull())
-				options.PriceType = (UInt32)PriceTypes.SellMedian;
-				
-			if (options.IsPricesRegionNull())
-				options.PricesRegion = (UInt32)EveRegions.Forge;
-				
+
+			if (options.IsPriceSettings_ItemsNull())
+			{
+				PriceSettings value = new PriceSettings();
+				value.Provider		= PriceProviders.EveCentral;
+				value.RegionID		= (UInt32)EveRegions.Forge;
+				value.SolarID		= 0;
+				value.StationID		= 0;
+				value.PriceType		= PriceTypes.SellMedian;
+
+				options.PriceSettings_Items = value;
+			}
+
+			if (options.IsPriceSettings_MineralsNull())
+			{
+				PriceSettings value = new PriceSettings();
+				value.Provider		= PriceProviders.EveCentral;
+				value.RegionID		= (UInt32)EveRegions.Forge;
+				value.SolarID		= 0;
+				value.StationID		= 0;
+				value.PriceType		= PriceTypes.SellMedian;
+
+				options.PriceSettings_Minerals = value;
+			}
+
 			if (options.IsRedPriceNull())
 				options.RedPrice = 0.50;
 				
@@ -165,12 +182,6 @@ namespace EveRefinery
 
 			if (options.IsMineralPriceExpiryDaysNull())
 				options.MineralPriceExpiryDays = 7;
-
-			if (options.IsMineralPricesRegionNull())
-				options.MineralPricesRegion = (UInt32)EveRegions.Forge;
-
-			if (options.IsMineralPricesTypeNull())
-				options.MineralPricesType = (UInt32)PriceTypes.SellMedian;
 		}
 
 		private void LoadSettings_TestPrices()
@@ -322,7 +333,6 @@ namespace EveRefinery
 		
 		public void UpdateSettingsCache()
 		{
-			m_OptionsCache.PriceType			= m_Settings.Options[0].PriceType;
 			m_OptionsCache.RefineryEfficiency	= m_Settings.Options[0].RefineryEfficiency;
 			m_OptionsCache.RefineryTax			= m_Settings.Options[0].RefineryTax;
 			m_OptionsCache.PriceExpiryDays		= m_Settings.Options[0].PriceExpiryDays;

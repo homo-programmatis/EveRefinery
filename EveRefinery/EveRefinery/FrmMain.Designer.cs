@@ -52,6 +52,7 @@
 			this.ClmItemType = new System.Windows.Forms.ColumnHeader();
 			this.ClmLossPercent = new System.Windows.Forms.ColumnHeader();
 			this.ClmVolume = new System.Windows.Forms.ColumnHeader();
+			this.ClmRefinedVolume = new System.Windows.Forms.ColumnHeader();
 			this.TblStatusBar = new System.Windows.Forms.TableLayoutPanel();
 			this.LblPriceQueueHint = new System.Windows.Forms.Label();
 			this.LblPriceQueue = new System.Windows.Forms.Label();
@@ -64,8 +65,8 @@
 			this.TlbBtnWhatsnew = new System.Windows.Forms.ToolStripButton();
 			this.TlbPrices = new System.Windows.Forms.ToolStrip();
 			this.TlbLblPrices = new System.Windows.Forms.ToolStripLabel();
-			this.TlbCmbPriceRegion = new System.Windows.Forms.ToolStripComboBox();
-			this.TlbCmbPriceType = new System.Windows.Forms.ToolStripComboBox();
+			this.TlbLblPricesType = new System.Windows.Forms.ToolStripLabel();
+			this.TlbBtnPricesType = new System.Windows.Forms.ToolStripButton();
 			this.TlbBtnUpdatePrices = new System.Windows.Forms.ToolStripButton();
 			this.TlbAssets = new System.Windows.Forms.ToolStrip();
 			this.TlbLblAssets = new System.Windows.Forms.ToolStripLabel();
@@ -77,7 +78,6 @@
 			this.TlbChkIgnoreAssembled = new System.Windows.Forms.ToolStripButton();
 			this.TlbChkUseQuantities = new System.Windows.Forms.ToolStripButton();
 			this.ImlToolbarButtons = new System.Windows.Forms.ImageList(this.components);
-			this.ClmRefinedVolume = new System.Windows.Forms.ColumnHeader();
 			this.TlcToolContainer.ContentPanel.SuspendLayout();
 			this.TlcToolContainer.TopToolStripPanel.SuspendLayout();
 			this.TlcToolContainer.SuspendLayout();
@@ -275,6 +275,11 @@
 			this.ClmVolume.Text = "Volume";
 			this.ClmVolume.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
+			// ClmRefinedVolume
+			// 
+			this.ClmRefinedVolume.Text = "Refined Volume";
+			this.ClmRefinedVolume.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			// 
 			// TblStatusBar
 			// 
 			this.TblStatusBar.ColumnCount = 5;
@@ -399,12 +404,12 @@
 			this.TlbPrices.Dock = System.Windows.Forms.DockStyle.None;
 			this.TlbPrices.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TlbLblPrices,
-            this.TlbCmbPriceRegion,
-            this.TlbCmbPriceType,
+            this.TlbLblPricesType,
+            this.TlbBtnPricesType,
             this.TlbBtnUpdatePrices});
 			this.TlbPrices.Location = new System.Drawing.Point(107, 0);
 			this.TlbPrices.Name = "TlbPrices";
-			this.TlbPrices.Size = new System.Drawing.Size(294, 25);
+			this.TlbPrices.Size = new System.Drawing.Size(247, 25);
 			this.TlbPrices.TabIndex = 8;
 			this.TlbPrices.Text = "Prices";
 			// 
@@ -414,22 +419,22 @@
 			this.TlbLblPrices.Size = new System.Drawing.Size(44, 22);
 			this.TlbLblPrices.Text = "Prices :";
 			// 
-			// TlbCmbPriceRegion
+			// TlbLblPricesType
 			// 
-			this.TlbCmbPriceRegion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.TlbCmbPriceRegion.Name = "TlbCmbPriceRegion";
-			this.TlbCmbPriceRegion.Size = new System.Drawing.Size(121, 25);
-			this.TlbCmbPriceRegion.Sorted = true;
-			this.TlbCmbPriceRegion.SelectedIndexChanged += new System.EventHandler(this.TlbCmbPriceRegion_SelectedIndexChanged);
+			this.TlbLblPricesType.Name = "TlbLblPricesType";
+			this.TlbLblPricesType.Size = new System.Drawing.Size(114, 22);
+			this.TlbLblPricesType.Text = "[Prices settings hint]";
 			// 
-			// TlbCmbPriceType
+			// TlbBtnPricesType
 			// 
-			this.TlbCmbPriceType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.TlbCmbPriceType.DropDownWidth = 350;
-			this.TlbCmbPriceType.Name = "TlbCmbPriceType";
-			this.TlbCmbPriceType.Size = new System.Drawing.Size(90, 25);
-			this.TlbCmbPriceType.Sorted = true;
-			this.TlbCmbPriceType.SelectedIndexChanged += new System.EventHandler(this.TlbCmbPriceType_SelectedIndexChanged);
+			this.TlbBtnPricesType.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.TlbBtnPricesType.Image = ((System.Drawing.Image)(resources.GetObject("TlbBtnPricesType.Image")));
+			this.TlbBtnPricesType.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.TlbBtnPricesType.Name = "TlbBtnPricesType";
+			this.TlbBtnPricesType.Size = new System.Drawing.Size(23, 22);
+			this.TlbBtnPricesType.Text = "...";
+			this.TlbBtnPricesType.ToolTipText = "Click to change price settings";
+			this.TlbBtnPricesType.Click += new System.EventHandler(this.TlbBtnPricesType_Click);
 			// 
 			// TlbBtnUpdatePrices
 			// 
@@ -546,11 +551,6 @@
 			this.ImlToolbarButtons.Images.SetKeyName(3, "Box");
 			this.ImlToolbarButtons.Images.SetKeyName(4, "Number");
 			// 
-			// ClmRefinedVolume
-			// 
-			this.ClmRefinedVolume.Text = "Refined Volume";
-			this.ClmRefinedVolume.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			// 
 			// FrmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -588,8 +588,6 @@
 		private System.Windows.Forms.TableLayoutPanel SplTable1;
 		private System.Windows.Forms.ToolStrip TlbPrices;
 		private System.Windows.Forms.ToolStripLabel TlbLblPrices;
-		private System.Windows.Forms.ToolStripComboBox TlbCmbPriceRegion;
-		private System.Windows.Forms.ToolStripComboBox TlbCmbPriceType;
 		private SpecialFNs.ListViewEx LstRefinery;
 		private System.Windows.Forms.ColumnHeader ClmItemName;
 		private System.Windows.Forms.ColumnHeader ClmRefinedCost;
@@ -631,6 +629,8 @@
 		private System.Windows.Forms.ColumnHeader ClmVolume;
         private System.Windows.Forms.ColumnHeader ClmMetaLevel;
 		private System.Windows.Forms.ColumnHeader ClmRefinedVolume;
+		private System.Windows.Forms.ToolStripButton TlbBtnPricesType;
+		private System.Windows.Forms.ToolStripLabel TlbLblPricesType;
 
     }
 }

@@ -17,6 +17,7 @@ namespace EveRefinery
 		protected EveDatabase	m_EveDatabase;
 		protected Pages			m_StartPage;
 		protected ListView.ColumnHeaderCollection m_ListColumns;
+		protected PriceSettings	m_MineralPriceSettings;
 		
 		public enum Pages
 		{
@@ -42,7 +43,6 @@ namespace EveRefinery
 			InitPage_Other();
 			InitPage_Developer();
 			
-			CmbMineralPriceType.DrawItem += Engine.DrawPriceTypeItem;
 			TabMain.SelectedIndex = (Int32)m_StartPage;
 		}
 
@@ -143,13 +143,12 @@ namespace EveRefinery
 			TxtMegacyte.Value	= (decimal)m_Engine.m_MaterialPrices[(UInt32)Materials.Megacyte];
 			TxtMorphite.Value	= (decimal)m_Engine.m_MaterialPrices[(UInt32)Materials.Morphite];
 			
-			Init_CmbMineralPriceType();
-			Init_CmbMineralRegion();
-
 			Settings.OptionsRow options = m_Engine.m_Settings.Options[0];
-
+			m_MineralPriceSettings		= options.PriceSettings_Minerals;
 			TxtRefineryEfficiency.Value = (decimal)options.RefineryEfficiency * 100;
 			TxtRefineryTax.Value		= (decimal)options.RefineryTax * 100;
+
+			UpdateMineralPricesTypeLabel();
 		}
 
 		private void HandleMineralPricesChange(double[] a_OldPrices)
@@ -182,10 +181,7 @@ namespace EveRefinery
 			m_Engine.m_MaterialPrices[(UInt32)Materials.Morphite]	= (double)TxtMorphite.Value;
 
 			Settings.OptionsRow options		= m_Engine.m_Settings.Options[0];
-
-			options.MineralPricesRegion		= TextItemWithUInt32.GetData(CmbMineralRegion.SelectedItem);
-			options.MineralPricesType		= TextItemWithUInt32.GetData(CmbMineralPriceType.SelectedItem);
-
+			options.PriceSettings_Minerals	= m_MineralPriceSettings;
 			options.RefineryEfficiency		= (double)(TxtRefineryEfficiency.Value / 100);
 			options.RefineryTax				= (double)(TxtRefineryTax.Value / 100);
 
@@ -442,43 +438,8 @@ namespace EveRefinery
 			OnGreenPriceChange(TrkGreenPrice.Value);
 		}
 
-		private void Init_CmbMineralPriceType()
-		{
-			ComboBox currCombo = CmbMineralPriceType;
-			currCombo.Items.Clear();
-
-			for (UInt32 i = 0; i < (UInt32)PriceTypes.MaxPriceTypes; i++)
-			{
-				string enumName = Engine.GetPriceTypeName((PriceTypes)i);
-				TextItemWithUInt32 newItem = new TextItemWithUInt32(enumName, i);
-				currCombo.Items.Add(newItem);
-				
-				if (i == m_Engine.m_Settings.Options[0].MineralPricesType)
-					currCombo.SelectedItem = newItem;
-			}
-		}
-
-		private void Init_CmbMineralRegion()
-		{
-			ComboBox currCombo = CmbMineralRegion;
-			currCombo.Items.Clear();
-
-			List<EveRegion> regions = m_EveDatabase.GetRegions();
-			foreach (EveRegion currRegion in regions)
-			{
-				TextItemWithUInt32 newItem = new TextItemWithUInt32(currRegion.Name, currRegion.ID);
-				currCombo.Items.Add(newItem);
-
-				if (currRegion.ID == m_Engine.m_Settings.Options[0].MineralPricesRegion)
-					currCombo.SelectedItem = newItem;
-			}
-		}
-
 		private void BtnLoadMineralPrices_Click(object sender, EventArgs e)
 		{
-			UInt32 regionID		= TextItemWithUInt32.GetData(CmbMineralRegion.SelectedItem);
-			UInt32 priceType	= TextItemWithUInt32.GetData(CmbMineralPriceType.SelectedItem);
-		
 			List<UInt32> loadPricesFor = new List<UInt32>();
 			loadPricesFor.Add((UInt32)EveTypeIDs.Tritanium);
 			loadPricesFor.Add((UInt32)EveTypeIDs.Pyerite);
@@ -489,20 +450,13 @@ namespace EveRefinery
 			loadPricesFor.Add((UInt32)EveTypeIDs.Megacyte);
 			loadPricesFor.Add((UInt32)EveTypeIDs.Morphite);
 
-			IPriceProvider provider = MarketPricesDB.CreateEveCentralProvider(m_Engine.m_Settings.Options[0].PriceHistoryDays);
-
-			PriceSettings settings	= new PriceSettings();
-			settings.Provider		= PriceProviders.EveCentral;
-			settings.RegionID		= regionID;
-			settings.SolarID		= 0;
-			settings.StationID		= 0;
-			settings.PriceType		= (PriceTypes)priceType;
+			IPriceProvider provider = new PriceProviderAuto(m_Engine.m_Settings);
 
 			// @@@@ Check for exceptions?
-			List<PriceRecord> prices = provider.GetPrices(loadPricesFor, settings);
+			List<PriceRecord> prices = provider.GetPrices(loadPricesFor, m_MineralPriceSettings);
 			foreach (PriceRecord currRecord in prices)
 			{
-				if (!currRecord.Settings.Matches(settings))
+				if (!currRecord.Settings.Matches(m_MineralPriceSettings))
 					continue;
 
 				switch ((EveTypeIDs)currRecord.TypeID)
@@ -579,6 +533,22 @@ namespace EveRefinery
 			{
 				ErrorMessageBox.Show("Failed to strip database:\n" + a_Exception.Message);
 			}
+		}
+
+		private void UpdateMineralPricesTypeLabel()
+		{
+			BtnMineralPricesType.Text = m_MineralPriceSettings.GetHintText(m_EveDatabase);
+		}
+
+		private void BtnMineralPricesType_Click(object sender, EventArgs e)
+		{
+			FrmPriceType dialog = new FrmPriceType(m_EveDatabase);
+			dialog.m_Settings = m_MineralPriceSettings;
+			if (DialogResult.OK != dialog.ShowDialog(this))
+				return;
+
+			m_MineralPriceSettings = dialog.m_Settings;
+			UpdateMineralPricesTypeLabel();
 		}
 	}
 }

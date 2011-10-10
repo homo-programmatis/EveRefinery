@@ -372,49 +372,6 @@ namespace EveRefinery
 			a_Combo.SelectedIndexChanging	+= a_EventChanging;
 		}
 
-		private void Init_TlbCmbPriceType()
-		{
-			EventHandler myHandler = new EventHandler(TlbCmbPriceType_SelectedIndexChanged);
-			ToolStripComboBox currCombo = TlbCmbPriceType;
-
-			currCombo.Items.Clear();
-
-			for (UInt32 i = 0; i < (UInt32)PriceTypes.MaxPriceTypes; i++)
-			{
-				//string enumName = ((PriceTypes)i).ToString();
-				string enumName = Engine.GetPriceTypeName((PriceTypes)i);
-				TextItemWithUInt32 newItem = new TextItemWithUInt32(enumName, i);
-				currCombo.Items.Add(newItem);
-				
-				if (newItem.Data == m_Engine.m_Settings.Options[0].PriceType)
-					SilentSetSelectedItem(currCombo, newItem, myHandler);
-			}
-		}
-		
-		private void Init_TlbCmbPriceRegion()
-		{
-			EventHandler myHandler = new EventHandler(TlbCmbPriceRegion_SelectedIndexChanged);
-			ToolStripComboBox currCombo = TlbCmbPriceRegion;
-
-			currCombo.Items.Clear();
-			
-			TextItemWithUInt32 newItem = new TextItemWithUInt32("[All regions]", 0);
-			currCombo.Items.Add(newItem);
-			
-			if (newItem.Data == m_Engine.m_Settings.Options[0].PricesRegion)
-				SilentSetSelectedItem(currCombo, newItem, myHandler);
-			
-			List<EveRegion> regions = m_EveDatabase.GetRegions();
-			foreach (EveRegion currRegion in regions)
-			{
-				newItem = new TextItemWithUInt32(currRegion.Name, currRegion.ID);
-				currCombo.Items.Add(newItem);
-
-				if (newItem.Data == m_Engine.m_Settings.Options[0].PricesRegion)
-					SilentSetSelectedItem(currCombo, newItem, myHandler);
-			}
-		}
-
 		private void Init_TlbCmbCharacter(bool a_IsSilent)
 		{
 			EventHandler		myHandler1	= new EventHandler(TlbCmbCharacter_SelectedIndexChanged);
@@ -538,11 +495,6 @@ namespace EveRefinery
 				m_Engine.m_Settings.Options[0].DBPath = frmInvalidDB.m_SelectedDbPath;
 			}
 			
-			TlbCmbPriceType.ComboBox.DrawMode = DrawMode.OwnerDrawFixed;
-			TlbCmbPriceType.ComboBox.DrawItem += Engine.DrawPriceTypeItem;
-			
-			Init_TlbCmbPriceRegion();
-			Init_TlbCmbPriceType();
 			Init_TlbCmbCharacter(true);
 			Init_TlbCmbLocation(true);
 			Init_TlbCmbContainer(true);
@@ -552,7 +504,8 @@ namespace EveRefinery
 			LoadSettings_Columns();
 			LoadSettings_Toolbars();
 			LoadSettings_Generic();
-			
+
+			UpdatePricesSettingsHint();
 			LoadMarketPrices(false, false);
 			CheckMineralPricesExpiry();
 			MakeRefineryItemList();
@@ -565,17 +518,13 @@ namespace EveRefinery
 		{
 			try
 			{
-				PriceSettings settings	= new PriceSettings();
-				settings.Provider		= PriceProviders.EveCentral;
-				settings.RegionID		= m_Engine.m_Settings.Options[0].PricesRegion;
-				settings.SolarID		= 0;
-				settings.StationID		= 0;
-				settings.PriceType		= 0;
+				PriceSettings settings	= m_Engine.m_Settings.Options[0].PriceSettings_Items;
 
 				if (a_DeleteOld)
 					m_MarketPrices.DropPrices(settings);
 
-				m_MarketPrices.LoadPrices(settings, m_Engine.m_OptionsCache.PriceExpiryDays, m_Engine.m_Settings.Options[0].PriceHistoryDays, a_Silent);
+				IPriceProvider provider = new PriceProviderAuto(m_Engine.m_Settings);
+				m_MarketPrices.LoadPrices(provider, settings, m_Engine.m_OptionsCache.PriceExpiryDays, a_Silent);
 			}
 			catch (System.Exception a_Exception)
 			{
@@ -874,18 +823,6 @@ namespace EveRefinery
 			MakeRefineryItemList();
 		}
 		
-		private void TlbCmbPriceType_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			m_Engine.m_Settings.Options[0].PriceType = ((TextItemWithUInt32)TlbCmbPriceType.SelectedItem).Data;
-			MakeRefineryItemList();
-		}
-
-		private void TlbCmbPriceRegion_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			m_Engine.m_Settings.Options[0].PricesRegion = ((TextItemWithUInt32)TlbCmbPriceRegion.SelectedItem).Data;
-			LoadMarketPrices(false, false);
-		}
-
 		private void TlbCmbCharacter_SelectedIndexChanging(object sender, CancelEventArgs e)
 		{
 			UInt32 charID = ((TextItemWithUInt32)TlbCmbCharacter.SelectedItem).Data;
@@ -1143,6 +1080,23 @@ namespace EveRefinery
 			{
 				ErrorMessageBox.Show("Failed to export data:\n" + a_Exception.Message);
 			}
+		}
+
+		private void UpdatePricesSettingsHint()
+		{
+			TlbLblPricesType.Text = m_Engine.m_Settings.Options[0].PriceSettings_Items.GetHintText(m_EveDatabase);
+		}
+
+		private void TlbBtnPricesType_Click(object sender, EventArgs e)
+		{
+			FrmPriceType dialog = new FrmPriceType(m_EveDatabase);
+			dialog.m_Settings = m_Engine.m_Settings.Options[0].PriceSettings_Items;
+			if (DialogResult.OK != dialog.ShowDialog(this))
+				return;
+
+			m_Engine.m_Settings.Options[0].PriceSettings_Items = dialog.m_Settings;
+			UpdatePricesSettingsHint();
+			LoadMarketPrices(false, false);
 		}
     }
     

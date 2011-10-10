@@ -51,9 +51,8 @@
 			this.TxtMorphite = new System.Windows.Forms.NumericUpDown();
 			this.LblLoadMineralPrices = new System.Windows.Forms.Label();
 			this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-			this.CmbMineralRegion = new System.Windows.Forms.ComboBox();
-			this.CmbMineralPriceType = new System.Windows.Forms.ComboBox();
 			this.BtnLoadMineralPrices = new System.Windows.Forms.Button();
+			this.BtnMineralPricesType = new System.Windows.Forms.Button();
 			this.LblMineralPrices = new System.Windows.Forms.Label();
 			this.LblRefineryEfficiency = new System.Windows.Forms.Label();
 			this.TblRefineryEfficiency = new System.Windows.Forms.TableLayoutPanel();
@@ -524,13 +523,13 @@
 			// 
 			// tableLayoutPanel4
 			// 
-			this.tableLayoutPanel4.ColumnCount = 3;
-			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 121F));
-			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.tableLayoutPanel4.ColumnCount = 2;
+			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 210F));
 			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel4.Controls.Add(this.CmbMineralRegion, 0, 0);
-			this.tableLayoutPanel4.Controls.Add(this.CmbMineralPriceType, 1, 0);
-			this.tableLayoutPanel4.Controls.Add(this.BtnLoadMineralPrices, 2, 0);
+			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel4.Controls.Add(this.BtnLoadMineralPrices, 1, 0);
+			this.tableLayoutPanel4.Controls.Add(this.BtnMineralPricesType, 0, 0);
 			this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 275);
 			this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
@@ -540,40 +539,27 @@
 			this.tableLayoutPanel4.Size = new System.Drawing.Size(355, 25);
 			this.tableLayoutPanel4.TabIndex = 3;
 			// 
-			// CmbMineralRegion
-			// 
-			this.CmbMineralRegion.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CmbMineralRegion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.CmbMineralRegion.FormattingEnabled = true;
-			this.CmbMineralRegion.Location = new System.Drawing.Point(3, 3);
-			this.CmbMineralRegion.Name = "CmbMineralRegion";
-			this.CmbMineralRegion.Size = new System.Drawing.Size(115, 21);
-			this.CmbMineralRegion.Sorted = true;
-			this.CmbMineralRegion.TabIndex = 0;
-			// 
-			// CmbMineralPriceType
-			// 
-			this.CmbMineralPriceType.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CmbMineralPriceType.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-			this.CmbMineralPriceType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.CmbMineralPriceType.DropDownWidth = 300;
-			this.CmbMineralPriceType.FormattingEnabled = true;
-			this.CmbMineralPriceType.Location = new System.Drawing.Point(124, 3);
-			this.CmbMineralPriceType.Name = "CmbMineralPriceType";
-			this.CmbMineralPriceType.Size = new System.Drawing.Size(84, 21);
-			this.CmbMineralPriceType.Sorted = true;
-			this.CmbMineralPriceType.TabIndex = 1;
-			// 
 			// BtnLoadMineralPrices
 			// 
 			this.BtnLoadMineralPrices.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.BtnLoadMineralPrices.Location = new System.Drawing.Point(214, 3);
+			this.BtnLoadMineralPrices.Location = new System.Drawing.Point(213, 3);
 			this.BtnLoadMineralPrices.Name = "BtnLoadMineralPrices";
-			this.BtnLoadMineralPrices.Size = new System.Drawing.Size(138, 19);
+			this.BtnLoadMineralPrices.Size = new System.Drawing.Size(139, 19);
 			this.BtnLoadMineralPrices.TabIndex = 2;
 			this.BtnLoadMineralPrices.Text = "Load";
 			this.BtnLoadMineralPrices.UseVisualStyleBackColor = true;
 			this.BtnLoadMineralPrices.Click += new System.EventHandler(this.BtnLoadMineralPrices_Click);
+			// 
+			// BtnMineralPricesType
+			// 
+			this.BtnMineralPricesType.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.BtnMineralPricesType.Location = new System.Drawing.Point(3, 3);
+			this.BtnMineralPricesType.Name = "BtnMineralPricesType";
+			this.BtnMineralPricesType.Size = new System.Drawing.Size(204, 19);
+			this.BtnMineralPricesType.TabIndex = 3;
+			this.BtnMineralPricesType.Text = "[Price settings hint]";
+			this.BtnMineralPricesType.UseVisualStyleBackColor = true;
+			this.BtnMineralPricesType.Click += new System.EventHandler(this.BtnMineralPricesType_Click);
 			// 
 			// LblMineralPrices
 			// 
@@ -1699,8 +1685,6 @@
 		private System.Windows.Forms.TableLayoutPanel TblMinerals;
 		private System.Windows.Forms.Label LblLoadMineralPrices;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
-		private System.Windows.Forms.ComboBox CmbMineralRegion;
-		private System.Windows.Forms.ComboBox CmbMineralPriceType;
 		private System.Windows.Forms.Button BtnLoadMineralPrices;
 		private System.Windows.Forms.Label LblMineralPrices;
 		private System.Windows.Forms.Label LblRefineryEfficiency;
@@ -1735,5 +1719,6 @@
 		private System.Windows.Forms.Label label15;
 		private System.Windows.Forms.NumericUpDown TxtPricesExpiryDays;
 		private System.Windows.Forms.NumericUpDown TxtMineralPricesExpiryDays;
+		private System.Windows.Forms.Button BtnMineralPricesType;
 	}
 }

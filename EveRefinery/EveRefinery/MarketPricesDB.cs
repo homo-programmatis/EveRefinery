@@ -36,7 +36,7 @@ namespace EveRefinery
 			m_Database.CreateTables();
 		}
 
-		public void LoadPrices(PriceSettings a_Settings, UInt32 a_PriceExpiryDays, UInt32 a_PriceHistoryDays, bool a_Silent)
+		public void LoadPrices(IPriceProvider a_PriceProvider, PriceSettings a_Settings, UInt32 a_PriceExpiryDays, bool a_Silent)
 		{
 			StopUpdaterThread();
 			
@@ -66,7 +66,7 @@ namespace EveRefinery
 				DbRecordToItemRecord(currRow);
 			}
 
-			TestMarketPrices(a_Settings, a_PriceExpiryDays, a_PriceHistoryDays, a_Silent);
+			TestMarketPrices(a_PriceProvider, a_Settings, a_PriceExpiryDays, a_Silent);
 		}
 
 		public void DropPrices(PriceSettings a_Settings)
@@ -141,8 +141,8 @@ namespace EveRefinery
 
 		protected class UpdateThreadParam
 		{
+			public IPriceProvider	PriceProvider;
 			public PriceSettings	PriceSettings;
-			public UInt32			PriceHistoryDays;
 			public Queue<UInt32>	UpdateQueue;
 		}
 		
@@ -163,7 +163,7 @@ namespace EveRefinery
 			m_UpdateQueue	= null;
 		}
 
-		protected void TestMarketPrices(PriceSettings a_Settings, UInt32 a_PriceExpiryDays, UInt32 a_PriceHistoryDays, bool a_Silent)
+		protected void TestMarketPrices(IPriceProvider a_PriceProvider, PriceSettings a_Settings, UInt32 a_PriceExpiryDays, bool a_Silent)
 		{
 			ItemFilter filter		= new ItemFilter();
 			filter.HasMarketGroup	= TristateFilter.Yes;
@@ -189,8 +189,8 @@ namespace EveRefinery
 			StopUpdaterThread();
 
 			UpdateThreadParam param = new UpdateThreadParam();
+			param.PriceProvider		= a_PriceProvider;
 			param.PriceSettings		= a_Settings;
-			param.PriceHistoryDays	= a_PriceHistoryDays;
 			param.UpdateQueue		= pricesQueue;
 
 			ThreadWithParam paramThread = new ThreadWithParam();
@@ -205,17 +205,9 @@ namespace EveRefinery
 			m_UpdateThread.Start();
 		}
 
-		public static IPriceProvider CreateEveCentralProvider(UInt32 a_PriceHistoryDays)
-		{
-			PriceProviderEveCentral provider = new PriceProviderEveCentral();
-			provider.m_PriceHistoryDays = a_PriceHistoryDays;
-			return provider;
-		}
-
 		protected void ThreadQueryMarketPrices(Object a_ParamObj)
 		{
 			UpdateThreadParam a_Param = (UpdateThreadParam)a_ParamObj;
-			IPriceProvider provider = CreateEveCentralProvider(a_Param.PriceHistoryDays);
 
 			for (; !m_EndUpdateThread; )
 			{
@@ -239,7 +231,7 @@ namespace EveRefinery
 
 				try
 				{
-					List<PriceRecord> newPrices = provider.GetPrices(queriedItems, a_Param.PriceSettings);
+					List<PriceRecord> newPrices = a_Param.PriceProvider.GetPrices(queriedItems, a_Param.PriceSettings);
 					ApplyPrices(newPrices, a_Param.PriceSettings);
 				}
 				catch (System.Exception a_Exception)

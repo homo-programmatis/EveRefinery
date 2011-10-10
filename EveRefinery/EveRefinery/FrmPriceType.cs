@@ -13,15 +13,11 @@ namespace EveRefinery
 	public partial class FrmPriceType : Form
 	{
 		protected	EveDatabase		m_EveDatabase;
-		protected	PriceSettings	m_Settings;
+		public		PriceSettings	m_Settings;
 
-		public FrmPriceType(EveDatabase a_EveDatabase, PriceSettings a_Settings)
+		public FrmPriceType(EveDatabase a_EveDatabase)
 		{
 			m_EveDatabase			= a_EveDatabase;
-			m_Settings				= a_Settings;
-
-			m_Settings.Provider		= PriceProviders.EveCentral;
-			m_Settings.StationID	= 0;
 
 			InitializeComponent();
 		}
@@ -103,6 +99,10 @@ namespace EveRefinery
 
 		private void BtnOk_Click(object sender, EventArgs e)
 		{
+			m_Settings.RegionID		= TextItemWithUInt32.GetData(CmbRegion.SelectedItem);
+			m_Settings.SolarID		= TextItemWithUInt32.GetData(CmbSolar.SelectedItem);
+			m_Settings.PriceType	= (PriceTypes)TextItemWithUInt32.GetData(CmbPriceType.SelectedItem);
+
 			this.DialogResult = DialogResult.OK;
 			Close();
 		}
