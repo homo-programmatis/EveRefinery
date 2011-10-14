@@ -409,7 +409,7 @@
             this.TlbBtnUpdatePrices});
 			this.TlbPrices.Location = new System.Drawing.Point(107, 0);
 			this.TlbPrices.Name = "TlbPrices";
-			this.TlbPrices.Size = new System.Drawing.Size(247, 25);
+			this.TlbPrices.Size = new System.Drawing.Size(252, 25);
 			this.TlbPrices.TabIndex = 8;
 			this.TlbPrices.Text = "Prices";
 			// 
@@ -431,8 +431,8 @@
 			this.TlbBtnPricesType.Image = ((System.Drawing.Image)(resources.GetObject("TlbBtnPricesType.Image")));
 			this.TlbBtnPricesType.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.TlbBtnPricesType.Name = "TlbBtnPricesType";
-			this.TlbBtnPricesType.Size = new System.Drawing.Size(23, 22);
-			this.TlbBtnPricesType.Text = "...";
+			this.TlbBtnPricesType.Size = new System.Drawing.Size(28, 22);
+			this.TlbBtnPricesType.Text = "[...]";
 			this.TlbBtnPricesType.ToolTipText = "Click to change price settings";
 			this.TlbBtnPricesType.Click += new System.EventHandler(this.TlbBtnPricesType_Click);
 			// 

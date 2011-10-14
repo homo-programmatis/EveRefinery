@@ -14,7 +14,13 @@ namespace EveRefinery
 		{
 			StringBuilder marketXmlUrl = new StringBuilder();
 			marketXmlUrl.AppendFormat("http://api.eve-central.com/api/marketstat?hours={0:d}", m_PriceHistoryDays * 24);
-			if (0 != a_Settings.RegionID)
+
+			if (0 != a_Settings.SolarID)
+			{
+				marketXmlUrl.Append("&usesystem=");
+				marketXmlUrl.Append(a_Settings.SolarID.ToString());
+			}
+			else if (0 != a_Settings.RegionID)
 			{
 				marketXmlUrl.Append("&regionlimit=");
 				marketXmlUrl.Append(a_Settings.RegionID.ToString());
