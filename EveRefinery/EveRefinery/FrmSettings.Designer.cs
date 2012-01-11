@@ -63,7 +63,6 @@
 			this.BtnRefineryCalculator = new System.Windows.Forms.Button();
 			this.TbpApiKeys = new System.Windows.Forms.TabPage();
 			this.TblApiTable = new System.Windows.Forms.TableLayoutPanel();
-			this.LnkGetApiKey = new System.Windows.Forms.LinkLabel();
 			this.LblContextHelp = new System.Windows.Forms.Label();
 			this.LstUsers = new System.Windows.Forms.ListView();
 			this.ClmUserID = new System.Windows.Forms.ColumnHeader();
@@ -669,45 +668,31 @@
 			// 
 			this.TblApiTable.ColumnCount = 1;
 			this.TblApiTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.TblApiTable.Controls.Add(this.LnkGetApiKey, 0, 1);
 			this.TblApiTable.Controls.Add(this.LblContextHelp, 0, 0);
-			this.TblApiTable.Controls.Add(this.LstUsers, 0, 2);
-			this.TblApiTable.Controls.Add(this.LstCharacters, 0, 4);
-			this.TblApiTable.Controls.Add(this.tableLayoutPanel2, 0, 3);
+			this.TblApiTable.Controls.Add(this.LstUsers, 0, 1);
+			this.TblApiTable.Controls.Add(this.LstCharacters, 0, 3);
+			this.TblApiTable.Controls.Add(this.tableLayoutPanel2, 0, 2);
 			this.TblApiTable.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TblApiTable.Location = new System.Drawing.Point(3, 3);
 			this.TblApiTable.Margin = new System.Windows.Forms.Padding(0);
 			this.TblApiTable.Name = "TblApiTable";
-			this.TblApiTable.RowCount = 5;
-			this.TblApiTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 85F));
-			this.TblApiTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F));
+			this.TblApiTable.RowCount = 4;
+			this.TblApiTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
 			this.TblApiTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.TblApiTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
 			this.TblApiTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.TblApiTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.TblApiTable.Size = new System.Drawing.Size(355, 358);
 			this.TblApiTable.TabIndex = 1;
-			// 
-			// LnkGetApiKey
-			// 
-			this.LnkGetApiKey.AutoSize = true;
-			this.LnkGetApiKey.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LnkGetApiKey.Location = new System.Drawing.Point(3, 85);
-			this.LnkGetApiKey.Name = "LnkGetApiKey";
-			this.LnkGetApiKey.Size = new System.Drawing.Size(349, 15);
-			this.LnkGetApiKey.TabIndex = 6;
-			this.LnkGetApiKey.TabStop = true;
-			this.LnkGetApiKey.Text = "http://www.eveonline.com/api/default.asp";
-			this.LnkGetApiKey.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LnkGetApiKey_LinkClicked);
 			// 
 			// LblContextHelp
 			// 
 			this.LblContextHelp.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LblContextHelp.Location = new System.Drawing.Point(3, 0);
 			this.LblContextHelp.Name = "LblContextHelp";
-			this.LblContextHelp.Size = new System.Drawing.Size(349, 85);
+			this.LblContextHelp.Size = new System.Drawing.Size(349, 30);
 			this.LblContextHelp.TabIndex = 5;
-			this.LblContextHelp.Text = resources.GetString("LblContextHelp.Text");
+			this.LblContextHelp.Text = "API keys are required if you want EveRefinery to show your in-game assets. If you" +
+    "\'re new to API keys, press \'Add key\' button for info.";
 			// 
 			// LstUsers
 			// 
@@ -717,22 +702,22 @@
 			this.LstUsers.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LstUsers.FullRowSelect = true;
 			this.LstUsers.HideSelection = false;
-			this.LstUsers.Location = new System.Drawing.Point(3, 103);
+			this.LstUsers.Location = new System.Drawing.Point(3, 33);
 			this.LstUsers.MultiSelect = false;
 			this.LstUsers.Name = "LstUsers";
-			this.LstUsers.Size = new System.Drawing.Size(349, 110);
+			this.LstUsers.Size = new System.Drawing.Size(349, 145);
 			this.LstUsers.TabIndex = 0;
 			this.LstUsers.UseCompatibleStateImageBehavior = false;
 			this.LstUsers.View = System.Windows.Forms.View.Details;
 			// 
 			// ClmUserID
 			// 
-			this.ClmUserID.Text = "UserID";
+			this.ClmUserID.Text = "ID";
 			this.ClmUserID.Width = 80;
 			// 
 			// ClmApiKey
 			// 
-			this.ClmApiKey.Text = "Full API Key";
+			this.ClmApiKey.Text = "Verification Code";
 			this.ClmApiKey.Width = 450;
 			// 
 			// LstCharacters
@@ -745,10 +730,10 @@
 			this.LstCharacters.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LstCharacters.FullRowSelect = true;
 			this.LstCharacters.HideSelection = false;
-			this.LstCharacters.Location = new System.Drawing.Point(3, 244);
+			this.LstCharacters.Location = new System.Drawing.Point(3, 209);
 			this.LstCharacters.MultiSelect = false;
 			this.LstCharacters.Name = "LstCharacters";
-			this.LstCharacters.Size = new System.Drawing.Size(349, 111);
+			this.LstCharacters.Size = new System.Drawing.Size(349, 146);
 			this.LstCharacters.TabIndex = 1;
 			this.LstCharacters.UseCompatibleStateImageBehavior = false;
 			this.LstCharacters.View = System.Windows.Forms.View.Details;
@@ -787,7 +772,7 @@
 			this.tableLayoutPanel2.Controls.Add(this.BtnDeleteApiKey, 1, 0);
 			this.tableLayoutPanel2.Controls.Add(this.BtnAddApiKey, 0, 0);
 			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 216);
+			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 181);
 			this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
 			this.tableLayoutPanel2.RowCount = 1;
@@ -1576,7 +1561,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.TxtRefineryTax)).EndInit();
 			this.TbpApiKeys.ResumeLayout(false);
 			this.TblApiTable.ResumeLayout(false);
-			this.TblApiTable.PerformLayout();
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.TbpAppearance.ResumeLayout(false);
 			this.SplAppearance.ResumeLayout(false);
@@ -1695,7 +1679,6 @@
 		private System.Windows.Forms.NumericUpDown TxtRefineryTax;
 		private System.Windows.Forms.Button BtnRefineryCalculator;
 		private System.Windows.Forms.Label LblContextHelp;
-		private System.Windows.Forms.LinkLabel LnkGetApiKey;
 		private System.Windows.Forms.Label LblDontDisableUpdates;
 		private System.Windows.Forms.CheckBox ChkOverrideColorsISK;
 		private System.Windows.Forms.TableLayoutPanel TblOverrideColors;

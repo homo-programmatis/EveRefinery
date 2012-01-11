@@ -19,7 +19,7 @@ namespace EveRefinery
 			InitializeComponent();
 		}
 
-		private void LnkGetApiKey_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		private void OnLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
 			System.Diagnostics.Process.Start(((LinkLabel)sender).Text);
 		}

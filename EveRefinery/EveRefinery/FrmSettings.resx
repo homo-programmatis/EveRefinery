@@ -216,9 +216,6 @@
   <metadata name="TblApiTable.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <data name="LblContextHelp.Text" xml:space="preserve">
-    <value>API keys are a special form of credentials allowing applications, such as this one, access your in-game information. In this application, providing a Full API key enables accessing your assets information. Please note that a Limited key is not enough to access your assets. If you would like to learn more, or get a key for your account, visit the following EVE Online resource:</value>
-  </data>
   <metadata name="LstUsers.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
