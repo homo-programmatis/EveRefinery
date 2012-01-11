@@ -257,7 +257,7 @@ namespace EveRefinery
 
 			if (a_TestCacheDate && (GetCacheTime(assetsXml) < DateTime.UtcNow))
 			{
-				if (DialogResult.No != MessageBox.Show("Your assets information expired. Would you like to update now?\nWARNING: Due to CCP limitations, you can only update assets once in 24 hours.", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+				if (DialogResult.No != MessageBox.Show("Your assets information expired. Would you like to update now?\nWARNING: Due to CCP limitations, you can only update assets once every 7 hours.", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question))
 					return false;
 			}
 
