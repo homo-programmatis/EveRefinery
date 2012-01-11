@@ -64,7 +64,6 @@ namespace EveRefinery
 		Int32			m_SortDirection	= 1;
 		MainListItem[]	m_ItemList;
 		MainListItem	m_TotalsItem;
-		bool			m_TotalsItem_BadPrices	= false;
 		AssetsMap		m_SelectedAssets;
 		ListUpdates		m_RunningListUpdates;
 		
@@ -139,7 +138,7 @@ namespace EveRefinery
 		ItemRecord CreateSpecialItem_Totals()
 		{
 			ItemRecord itemRecord		= new ItemRecord(m_TotalsItem.TypeID);
-			itemRecord.ItemName			= "[Totals]";
+			itemRecord.ItemName			= "[Totals] -- known part";
 			itemRecord.TypeSortString	= itemRecord.ItemName;
 			itemRecord.IsPublished		= true;
 			itemRecord.GroupID			= 1;
@@ -312,21 +311,16 @@ namespace EveRefinery
 				subitems.Add(new ListViewItem.ListViewSubItem());
 			}
 			
-			bool isTotals		= (listItem.TypeID == SpecialTypeID_Totals);
-			bool isInvalidPrice = isTotals && m_TotalsItem_BadPrices;
-			if (isInvalidPrice)
-				columnData[(int)Columns.PriceDelta] = ItemPrice.Empty;
-
-			if (isInvalidPrice || !ItemPrice.IsValidPrice((double)columnData[(int)Columns.MarketPrice]))
+			if (!ItemPrice.IsValidPrice((double)columnData[(int)Columns.MarketPrice]))
 				a_QueryArgs.Item.BackColor = Color.White;
 			else
 				a_QueryArgs.Item.BackColor = m_Engine.GetPriceColor((double)columnData[(int)Columns.RefinedCost], (double)columnData[(int)Columns.MarketPrice], isQuantityOk);
 			
 			subitems[(int)Columns.Name].Text		= (string)columnData[(int)Columns.Name];
             subitems[(int)Columns.MetaLevel].Text	= columnData[(int)Columns.MetaLevel].ToString();
-			subitems[(int)Columns.RefinedCost].Text	= ItemPrice.FormatPrice((double)columnData[(int)Columns.RefinedCost], false);
-			subitems[(int)Columns.MarketPrice].Text	= ItemPrice.FormatPrice((double)columnData[(int)Columns.MarketPrice], isInvalidPrice);
-			subitems[(int)Columns.PriceDelta].Text	= ItemPrice.FormatPrice((double)columnData[(int)Columns.PriceDelta], false);
+			subitems[(int)Columns.RefinedCost].Text	= ItemPrice.FormatPrice((double)columnData[(int)Columns.RefinedCost]);
+			subitems[(int)Columns.MarketPrice].Text	= ItemPrice.FormatPrice((double)columnData[(int)Columns.MarketPrice]);
+			subitems[(int)Columns.PriceDelta].Text	= ItemPrice.FormatPrice((double)columnData[(int)Columns.PriceDelta]);
 
 			subitems[(int)Columns.Tritanium].Text	= Engine.FormatDouble((double)columnData[(int)Columns.Tritanium]);
 			subitems[(int)Columns.Pyerite].Text		= Engine.FormatDouble((double)columnData[(int)Columns.Pyerite]);
@@ -340,7 +334,7 @@ namespace EveRefinery
 			subitems[(int)Columns.Type].Text		= (string)columnData[(int)Columns.Type];
 			
 			double lossPercent						= (double)columnData[(int)Columns.LossPercent];
-			bool isInvalidLossPercent				= isInvalidPrice || double.IsInfinity(lossPercent);
+			bool isInvalidLossPercent				= double.IsInfinity(lossPercent);
 			subitems[(int)Columns.LossPercent].Text	= isInvalidLossPercent ? "" : String.Format("{0:d}%", (int)(100 * lossPercent));
 			subitems[(int)Columns.Volume].Text		= Engine.FormatDouble((double)columnData[(int)Columns.Volume]);
 			subitems[(int)Columns.RefinedVolume].Text = Engine.FormatDouble((double)columnData[(int)Columns.RefinedVolume]);
@@ -870,7 +864,6 @@ namespace EveRefinery
 			m_TotalsItem.Quantity	= 0;
 			
 			ItemRecord totalRecord	= m_TotalsItem.ItemData;
-			m_TotalsItem_BadPrices	= false;
 			
 			foreach (MainListItem listItem in m_ItemList)
 			{
@@ -882,14 +875,12 @@ namespace EveRefinery
 				lock (currRecord)
 				{
 					m_TotalsItem.Quantity			+= listItem.Quantity;
-					m_TotalsItem.ItemData.Volume	+= currRecord.Volume;
+					m_TotalsItem.ItemData.Volume	+= listItem.Quantity * currRecord.Volume;
 
 					bool isPriceExpired	= !currRecord.IsPricesOk(m_Engine.m_OptionsCache.PriceExpiryDays);
 					bool isZeroPrice	= (currRecord.Price == 0);
 
-					if (isPriceExpired || !isZeroPrice)
-						m_TotalsItem_BadPrices = true;
-					else
+					if (!isPriceExpired && !isZeroPrice)
 						totalRecord.Price += listItem.Quantity * currRecord.Price;
 					
 					for (int i = 0; i < currRecord.MaterialAmount.Count(); i++)

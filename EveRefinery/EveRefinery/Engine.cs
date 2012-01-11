@@ -41,7 +41,7 @@ namespace EveRefinery
 		public double			MarketPrice;
 		public double			PriceDelta;
 
-		public static string FormatPrice(double a_Price, bool a_IsPatial)
+		public static string FormatPrice(double a_Price)
 		{
 			if (a_Price == ItemPrice.Empty)
 				return "";
@@ -52,9 +52,6 @@ namespace EveRefinery
 			else if (a_Price == ItemPrice.Outdated)
 				return "Outdated";
 				
-			if (a_IsPatial)
-				return String.Format("Unknown (known part is {0:s})", Engine.FormatDouble(a_Price));
-
 			return Engine.FormatDouble(a_Price);
 		}
 		
