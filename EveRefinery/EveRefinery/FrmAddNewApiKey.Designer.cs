@@ -222,6 +222,7 @@
 			this.Name = "FrmAddNewApiKey";
 			this.ShowIcon = false;
 			this.ShowInTaskbar = false;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Add new API key";
 			this.SplTable1.ResumeLayout(false);
 			this.SplTable1.PerformLayout();

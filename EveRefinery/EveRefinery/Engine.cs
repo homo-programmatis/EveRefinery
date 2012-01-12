@@ -219,24 +219,24 @@ namespace EveRefinery
 		private void LoadSettings_TestAccounts()
 		{
 			// Eliminate everything that contains null's
-			for (int i = m_Settings.Accounts.Count - 1; i >= 0; i--)
+			for (int i = m_Settings.ApiKeys.Count - 1; i >= 0; i--)
 			{
-				Settings.AccountsRow currAccount = m_Settings.Accounts[i];
-				if (currAccount.IsFullKeyNull())
-					m_Settings.Accounts.Rows.RemoveAt(i);
+				Settings.ApiKeysRow currAccount = m_Settings.ApiKeys[i];
+				if (currAccount.IsVerificationNull())
+					m_Settings.ApiKeys.Rows.RemoveAt(i);
 			}		
 		}
 
 		private void LoadSettings_TestCharacters()
 		{
 			// Eliminate everything that contains null's
-			for (int i = m_Settings.Characters.Count - 1; i >= 0; i--)
+			for (int i = m_Settings.ApiCharacters.Count - 1; i >= 0; i--)
 			{
-				Settings.CharactersRow currCharacter = m_Settings.Characters[i];
+				Settings.ApiCharactersRow currCharacter = m_Settings.ApiCharacters[i];
 				if (currCharacter.IsCharacterNameNull() ||
-					currCharacter.IsUserIDNull())
+					currCharacter.IsKeyIDNull())
 				{
-					m_Settings.Characters.Rows.RemoveAt(i);
+					m_Settings.ApiCharacters.Rows.RemoveAt(i);
 					continue;
 				}
 				
@@ -245,12 +245,12 @@ namespace EveRefinery
 			}			
 		
 			// Eliminate orphaned characters
-			for (int i = m_Settings.Characters.Count - 1; i >= 0; i--)
+			for (int i = m_Settings.ApiCharacters.Count - 1; i >= 0; i--)
 			{
-				Settings.CharactersRow currCharacter = m_Settings.Characters[i];
+				Settings.ApiCharactersRow currCharacter = m_Settings.ApiCharacters[i];
 				
-				if (null == m_Settings.Accounts.FindByUserID(currCharacter.UserID))
-					m_Settings.Characters.Rows.RemoveAt(i);
+				if (null == m_Settings.ApiKeys.FindByKeyID(currCharacter.KeyID))
+					m_Settings.ApiCharacters.Rows.RemoveAt(i);
 			}
 		}
 		
@@ -386,13 +386,13 @@ namespace EveRefinery
 			}
 		}
 		
-		public Settings.AccountsRow GetCharacterAccount(UInt32 a_CharacterID)
+		public Settings.ApiKeysRow GetCharacterKey(UInt32 a_CharacterID)
 		{
-			Settings.CharactersRow character = m_Settings.Characters.FindByCharacterID(a_CharacterID);
+			Settings.ApiCharactersRow character = m_Settings.ApiCharacters.FindByCharacterID(a_CharacterID);
 			if (null == character)
 				return null;
-			
-			Settings.AccountsRow account = m_Settings.Accounts.FindByUserID(character.UserID);
+
+			Settings.ApiKeysRow account = m_Settings.ApiKeys.FindByKeyID(character.KeyID);
 			return account;
 		}
 

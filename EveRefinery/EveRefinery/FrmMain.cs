@@ -385,7 +385,7 @@ namespace EveRefinery
 			newItem = new TextItemWithUInt32("[Edit list...]", character_EditApiKeys);
 			currCombo.Items.Add(newItem);
 
-			foreach (Settings.CharactersRow currChar in m_Engine.m_Settings.Characters.Rows)
+			foreach (Settings.ApiCharactersRow currChar in m_Engine.m_Settings.ApiCharacters.Rows)
 			{
 				newItem = new TextItemWithUInt32(currChar.CharacterName, currChar.CharacterID);
 				currCombo.Items.Add(newItem);

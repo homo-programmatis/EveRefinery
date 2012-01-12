@@ -74,17 +74,17 @@ namespace EveRefinery
 
 		private void InitPage_ApiKeys()
 		{
-			for (int i = 0; i < m_Engine.m_Settings.Accounts.Count; i++)
+			for (int i = 0; i < m_Engine.m_Settings.ApiKeys.Count; i++)
 			{
-				Settings.AccountsRow currAccount = m_Engine.m_Settings.Accounts[i];
-				ListViewItem newItem = LstUsers.Items.Add(currAccount.UserID.ToString());
-				newItem.SubItems.Add(currAccount.FullKey);
+				Settings.ApiKeysRow currKey = m_Engine.m_Settings.ApiKeys[i];
+				ListViewItem newItem = LstUsers.Items.Add(currKey.KeyID.ToString());
+				newItem.SubItems.Add(currKey.Verification);
 			}
 
-			for (int i = 0; i < m_Engine.m_Settings.Characters.Count; i++)
+			for (int i = 0; i < m_Engine.m_Settings.ApiCharacters.Count; i++)
 			{
-				Settings.CharactersRow currCharacter = m_Engine.m_Settings.Characters[i];
-				ListViewItem newItem = LstCharacters.Items.Add(currCharacter.UserID.ToString());
+				Settings.ApiCharactersRow currCharacter = m_Engine.m_Settings.ApiCharacters[i];
+				ListViewItem newItem = LstCharacters.Items.Add(currCharacter.KeyID.ToString());
 				newItem.SubItems.Add(currCharacter.CharacterID.ToString());
 				newItem.SubItems.Add(currCharacter.CharacterName);
 				newItem.SubItems.Add(currCharacter.CorporationName);
@@ -99,34 +99,34 @@ namespace EveRefinery
 					return false;
 			}
 
-			m_Engine.m_Settings.Accounts.Clear();
+			m_Engine.m_Settings.ApiKeys.Clear();
 			for (int i = 0; i < LstUsers.Items.Count; i++)
 			{
 				ListViewItem currItem = LstUsers.Items[i];
 				string userID	= currItem.Text;
 				string apiKey	= currItem.SubItems[1].Text;
 
-				Settings.AccountsRow newRow = m_Engine.m_Settings.Accounts.NewAccountsRow();
-				newRow.UserID	= Convert.ToUInt32(userID);
-				newRow.FullKey	= apiKey;
-				m_Engine.m_Settings.Accounts.AddAccountsRow(newRow);
+				Settings.ApiKeysRow newRow = m_Engine.m_Settings.ApiKeys.NewApiKeysRow();
+				newRow.KeyID		= Convert.ToUInt32(userID);
+				newRow.Verification	= apiKey;
+				m_Engine.m_Settings.ApiKeys.AddApiKeysRow(newRow);
 			}
 
-			m_Engine.m_Settings.Characters.Clear();
+			m_Engine.m_Settings.ApiCharacters.Clear();
 			for (int i = 0; i < LstCharacters.Items.Count; i++)
 			{
 				ListViewItem currItem = LstCharacters.Items[i];
-				string userID	= currItem.Text;
+				string keyID	= currItem.Text;
 				string charID	= currItem.SubItems[1].Text;
 				string charName = currItem.SubItems[2].Text;
 				string charCorp = currItem.SubItems[3].Text;
 
-				Settings.CharactersRow newRow = m_Engine.m_Settings.Characters.NewCharactersRow();
-				newRow.UserID			= Convert.ToUInt32(userID);
+				Settings.ApiCharactersRow newRow = m_Engine.m_Settings.ApiCharacters.NewApiCharactersRow();
+				newRow.KeyID			= Convert.ToUInt32(keyID);
 				newRow.CharacterID		= Convert.ToUInt32(charID);
 				newRow.CharacterName	= charName;
 				newRow.CorporationName	= charCorp;
-				m_Engine.m_Settings.Characters.AddCharactersRow(newRow);
+				m_Engine.m_Settings.ApiCharacters.AddApiCharactersRow(newRow);
 			}
 
 			return true;
@@ -315,12 +315,12 @@ namespace EveRefinery
 			}
 		}
 
-		private void UpdateSingleUser(string a_UserID, string a_ApiKey)
+		private void UpdateSingleUser(string a_KeyID, string a_Verification)
 		{
-			string xmlQueryUrl = "http://api.eve-online.com//account/Characters.xml.aspx?userID=" + a_UserID + "&apiKey=" + a_ApiKey;
+			string xmlQueryUrl = "http://api.eve-online.com/account/Characters.xml.aspx?keyID=" + a_KeyID + "&vCode=" + a_Verification;
 			XmlDocument xmlReply = new XmlDocument();
 
-			string errorHeader = "Failed to update user " + a_UserID + ":\n";
+			string errorHeader = "Failed to update user " + a_KeyID + ":\n";
 
 			try
 			{
@@ -346,11 +346,11 @@ namespace EveRefinery
 				return;
 			}
 
-			DeleteCharactersFromUser(a_UserID);
+			DeleteCharactersFromUser(a_KeyID);
 
 			foreach (XmlNode characterNode in characterNodes)
 			{
-				ListViewItem newItem = LstCharacters.Items.Add(a_UserID);
+				ListViewItem newItem = LstCharacters.Items.Add(a_KeyID);
 				newItem.SubItems.Add(characterNode.Attributes["characterID"].Value);
 				newItem.SubItems.Add(characterNode.Attributes["name"].Value);
 				newItem.SubItems.Add(characterNode.Attributes["corporationName"].Value);

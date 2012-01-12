@@ -285,13 +285,11 @@ namespace EveRefinery
 				System.Diagnostics.Debug.WriteLine(a_Exception.Message);
 			}
 
-			Settings.AccountsRow account = m_Engine.GetCharacterAccount(a_CharID);
-			if (null == account)
+			Settings.ApiKeysRow apiKey = m_Engine.GetCharacterKey(a_CharID);
+			if (null == apiKey)
 				return false;
-				
-			string requestUrl = String.Format("http://api.eve-online.com/char/AssetList.xml.aspx?userID={0:d}&characterID={1:d}&version=2&apiKey=", account.UserID, a_CharID);
-			requestUrl += account.FullKey;
-			
+
+			string requestUrl = "http://api.eve-online.com/char/AssetList.xml.aspx?KeyID=" + apiKey.KeyID + "&vCode=" + apiKey.Verification + "&characterID=" + a_CharID;
 			string errorHeader = "Failed to update assets:\n";
 			XmlDocument assetsXml = new XmlDocument();
 
