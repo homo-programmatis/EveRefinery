@@ -1,4 +1,7 @@
-
+1.0.4395.5683 [13jan12]
+! Transition to APIv2. Your old api keys will be removed from EveRefinery and are
+  no longer supported. Please go to 'API keys' page in settings and follow
+  instructions to create new api keys.
 * Totals calculation for Volume didn't take quantity into account.
 * Unknown prices in totals were deprecated. Now totals are shown for known part.
 
