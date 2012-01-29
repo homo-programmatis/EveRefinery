@@ -104,6 +104,25 @@ namespace UpdatePublisher
 			
 			return fileNode;
 		}
+
+		private bool GetUserConfirm(String a_Question)
+		{
+			Console.WriteLine(a_Question + " (Y/N)");
+
+			for (; ; )
+			{
+				Char reply = Console.ReadKey(true).KeyChar;
+				switch (reply)
+				{
+					case 'Y':
+					case 'y':
+						return true;
+					case 'N':
+					case 'n':
+						return false;
+				}
+			}
+		}
 		
 		public void PublishFile(string a_FilePath)
 		{
@@ -121,6 +140,8 @@ namespace UpdatePublisher
 			}
 
 			Console.WriteLine("[Upd] " + fileName);
+			if (!GetUserConfirm("Update this file?"))
+				return;
 
 			Process packer = new Process();
 			packer.StartInfo.FileName	= m_7z_Location;
