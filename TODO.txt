@@ -1,0 +1,8 @@
+Price/Volume, Delta/Volume columns
+Dim colors a bit
+Filtering & searching
+Removing items from assets by hand
+Adding ALL items, not just refinable
+Second prices column
+Refresh specific prices on demand
+Copy specific rows
