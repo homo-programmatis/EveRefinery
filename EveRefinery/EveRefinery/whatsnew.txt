@@ -1,3 +1,6 @@
+1.0.4395.5683 [30dec12]
+* Database upgrade to Retribution 1.0.7
+
 1.0.4395.5683 [31mar12]
 * Database upgrade to Crucible 1.6
 
