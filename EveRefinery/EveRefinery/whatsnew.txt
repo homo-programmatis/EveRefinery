@@ -1,3 +1,7 @@
+1.0.5329.39470 [04aug14]
+! Warning about preliminary Crius support on program start. Please read!
+* Database upgrade to Crius 1.6
+
 1.0.4395.5683 [14jul14]
 * Database upgrade to Kronos 1.0
 
