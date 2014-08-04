@@ -16,7 +16,6 @@ namespace EveRefinery
 			this.Text = String.Format("About {0}", AssemblyTitle);
 			this.LblNameAndVersion.Text = AssemblyProduct + String.Format(" Version {0}", AssemblyVersion);
 			this.labelCopyright.Text = AssemblyCopyright;
-			this.textBoxDescription.Text = AssemblyDescription;
 		}
 
 		public string AssemblyTitle
@@ -96,12 +95,12 @@ namespace EveRefinery
 			}
 		}
 
-		private void LnkEmail_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		private void OnMailLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
 			System.Diagnostics.Process.Start("mailto:" + ((LinkLabel)sender).Text);
 		}
 
-		private void LnkWebSite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		private void OnWebLinkCLicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
 			System.Diagnostics.Process.Start(((LinkLabel)sender).Text);
 		}
