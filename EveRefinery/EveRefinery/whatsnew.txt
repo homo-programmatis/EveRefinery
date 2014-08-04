@@ -1,3 +1,12 @@
+1.0.4395.5683 [14jul14]
+* Database upgrade to Kronos 1.0
+
+1.0.4395.5683 [18dec13]
+* Database upgrade to Rubicon 1.0.4
+
+1.0.4395.5683 [08jun13]
+* Database upgrade to Odyssey 1.0
+
 1.0.4395.5683 [30dec12]
 * Database upgrade to Retribution 1.0.7
 
