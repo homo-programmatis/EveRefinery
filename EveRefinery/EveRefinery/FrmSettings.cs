@@ -75,6 +75,144 @@ namespace EveRefinery
 			Close();
 		}
 
+		#region Page Minerals
+		private void InitPage_Minerals()
+		{
+			TxtTritanium.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Tritanium];
+			TxtPyerite.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Pyerite];
+			TxtMexallon.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Mexallon];
+			TxtIsogen.Value		= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Isogen];
+			TxtNoxcium.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Noxcium];
+			TxtZydrine.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Zydrine];
+			TxtMegacyte.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Megacyte];
+			TxtMorphite.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Morphite];
+			
+			m_MineralPriceSettings		= m_Settings.PriceLoad.SourceMinerals;
+			
+            // @@@@ Remove controls
+            TxtRefineryEfficiency.Value = 100;
+			TxtRefineryTax.Value		= 0;
+
+			UpdateMineralPricesTypeLabel();
+		}
+
+		private void HandleMineralPricesChange(double[] a_OldPrices)
+		{
+			Boolean mineralPricesChanged = false;
+			for (int i = 0; i < a_OldPrices.Length; i++)
+			{
+				if (a_OldPrices[i] != m_Settings.MaterialPrices[i])
+				{
+					mineralPricesChanged = true;
+					break;
+				}
+			}
+
+			if (mineralPricesChanged)
+				m_Settings.Stats.LastMineralPricesEdit = DateTime.UtcNow;
+		}
+
+		private bool SavePage_Minerals()
+		{
+			double[] oldMaterialPrices = (double[])m_Settings.MaterialPrices.Clone();
+
+			m_Settings.MaterialPrices[(UInt32)Materials.Tritanium]	= (double)TxtTritanium.Value;
+			m_Settings.MaterialPrices[(UInt32)Materials.Pyerite]	= (double)TxtPyerite.Value;
+			m_Settings.MaterialPrices[(UInt32)Materials.Mexallon]	= (double)TxtMexallon.Value;
+			m_Settings.MaterialPrices[(UInt32)Materials.Isogen]		= (double)TxtIsogen.Value;
+			m_Settings.MaterialPrices[(UInt32)Materials.Noxcium]	= (double)TxtNoxcium.Value;
+			m_Settings.MaterialPrices[(UInt32)Materials.Zydrine]	= (double)TxtZydrine.Value;
+			m_Settings.MaterialPrices[(UInt32)Materials.Megacyte]	= (double)TxtMegacyte.Value;
+			m_Settings.MaterialPrices[(UInt32)Materials.Morphite]	= (double)TxtMorphite.Value;
+
+			m_Settings.PriceLoad.SourceMinerals = m_MineralPriceSettings;
+
+			HandleMineralPricesChange(oldMaterialPrices);
+			return true;
+		}
+
+		private void BtnLoadMineralPrices_Click(object sender, EventArgs e)
+		{
+			List<UInt32> loadPricesFor = new List<UInt32>();
+			loadPricesFor.Add((UInt32)EveTypeIDs.Tritanium);
+			loadPricesFor.Add((UInt32)EveTypeIDs.Pyerite);
+			loadPricesFor.Add((UInt32)EveTypeIDs.Mexallon);
+			loadPricesFor.Add((UInt32)EveTypeIDs.Isogen);
+			loadPricesFor.Add((UInt32)EveTypeIDs.Noxcium);
+			loadPricesFor.Add((UInt32)EveTypeIDs.Zydrine);
+			loadPricesFor.Add((UInt32)EveTypeIDs.Megacyte);
+			loadPricesFor.Add((UInt32)EveTypeIDs.Morphite);
+
+			IPriceProvider provider = new PriceProviderAuto(m_Settings);
+
+			// @@@@ Check for exceptions?
+			List<PriceRecord> prices = provider.GetPrices(loadPricesFor, m_MineralPriceSettings);
+			foreach (PriceRecord currRecord in prices)
+			{
+				if (!currRecord.Settings.Matches(m_MineralPriceSettings))
+					continue;
+
+				switch ((EveTypeIDs)currRecord.TypeID)
+				{
+				case EveTypeIDs.Tritanium:
+					TxtTritanium.Value	= (decimal)currRecord.Price;
+					break;
+				case EveTypeIDs.Pyerite:
+					TxtPyerite.Value	= (decimal)currRecord.Price;
+					break;
+				case EveTypeIDs.Mexallon:
+					TxtMexallon.Value	= (decimal)currRecord.Price;
+					break;
+				case EveTypeIDs.Isogen:
+					TxtIsogen.Value		= (decimal)currRecord.Price;
+					break;
+				case EveTypeIDs.Noxcium:
+					TxtNoxcium.Value	= (decimal)currRecord.Price;
+					break;
+				case EveTypeIDs.Zydrine:
+					TxtZydrine.Value	= (decimal)currRecord.Price;
+					break;
+				case EveTypeIDs.Megacyte:
+					TxtMegacyte.Value	= (decimal)currRecord.Price;
+					break;
+				case EveTypeIDs.Morphite:
+					TxtMorphite.Value	= (decimal)currRecord.Price;
+					break;
+				}
+			}
+		}
+
+		private void UpdateMineralPricesTypeLabel()
+		{
+			BtnMineralPricesType.Text = m_MineralPriceSettings.GetHintText(m_EveDatabase);
+		}
+
+		private void BtnMineralPricesType_Click(object sender, EventArgs e)
+		{
+			FrmPriceType dialog = new FrmPriceType(m_EveDatabase);
+			dialog.m_Settings = m_MineralPriceSettings;
+			if (DialogResult.OK != dialog.ShowDialog(this))
+				return;
+
+			m_MineralPriceSettings = dialog.m_Settings;
+			UpdateMineralPricesTypeLabel();
+		}
+
+		private void BtnRefineryCalculator_Click(object sender, EventArgs e)
+		{
+			FrmRefineCalc frmRefineCalc = new FrmRefineCalc();
+			if (DialogResult.OK != frmRefineCalc.ShowDialog(this))
+				return;
+
+			TxtRefineryEfficiency.Value = (decimal)frmRefineCalc.m_RefineryEfficiency * 100;
+			TxtRefineryTax.Value		= (decimal)frmRefineCalc.m_TaxesTaken * 100;
+		}
+		#endregion
+
+		#region Page Refining
+		#endregion
+
+		#region Page API
 		private void InitPage_ApiKeys()
 		{
 			foreach (Settings._ApiAccess.Key currKey in m_Settings.ApiAccess.Keys)
@@ -131,136 +269,6 @@ namespace EveRefinery
 			}
 
 			return true;
-		}
-
-		private void InitPage_Minerals()
-		{
-			TxtTritanium.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Tritanium];
-			TxtPyerite.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Pyerite];
-			TxtMexallon.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Mexallon];
-			TxtIsogen.Value		= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Isogen];
-			TxtNoxcium.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Noxcium];
-			TxtZydrine.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Zydrine];
-			TxtMegacyte.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Megacyte];
-			TxtMorphite.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Morphite];
-			
-			m_MineralPriceSettings		= m_Settings.PriceLoad.SourceMinerals;
-			
-            // @@@@ Remove controls
-            TxtRefineryEfficiency.Value = 100;
-			TxtRefineryTax.Value		= 0;
-
-			UpdateMineralPricesTypeLabel();
-		}
-
-		private void HandleMineralPricesChange(double[] a_OldPrices)
-		{
-			Boolean mineralPricesChanged = false;
-			for (int i = 0; i < a_OldPrices.Length; i++)
-			{
-				if (a_OldPrices[i] != m_Settings.MaterialPrices[i])
-				{
-					mineralPricesChanged = true;
-					break;
-				}
-			}
-
-			if (mineralPricesChanged)
-				m_Settings.Stats.LastMineralPricesEdit = DateTime.UtcNow;
-		}
-
-		private bool SavePage_Minerals()
-		{
-			double[] oldMaterialPrices = (double[])m_Settings.MaterialPrices.Clone();
-
-			m_Settings.MaterialPrices[(UInt32)Materials.Tritanium]	= (double)TxtTritanium.Value;
-			m_Settings.MaterialPrices[(UInt32)Materials.Pyerite]	= (double)TxtPyerite.Value;
-			m_Settings.MaterialPrices[(UInt32)Materials.Mexallon]	= (double)TxtMexallon.Value;
-			m_Settings.MaterialPrices[(UInt32)Materials.Isogen]		= (double)TxtIsogen.Value;
-			m_Settings.MaterialPrices[(UInt32)Materials.Noxcium]	= (double)TxtNoxcium.Value;
-			m_Settings.MaterialPrices[(UInt32)Materials.Zydrine]	= (double)TxtZydrine.Value;
-			m_Settings.MaterialPrices[(UInt32)Materials.Megacyte]	= (double)TxtMegacyte.Value;
-			m_Settings.MaterialPrices[(UInt32)Materials.Morphite]	= (double)TxtMorphite.Value;
-
-			m_Settings.PriceLoad.SourceMinerals = m_MineralPriceSettings;
-
-			HandleMineralPricesChange(oldMaterialPrices);
-			return true;
-		}
-		
-		private void InitPage_Appearance()
-		{
-			foreach (ColumnHeader column in m_ListColumns)
-			{
-				bool isColumnVisible = (0 != column.Width);
-				ListViewItem newItem = new ListViewItem(column.Text);
-				newItem.Checked = isColumnVisible;
-				newItem.Tag = (Object)column.Index;
-				LstColumns.Items.Add(newItem);
-			}
-
-			TxtRedPrice.Value				= (int)(m_Settings.Appearance.RedPrice * 100);
-			TxtGreenPrice.Value				= (int)(m_Settings.Appearance.GreenPrice * 100);
-			
-			ChkOverrideColorsISK.Checked	= m_Settings.Appearance.OverrideAssetsColors;
-			TxtGreenIskLoss.Value			= (decimal)m_Settings.Appearance.GreenIskLoss;
-			TxtRedIskLoss.Value				= (decimal)m_Settings.Appearance.RedIskLoss;
-			Update_OverrideColorsControls_Enabled();
-		}
-		
-		private bool SavePage_Appearance()
-		{
-			for (int i = 0; i < LstColumns.Items.Count; i++)
-			{
-				ListViewItem currItem = LstColumns.Items[i];
-				Int32 columnIndex = (Int32)currItem.Tag;
-				
-				if (currItem.Checked)
-					ListViewEx.UnhideColumn(m_ListColumns[columnIndex]);
-				else
-					ListViewEx.HideColumn(m_ListColumns[columnIndex]);
-			}
-
-			m_Settings.Appearance.RedPrice				= ((double)TxtRedPrice.Value) / 100;
-			m_Settings.Appearance.GreenPrice			= ((double)TxtGreenPrice.Value) / 100;
-			
-			m_Settings.Appearance.OverrideAssetsColors	= ChkOverrideColorsISK.Checked;
-			m_Settings.Appearance.GreenIskLoss			= (double)TxtGreenIskLoss.Value;
-			m_Settings.Appearance.RedIskLoss			= (double)TxtRedIskLoss.Value;
-			
-			return true;
-		}
-		
-		private void InitPage_Other()
-		{
-			ChkCheckUpdates.Checked			= m_Settings.Options.CheckUpdates;
-			TxtPriceHistory.Value			= m_Settings.PriceLoad.ItemsHistoryDays;
-			TxtPricesExpiryDays.Value		= m_Settings.PriceLoad.ItemsExpiryDays;
-			TxtMineralPricesExpiryDays.Value = m_Settings.PriceLoad.MineralExpiryDays;
-		}
-		
-		private bool SavePage_Other()
-		{
-			m_Settings.Options.CheckUpdates		= ChkCheckUpdates.Checked;
-			m_Settings.PriceLoad.ItemsHistoryDays	= (UInt32)TxtPriceHistory.Value;
-			m_Settings.PriceLoad.ItemsExpiryDays	= (UInt32)TxtPricesExpiryDays.Value;
-			m_Settings.PriceLoad.MineralExpiryDays	= (UInt32)TxtMineralPricesExpiryDays.Value;
-			return true;
-		}
-
-		private void InitPage_Developer()
-		{
-			Boolean isPageShown = false;
-
-			#if (DEBUG)
-				isPageShown = true;
-			#endif
-
-			if (Environment.GetCommandLineArgs().Contains("/dev"))
-				isPageShown = true;
-
-			if (!isPageShown)
-				TabMain.TabPages.Remove(TabDeveloper);
 		}
 
 		private void BtnAddApiKey_Click(object sender, EventArgs e)
@@ -384,7 +392,57 @@ namespace EveRefinery
 
 			return false;
 		}
+
+		private void LnkGetApiKey_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			System.Diagnostics.Process.Start(((LinkLabel)sender).Text);
+		}
+		#endregion
+
+		#region Page Appearance
+		private void InitPage_Appearance()
+		{
+			foreach (ColumnHeader column in m_ListColumns)
+			{
+				bool isColumnVisible = (0 != column.Width);
+				ListViewItem newItem = new ListViewItem(column.Text);
+				newItem.Checked = isColumnVisible;
+				newItem.Tag = (Object)column.Index;
+				LstColumns.Items.Add(newItem);
+			}
+
+			TxtRedPrice.Value				= (int)(m_Settings.Appearance.RedPrice * 100);
+			TxtGreenPrice.Value				= (int)(m_Settings.Appearance.GreenPrice * 100);
+			
+			ChkOverrideColorsISK.Checked	= m_Settings.Appearance.OverrideAssetsColors;
+			TxtGreenIskLoss.Value			= (decimal)m_Settings.Appearance.GreenIskLoss;
+			TxtRedIskLoss.Value				= (decimal)m_Settings.Appearance.RedIskLoss;
+			Update_OverrideColorsControls_Enabled();
+		}
 		
+		private bool SavePage_Appearance()
+		{
+			for (int i = 0; i < LstColumns.Items.Count; i++)
+			{
+				ListViewItem currItem = LstColumns.Items[i];
+				Int32 columnIndex = (Int32)currItem.Tag;
+				
+				if (currItem.Checked)
+					ListViewEx.UnhideColumn(m_ListColumns[columnIndex]);
+				else
+					ListViewEx.HideColumn(m_ListColumns[columnIndex]);
+			}
+
+			m_Settings.Appearance.RedPrice				= ((double)TxtRedPrice.Value) / 100;
+			m_Settings.Appearance.GreenPrice			= ((double)TxtGreenPrice.Value) / 100;
+			
+			m_Settings.Appearance.OverrideAssetsColors	= ChkOverrideColorsISK.Checked;
+			m_Settings.Appearance.GreenIskLoss			= (double)TxtGreenIskLoss.Value;
+			m_Settings.Appearance.RedIskLoss			= (double)TxtRedIskLoss.Value;
+			
+			return true;
+		}
+
 		private void OnGreenPriceChange(Int32 a_NewValue)
 		{
 			if (TrkGreenPrice.Value != a_NewValue)
@@ -429,72 +487,6 @@ namespace EveRefinery
 			OnGreenPriceChange(TrkGreenPrice.Value);
 		}
 
-		private void BtnLoadMineralPrices_Click(object sender, EventArgs e)
-		{
-			List<UInt32> loadPricesFor = new List<UInt32>();
-			loadPricesFor.Add((UInt32)EveTypeIDs.Tritanium);
-			loadPricesFor.Add((UInt32)EveTypeIDs.Pyerite);
-			loadPricesFor.Add((UInt32)EveTypeIDs.Mexallon);
-			loadPricesFor.Add((UInt32)EveTypeIDs.Isogen);
-			loadPricesFor.Add((UInt32)EveTypeIDs.Noxcium);
-			loadPricesFor.Add((UInt32)EveTypeIDs.Zydrine);
-			loadPricesFor.Add((UInt32)EveTypeIDs.Megacyte);
-			loadPricesFor.Add((UInt32)EveTypeIDs.Morphite);
-
-			IPriceProvider provider = new PriceProviderAuto(m_Settings);
-
-			// @@@@ Check for exceptions?
-			List<PriceRecord> prices = provider.GetPrices(loadPricesFor, m_MineralPriceSettings);
-			foreach (PriceRecord currRecord in prices)
-			{
-				if (!currRecord.Settings.Matches(m_MineralPriceSettings))
-					continue;
-
-				switch ((EveTypeIDs)currRecord.TypeID)
-				{
-				case EveTypeIDs.Tritanium:
-					TxtTritanium.Value	= (decimal)currRecord.Price;
-					break;
-				case EveTypeIDs.Pyerite:
-					TxtPyerite.Value	= (decimal)currRecord.Price;
-					break;
-				case EveTypeIDs.Mexallon:
-					TxtMexallon.Value	= (decimal)currRecord.Price;
-					break;
-				case EveTypeIDs.Isogen:
-					TxtIsogen.Value		= (decimal)currRecord.Price;
-					break;
-				case EveTypeIDs.Noxcium:
-					TxtNoxcium.Value	= (decimal)currRecord.Price;
-					break;
-				case EveTypeIDs.Zydrine:
-					TxtZydrine.Value	= (decimal)currRecord.Price;
-					break;
-				case EveTypeIDs.Megacyte:
-					TxtMegacyte.Value	= (decimal)currRecord.Price;
-					break;
-				case EveTypeIDs.Morphite:
-					TxtMorphite.Value	= (decimal)currRecord.Price;
-					break;
-				}
-			}
-		}
-
-		private void BtnRefineryCalculator_Click(object sender, EventArgs e)
-		{
-			FrmRefineCalc frmRefineCalc = new FrmRefineCalc();
-			if (DialogResult.OK != frmRefineCalc.ShowDialog(this))
-				return;
-				
-			TxtRefineryEfficiency.Value = (decimal)frmRefineCalc.m_RefineryEfficiency * 100;
-			TxtRefineryTax.Value		= (decimal)frmRefineCalc.m_TaxesTaken * 100;
-		}
-
-		private void LnkGetApiKey_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			System.Diagnostics.Process.Start(((LinkLabel)sender).Text);
-		}
-		
 		private void Update_OverrideColorsControls_Enabled()
 		{
 			TxtGreenIskLoss.Enabled = ChkOverrideColorsISK.Checked;
@@ -504,6 +496,42 @@ namespace EveRefinery
 		private void ChkOverrideColorsISK_CheckedChanged(object sender, EventArgs e)
 		{
 			Update_OverrideColorsControls_Enabled();
+		}
+		#endregion
+
+		#region Page Other
+		private void InitPage_Other()
+		{
+			ChkCheckUpdates.Checked			= m_Settings.Options.CheckUpdates;
+			TxtPriceHistory.Value			= m_Settings.PriceLoad.ItemsHistoryDays;
+			TxtPricesExpiryDays.Value		= m_Settings.PriceLoad.ItemsExpiryDays;
+			TxtMineralPricesExpiryDays.Value = m_Settings.PriceLoad.MineralExpiryDays;
+		}
+		
+		private bool SavePage_Other()
+		{
+			m_Settings.Options.CheckUpdates		= ChkCheckUpdates.Checked;
+			m_Settings.PriceLoad.ItemsHistoryDays	= (UInt32)TxtPriceHistory.Value;
+			m_Settings.PriceLoad.ItemsExpiryDays	= (UInt32)TxtPricesExpiryDays.Value;
+			m_Settings.PriceLoad.MineralExpiryDays	= (UInt32)TxtMineralPricesExpiryDays.Value;
+			return true;
+		}
+		#endregion
+
+		#region Page Developer
+		private void InitPage_Developer()
+		{
+			Boolean isPageShown = false;
+
+			#if (DEBUG)
+				isPageShown = true;
+			#endif
+
+			if (Environment.GetCommandLineArgs().Contains("/dev"))
+				isPageShown = true;
+
+			if (!isPageShown)
+				TabMain.TabPages.Remove(TabDeveloper);
 		}
 
 		private void BtnStripDatabase_Click(object sender, EventArgs e)
@@ -525,21 +553,6 @@ namespace EveRefinery
 				ErrorMessageBox.Show("Failed to strip database:\n" + a_Exception.Message);
 			}
 		}
-
-		private void UpdateMineralPricesTypeLabel()
-		{
-			BtnMineralPricesType.Text = m_MineralPriceSettings.GetHintText(m_EveDatabase);
-		}
-
-		private void BtnMineralPricesType_Click(object sender, EventArgs e)
-		{
-			FrmPriceType dialog = new FrmPriceType(m_EveDatabase);
-			dialog.m_Settings = m_MineralPriceSettings;
-			if (DialogResult.OK != dialog.ShowDialog(this))
-				return;
-
-			m_MineralPriceSettings = dialog.m_Settings;
-			UpdateMineralPricesTypeLabel();
-		}
+		#endregion
 	}
 }
