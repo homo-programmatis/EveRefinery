@@ -54,13 +54,6 @@
 			this.BtnLoadMineralPrices = new System.Windows.Forms.Button();
 			this.BtnMineralPricesType = new System.Windows.Forms.Button();
 			this.LblMineralPrices = new System.Windows.Forms.Label();
-			this.LblRefineryEfficiency = new System.Windows.Forms.Label();
-			this.TblRefineryEfficiency = new System.Windows.Forms.TableLayoutPanel();
-			this.label9 = new System.Windows.Forms.Label();
-			this.label10 = new System.Windows.Forms.Label();
-			this.TxtRefineryEfficiency = new System.Windows.Forms.NumericUpDown();
-			this.TxtRefineryTax = new System.Windows.Forms.NumericUpDown();
-			this.BtnRefineryCalculator = new System.Windows.Forms.Button();
 			this.TbpRefining = new System.Windows.Forms.TabPage();
 			this.PrpRefining = new System.Windows.Forms.PropertyGrid();
 			this.TbpApiKeys = new System.Windows.Forms.TabPage();
@@ -140,9 +133,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.TxtMegacyte)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.TxtMorphite)).BeginInit();
 			this.tableLayoutPanel4.SuspendLayout();
-			this.TblRefineryEfficiency.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.TxtRefineryEfficiency)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.TxtRefineryTax)).BeginInit();
 			this.TbpRefining.SuspendLayout();
 			this.TbpApiKeys.SuspendLayout();
 			this.TblApiTable.SuspendLayout();
@@ -213,21 +203,19 @@
 			this.TblMinerals.Controls.Add(this.LblLoadMineralPrices, 0, 3);
 			this.TblMinerals.Controls.Add(this.tableLayoutPanel4, 0, 4);
 			this.TblMinerals.Controls.Add(this.LblMineralPrices, 0, 0);
-			this.TblMinerals.Controls.Add(this.LblRefineryEfficiency, 0, 6);
-			this.TblMinerals.Controls.Add(this.TblRefineryEfficiency, 0, 7);
 			this.TblMinerals.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TblMinerals.Location = new System.Drawing.Point(3, 3);
 			this.TblMinerals.Name = "TblMinerals";
-			this.TblMinerals.RowCount = 9;
+			this.TblMinerals.RowCount = 6;
 			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F));
 			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 235F));
 			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
 			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F));
 			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
-			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F));
-			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
 			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.TblMinerals.Size = new System.Drawing.Size(355, 358);
 			this.TblMinerals.TabIndex = 2;
 			// 
@@ -573,89 +561,6 @@
 			this.LblMineralPrices.Size = new System.Drawing.Size(349, 15);
 			this.LblMineralPrices.TabIndex = 4;
 			this.LblMineralPrices.Text = "Mineral prices :";
-			// 
-			// LblRefineryEfficiency
-			// 
-			this.LblRefineryEfficiency.AutoSize = true;
-			this.LblRefineryEfficiency.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LblRefineryEfficiency.Location = new System.Drawing.Point(3, 310);
-			this.LblRefineryEfficiency.Name = "LblRefineryEfficiency";
-			this.LblRefineryEfficiency.Size = new System.Drawing.Size(349, 15);
-			this.LblRefineryEfficiency.TabIndex = 5;
-			this.LblRefineryEfficiency.Text = "Refinery efficiency :";
-			// 
-			// TblRefineryEfficiency
-			// 
-			this.TblRefineryEfficiency.ColumnCount = 5;
-			this.TblRefineryEfficiency.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-			this.TblRefineryEfficiency.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-			this.TblRefineryEfficiency.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-			this.TblRefineryEfficiency.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-			this.TblRefineryEfficiency.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-			this.TblRefineryEfficiency.Controls.Add(this.label9, 0, 0);
-			this.TblRefineryEfficiency.Controls.Add(this.label10, 2, 0);
-			this.TblRefineryEfficiency.Controls.Add(this.TxtRefineryEfficiency, 1, 0);
-			this.TblRefineryEfficiency.Controls.Add(this.TxtRefineryTax, 3, 0);
-			this.TblRefineryEfficiency.Controls.Add(this.BtnRefineryCalculator, 4, 0);
-			this.TblRefineryEfficiency.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.TblRefineryEfficiency.Location = new System.Drawing.Point(0, 325);
-			this.TblRefineryEfficiency.Margin = new System.Windows.Forms.Padding(0);
-			this.TblRefineryEfficiency.Name = "TblRefineryEfficiency";
-			this.TblRefineryEfficiency.RowCount = 1;
-			this.TblRefineryEfficiency.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.TblRefineryEfficiency.Size = new System.Drawing.Size(355, 25);
-			this.TblRefineryEfficiency.TabIndex = 6;
-			// 
-			// label9
-			// 
-			this.label9.AutoSize = true;
-			this.label9.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label9.Location = new System.Drawing.Point(3, 0);
-			this.label9.Name = "label9";
-			this.label9.Size = new System.Drawing.Size(65, 25);
-			this.label9.TabIndex = 0;
-			this.label9.Text = "Efficiency";
-			this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// label10
-			// 
-			this.label10.AutoSize = true;
-			this.label10.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label10.Location = new System.Drawing.Point(145, 0);
-			this.label10.Name = "label10";
-			this.label10.Size = new System.Drawing.Size(65, 25);
-			this.label10.TabIndex = 1;
-			this.label10.Text = "Tax :";
-			this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// TxtRefineryEfficiency
-			// 
-			this.TxtRefineryEfficiency.DecimalPlaces = 2;
-			this.TxtRefineryEfficiency.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.TxtRefineryEfficiency.Location = new System.Drawing.Point(74, 3);
-			this.TxtRefineryEfficiency.Name = "TxtRefineryEfficiency";
-			this.TxtRefineryEfficiency.Size = new System.Drawing.Size(65, 20);
-			this.TxtRefineryEfficiency.TabIndex = 2;
-			// 
-			// TxtRefineryTax
-			// 
-			this.TxtRefineryTax.DecimalPlaces = 2;
-			this.TxtRefineryTax.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.TxtRefineryTax.Location = new System.Drawing.Point(216, 3);
-			this.TxtRefineryTax.Name = "TxtRefineryTax";
-			this.TxtRefineryTax.Size = new System.Drawing.Size(65, 20);
-			this.TxtRefineryTax.TabIndex = 3;
-			// 
-			// BtnRefineryCalculator
-			// 
-			this.BtnRefineryCalculator.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.BtnRefineryCalculator.Location = new System.Drawing.Point(287, 3);
-			this.BtnRefineryCalculator.Name = "BtnRefineryCalculator";
-			this.BtnRefineryCalculator.Size = new System.Drawing.Size(65, 19);
-			this.BtnRefineryCalculator.TabIndex = 4;
-			this.BtnRefineryCalculator.Text = "Calc...";
-			this.BtnRefineryCalculator.UseVisualStyleBackColor = true;
-			this.BtnRefineryCalculator.Click += new System.EventHandler(this.BtnRefineryCalculator_Click);
 			// 
 			// TbpRefining
 			// 
@@ -1577,10 +1482,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.TxtMegacyte)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.TxtMorphite)).EndInit();
 			this.tableLayoutPanel4.ResumeLayout(false);
-			this.TblRefineryEfficiency.ResumeLayout(false);
-			this.TblRefineryEfficiency.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.TxtRefineryEfficiency)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.TxtRefineryTax)).EndInit();
 			this.TbpRefining.ResumeLayout(false);
 			this.TbpApiKeys.ResumeLayout(false);
 			this.TblApiTable.ResumeLayout(false);
@@ -1694,13 +1595,6 @@
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
 		private System.Windows.Forms.Button BtnLoadMineralPrices;
 		private System.Windows.Forms.Label LblMineralPrices;
-		private System.Windows.Forms.Label LblRefineryEfficiency;
-		private System.Windows.Forms.TableLayoutPanel TblRefineryEfficiency;
-		private System.Windows.Forms.Label label9;
-		private System.Windows.Forms.Label label10;
-		private System.Windows.Forms.NumericUpDown TxtRefineryEfficiency;
-		private System.Windows.Forms.NumericUpDown TxtRefineryTax;
-		private System.Windows.Forms.Button BtnRefineryCalculator;
 		private System.Windows.Forms.Label LblContextHelp;
 		private System.Windows.Forms.Label LblDontDisableUpdates;
 		private System.Windows.Forms.CheckBox ChkOverrideColorsISK;

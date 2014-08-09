@@ -94,10 +94,6 @@ namespace EveRefinery
 			
 			m_MineralPriceSettings		= m_Settings.PriceLoad.SourceMinerals;
 			
-            // @@@@ Remove controls
-            TxtRefineryEfficiency.Value = 100;
-			TxtRefineryTax.Value		= 0;
-
 			UpdateMineralPricesTypeLabel();
 		}
 
@@ -201,16 +197,6 @@ namespace EveRefinery
 
 			m_MineralPriceSettings = dialog.m_Settings;
 			UpdateMineralPricesTypeLabel();
-		}
-
-		private void BtnRefineryCalculator_Click(object sender, EventArgs e)
-		{
-			FrmRefineCalc frmRefineCalc = new FrmRefineCalc();
-			if (DialogResult.OK != frmRefineCalc.ShowDialog(this))
-				return;
-
-			TxtRefineryEfficiency.Value = (decimal)frmRefineCalc.m_RefineryEfficiency * 100;
-			TxtRefineryTax.Value		= (decimal)frmRefineCalc.m_TaxesTaken * 100;
 		}
 		#endregion
 
