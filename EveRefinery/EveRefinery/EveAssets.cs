@@ -285,7 +285,7 @@ namespace EveRefinery
 				System.Diagnostics.Debug.WriteLine(a_Exception.Message);
 			}
 
-			Settings.ApiKeysRow apiKey = m_Engine.GetCharacterKey(a_CharID);
+			Settings._ApiAccess.Key apiKey = m_Engine.GetCharacterKey(a_CharID);
 			if (null == apiKey)
 				return false;
 

@@ -194,6 +194,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
     <None Include="app.config" />
     <None Include="ItemPrices.xsc">
       <DependentUpon>ItemPrices.xsd</DependentUpon>
@@ -206,22 +207,6 @@
     <None Include="ItemPrices.xss">
       <DependentUpon>ItemPrices.xsd</DependentUpon>
     </None>
-    <None Include="Settings.xsc">
-      <DependentUpon>Settings.xsd</DependentUpon>
-    </None>
-    <None Include="Settings.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Settings.xss">
-      <DependentUpon>Settings.xsd</DependentUpon>
-    </None>
-    <Compile Include="Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Settings.xsd</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

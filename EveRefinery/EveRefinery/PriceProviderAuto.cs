@@ -29,7 +29,7 @@ namespace EveRefinery
 			switch (a_Settings.Provider)
 			{
 				case PriceProviders.EveCentral:
-					provider = CreateEveCentralProvider(m_Settings.Options[0].PriceHistoryDays);
+					provider = CreateEveCentralProvider(m_Settings.PriceLoad.ItemsHistoryDays);
 					break;
 				default:
 					Debug.Assert(false, "Invalid price provider");

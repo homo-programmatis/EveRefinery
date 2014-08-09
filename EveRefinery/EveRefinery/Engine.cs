@@ -61,20 +61,9 @@ namespace EveRefinery
 		}
 	}
 
-	// Optimization: Cache popular settings to counter insane DataTable overhead (saves 8 sec per sort request)	
-	public class OptionsCache
-	{
-		public double		RefineryTax;
-		public double		RefineryEfficiency;
-		public UInt32		PriceExpiryDays;
-	}
-
 	public class Engine
 	{
-		public double[]		m_MaterialPrices = new double[(UInt32)Materials.MaxMaterials];
 		public Settings		m_Settings;
-
-		public OptionsCache	m_OptionsCache = new OptionsCache();
 
 		static CultureInfo	m_DoubleFormat = (CultureInfo)CultureInfo.InvariantCulture.Clone();
 
@@ -84,301 +73,56 @@ namespace EveRefinery
 
 			LoadSettings();
 		}
+
+        private bool IsCharacterOrphaned(Settings._ApiAccess.Char a_Character)
+        {
+            return !m_Settings.ApiAccess.Keys.Exists(a => (a.KeyID == a_Character.KeyID));
+        }
 		
-		void LoadSettingsXml()
-		{
-			m_Settings = new Settings();
-			
-			try
-			{
-				m_Settings.ReadXml("Settings.xml", System.Data.XmlReadMode.IgnoreSchema);
-			}
-			catch (System.Exception a_Exception)
-			{
-				System.Diagnostics.Debug.WriteLine(a_Exception.Message);
-			}
-		}
-		
-		private void LoadSettings_TestOptions()
-		{
-			if (m_Settings.Options.Count == 0)
-				m_Settings.Options.Rows.Add();
-
-			Settings.OptionsRow options = m_Settings.Options[0];
-			if (options.IsDBPathNull())
-				options.DBPath = "EveDatabase.db";
-
-			if (options.IsPriceSettings_ItemsNull())
-			{
-				PriceSettings value = new PriceSettings();
-				value.Provider		= PriceProviders.EveCentral;
-				value.RegionID		= (UInt32)EveRegions.Forge;
-				value.SolarID		= 0;
-				value.StationID		= 0;
-				value.PriceType		= PriceTypes.SellMedian;
-
-				options.PriceSettings_Items = value;
-			}
-
-			if (options.IsPriceSettings_MineralsNull())
-			{
-				PriceSettings value = new PriceSettings();
-				value.Provider		= PriceProviders.EveCentral;
-				value.RegionID		= (UInt32)EveRegions.Forge;
-				value.SolarID		= 0;
-				value.StationID		= 0;
-				value.PriceType		= PriceTypes.SellMedian;
-
-				options.PriceSettings_Minerals = value;
-			}
-
-			if (options.IsRedPriceNull())
-				options.RedPrice = 0.50;
-				
-			if (options.IsGreenPriceNull())
-				options.GreenPrice = 1.00;
-				
-			if (options.IsCheckUpdatesNull())
-				options.CheckUpdates = true;
-				
-			if (options.IsRefineryEfficiencyNull())
-				options.RefineryEfficiency = 1.00;
-
-			if (options.RefineryEfficiency < 0)
-				options.RefineryEfficiency = 0;
-
-			if (options.RefineryEfficiency > 1.00)
-				options.RefineryEfficiency = 1.00;
-				
-			if (options.IsRefineryTaxNull())
-				options.RefineryTax = 0.00;
-
-			if (options.RefineryTax < 0)
-				options.RefineryTax = 0;
-
-			if (options.RefineryTax > 1.00)
-				options.RefineryTax = 1.00;
-				
-			if (options.IsUseAssetQuantitiesNull())
-				options.UseAssetQuantities = true;
-				
-			if (options.IsOverrideAssetsColorsNull())
-				options.OverrideAssetsColors = true;
-				
-			if (options.IsGreenIskLossNull())
-				options.GreenIskLoss = 10000;
-				
-			if (options.IsRedIskLossNull())
-				options.RedIskLoss = 100000;
-				
-			if (options.IsPriceHistoryDaysNull())
-				options.PriceHistoryDays = 14;
-
-			if (options.IsPriceExpiryDaysNull())
-				options.PriceExpiryDays = 7;
-
-			if (options.IsMineralPriceExpiryDaysNull())
-				options.MineralPriceExpiryDays = 7;
-		}
-
-		private void LoadSettings_TestPrices()
-		{
-			if (m_Settings.Prices.Count == 0)
-				m_Settings.Prices.Rows.Add();
-
-			Settings.PricesRow prices = m_Settings.Prices[0];
-
-			if (prices.IsTritaniumNull())
-				prices.Tritanium = 0;
-
-			if (prices.IsPyeriteNull())
-				prices.Pyerite = 0;
-
-			if (prices.IsTritaniumNull())
-				prices.Tritanium = 0;
-
-			if (prices.IsMexallonNull())
-				prices.Mexallon = 0;
-
-			if (prices.IsIsogenNull())
-				prices.Isogen = 0;
-
-			if (prices.IsNoxciumNull())
-				prices.Noxcium = 0;
-
-			if (prices.IsZydrineNull())
-				prices.Zydrine = 0;
-
-			if (prices.IsMegacyteNull())
-				prices.Megacyte = 0;
-
-			if (prices.IsMorphiteNull())
-				prices.Morphite = 0;
-		}
-		
-		private void LoadSettings_TestAccounts()
-		{
-			// Eliminate everything that contains null's
-			for (int i = m_Settings.ApiKeys.Count - 1; i >= 0; i--)
-			{
-				Settings.ApiKeysRow currAccount = m_Settings.ApiKeys[i];
-				if (currAccount.IsVerificationNull())
-					m_Settings.ApiKeys.Rows.RemoveAt(i);
-			}		
-		}
-
 		private void LoadSettings_TestCharacters()
 		{
-			// Eliminate everything that contains null's
-			for (int i = m_Settings.ApiCharacters.Count - 1; i >= 0; i--)
-			{
-				Settings.ApiCharactersRow currCharacter = m_Settings.ApiCharacters[i];
-				if (currCharacter.IsCharacterNameNull() ||
-					currCharacter.IsKeyIDNull())
-				{
-					m_Settings.ApiCharacters.Rows.RemoveAt(i);
-					continue;
-				}
-				
-				if (currCharacter.IsCorporationNameNull())
-					currCharacter.CorporationName = "(Unknown)";
-			}			
-		
-			// Eliminate orphaned characters
-			for (int i = m_Settings.ApiCharacters.Count - 1; i >= 0; i--)
-			{
-				Settings.ApiCharactersRow currCharacter = m_Settings.ApiCharacters[i];
-				
-				if (null == m_Settings.ApiKeys.FindByKeyID(currCharacter.KeyID))
-					m_Settings.ApiCharacters.Rows.RemoveAt(i);
-			}
+            m_Settings.ApiAccess.Chars.RemoveAll(IsCharacterOrphaned);
 		}
 		
-		protected void LoadSettings_TestViewColumns()
-		{
-			for (int i = m_Settings.ViewColumns.Rows.Count - 1; i >= 0; i--)
-			{
-				Settings.ViewColumnsRow currRow = m_Settings.ViewColumns[i];
-			
-				if (currRow.IsIndexNull() ||
-					currRow.IsVisibleNull() ||
-					currRow.IsWidthNull())
-				{
-					m_Settings.ViewColumns.Rows.RemoveAt(i);
-				}
-			}
-		}
-
 		protected void LoadSettings_TestLocations()
 		{
-			if (m_Settings.Locations.Count == 0)
-				m_Settings.Locations.Rows.Add();
-
-			Settings.LocationsRow locations = m_Settings.Locations[0];
-			
 			Int32 screenCX = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
 			Int32 screenCY = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
 			
-			if (locations.IsFormSizeNull() ||
-				locations.FormSize.Width < 100 ||
-				locations.FormSize.Width > screenCX ||
-				locations.FormSize.Height < 100 ||
-				locations.FormSize.Height > screenCY
+			if (m_Settings.UILocations.MainWindow.CX < 100 ||
+				m_Settings.UILocations.MainWindow.CX > screenCX ||
+				m_Settings.UILocations.MainWindow.CY < 100 ||
+				m_Settings.UILocations.MainWindow.CY > screenCY
 				)
 			{
-				locations.FormSize = new Size(918, 350);
+                m_Settings.UILocations.MainWindow.CX = 920;
+                m_Settings.UILocations.MainWindow.CY = 350;
 			}
 			
-			if (locations.IsFormLocationNull() ||
-				locations.FormLocation.X < 0 ||
-				locations.FormLocation.X > screenCX - 50 ||
-				locations.FormLocation.Y < 0 ||
-				locations.FormLocation.Y >= screenCY - 50
+			if (m_Settings.UILocations.MainWindow.X0 < 0 ||
+				m_Settings.UILocations.MainWindow.X0 > screenCX - 50 ||
+				m_Settings.UILocations.MainWindow.Y0 < 0 ||
+				m_Settings.UILocations.MainWindow.Y0 >= screenCY - 50
 				)
 			{
-				int x = (screenCX - locations.FormSize.Width) / 2;
-				int y = (screenCY - locations.FormSize.Height) / 2;
-				locations.FormLocation = new Point(x, y);
+				m_Settings.UILocations.MainWindow.X0 = (screenCX - m_Settings.UILocations.MainWindow.CX) / 2;
+                m_Settings.UILocations.MainWindow.Y0 = (screenCY - m_Settings.UILocations.MainWindow.CY) / 2;
 			}
-		}
-
-		protected void LoadSettings_TestToolbars()
-		{
-			for (int i = m_Settings.Toolbars.Rows.Count - 1; i >= 0; i--)
-			{
-				Settings.ToolbarsRow currRow = m_Settings.Toolbars[i];
-				
-				if (currRow.IsLocationNull() ||
-					currRow.IsSizeNull() ||
-					currRow.IsPanelNull())
-				{
-					m_Settings.Toolbars.Rows.RemoveAt(i);
-				}
-			}
-		}
-
-		private void LoadSettings_TestStats()
-		{
-			if (m_Settings.Stats.Count == 0)
-				m_Settings.Stats.Rows.Add();
-
-			Settings.StatsRow stats = m_Settings.Stats[0];
-
-			if (stats.IsLastMineralPricesEditNull())
-				stats.LastMineralPricesEdit = DateTime.FromFileTime(0);
-		}
-		
-		public void UpdateSettingsCache()
-		{
-			m_OptionsCache.RefineryEfficiency	= m_Settings.Options[0].RefineryEfficiency;
-			m_OptionsCache.RefineryTax			= m_Settings.Options[0].RefineryTax;
-			m_OptionsCache.PriceExpiryDays		= m_Settings.Options[0].PriceExpiryDays;
-		}
-		
-		protected void OnUpdateOptionsRow(object sender, Settings.OptionsRowChangeEvent e)
-		{
-			UpdateSettingsCache();
 		}
 
 		public void LoadSettings()
 		{
-			LoadSettingsXml();
-			LoadSettings_TestOptions();
-			LoadSettings_TestPrices();
-			LoadSettings_TestAccounts();
-			LoadSettings_TestCharacters();	// Must go AFTER accounts
-			LoadSettings_TestLocations();
-			LoadSettings_TestViewColumns();
-			LoadSettings_TestToolbars();
-			LoadSettings_TestStats();
-			
-			UpdateSettingsCache();
-			m_Settings.Options.OptionsRowChanged += OnUpdateOptionsRow;
+            m_Settings = SettingsStorage.Load();
 
-			m_MaterialPrices[(UInt32)Materials.Tritanium]	= m_Settings.Prices[0].Tritanium;
-			m_MaterialPrices[(UInt32)Materials.Pyerite]		= m_Settings.Prices[0].Pyerite;
-			m_MaterialPrices[(UInt32)Materials.Mexallon]	= m_Settings.Prices[0].Mexallon;
-			m_MaterialPrices[(UInt32)Materials.Isogen]		= m_Settings.Prices[0].Isogen;
-			m_MaterialPrices[(UInt32)Materials.Noxcium]		= m_Settings.Prices[0].Noxcium;
-			m_MaterialPrices[(UInt32)Materials.Zydrine]		= m_Settings.Prices[0].Zydrine;
-			m_MaterialPrices[(UInt32)Materials.Megacyte]	= m_Settings.Prices[0].Megacyte;
-			m_MaterialPrices[(UInt32)Materials.Morphite]	= m_Settings.Prices[0].Morphite;
+			LoadSettings_TestCharacters();
+			LoadSettings_TestLocations();
 		}
 		
 		public void SaveSettings()
 		{
-			m_Settings.Prices[0].Tritanium	= m_MaterialPrices[(UInt32)Materials.Tritanium];
-			m_Settings.Prices[0].Pyerite	= m_MaterialPrices[(UInt32)Materials.Pyerite];
-			m_Settings.Prices[0].Mexallon	= m_MaterialPrices[(UInt32)Materials.Mexallon];
-			m_Settings.Prices[0].Isogen		= m_MaterialPrices[(UInt32)Materials.Isogen];
-			m_Settings.Prices[0].Noxcium	= m_MaterialPrices[(UInt32)Materials.Noxcium];
-			m_Settings.Prices[0].Zydrine	= m_MaterialPrices[(UInt32)Materials.Zydrine];
-			m_Settings.Prices[0].Megacyte	= m_MaterialPrices[(UInt32)Materials.Megacyte];
-			m_Settings.Prices[0].Morphite	= m_MaterialPrices[(UInt32)Materials.Morphite];
-			
 			try
 			{
-				m_Settings.WriteXml("Settings.xml", System.Data.XmlWriteMode.IgnoreSchema);
+				SettingsStorage.Save(m_Settings);
 			}
 			catch (System.Exception a_Exception)
 			{
@@ -386,21 +130,20 @@ namespace EveRefinery
 			}
 		}
 		
-		public Settings.ApiKeysRow GetCharacterKey(UInt32 a_CharacterID)
+		public Settings._ApiAccess.Key GetCharacterKey(UInt32 a_CharacterID)
 		{
-			Settings.ApiCharactersRow character = m_Settings.ApiCharacters.FindByCharacterID(a_CharacterID);
+            Settings._ApiAccess.Char character = m_Settings.ApiAccess.Chars.FirstOrDefault(a => a.CharacterID == a_CharacterID);
 			if (null == character)
 				return null;
 
-			Settings.ApiKeysRow account = m_Settings.ApiKeys.FindByKeyID(character.KeyID);
-			return account;
+            Settings._ApiAccess.Key key = m_Settings.ApiAccess.Keys.FirstOrDefault(a => a.KeyID == character.KeyID);
+			return key;
 		}
 
 		public double GetRefineQuota(double a_OriginalAmount)
 		{
-			double result = a_OriginalAmount * m_OptionsCache.RefineryEfficiency;
-			result *= (1 - m_OptionsCache.RefineryTax);
-			return result;
+            // @@@@ Fix quota
+			return a_OriginalAmount;
 		}
 
 		/// <summary>
@@ -427,7 +170,7 @@ namespace EveRefinery
 
 			for (UInt32 i = 0; i < (UInt32)Materials.MaxMaterials; i++)
 			{
-				result += (GetRefineQuota(a_Quantity * a_Item.MaterialAmount[i]) * m_MaterialPrices[i]);
+				result += (GetRefineQuota(a_Quantity * a_Item.MaterialAmount[i]) * m_Settings.MaterialPrices[i]);
 			}
 
 			return result / a_Item.BatchSize;
@@ -437,22 +180,22 @@ namespace EveRefinery
 		{
 			double colorGreenPercent = 0;
 		
-			if (a_QuantityOK && m_Settings.Options[0].OverrideAssetsColors)
+			if (a_QuantityOK && m_Settings.Appearance.OverrideAssetsColors)
 			{
 				double losses = a_PriceSell - a_PriceRefine;
 			
-				if (losses <= m_Settings.Options[0].GreenIskLoss)
+				if (losses <= m_Settings.Appearance.GreenIskLoss)
 					return Color.FromArgb(0, 255, 0);
 					
-				if (losses >= m_Settings.Options[0].RedIskLoss)
+				if (losses >= m_Settings.Appearance.RedIskLoss)
 					return Color.FromArgb(255, 0, 0);
 
-				colorGreenPercent = (m_Settings.Options[0].RedIskLoss - losses) / (m_Settings.Options[0].RedIskLoss - m_Settings.Options[0].GreenIskLoss);
+				colorGreenPercent = (m_Settings.Appearance.RedIskLoss - losses) / (m_Settings.Appearance.RedIskLoss - m_Settings.Appearance.GreenIskLoss);
 			}
 			else
 			{
-				double priceRangeLo = a_PriceSell * m_Settings.Options[0].RedPrice;
-				double priceRangeHi = a_PriceSell * m_Settings.Options[0].GreenPrice;
+				double priceRangeLo = a_PriceSell * m_Settings.Appearance.RedPrice;
+				double priceRangeHi = a_PriceSell * m_Settings.Appearance.GreenPrice;
 				if (priceRangeLo == priceRangeHi)
 					return Color.FromArgb(255, 255, 255);
 
@@ -505,7 +248,7 @@ namespace EveRefinery
 				result.MarketPrice	= ItemPrice.Unknown;
 				isError = true;
 			}
-			else if (!a_Item.IsPricesOk(m_OptionsCache.PriceExpiryDays))
+			else if (!a_Item.IsPricesOk(m_Settings.PriceLoad.ItemsExpiryDays))
 			{
 				result.MarketPrice	= ItemPrice.Outdated;
 				isError = true;

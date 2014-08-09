@@ -245,7 +245,7 @@ namespace EveRefinery
 		{
 			Object[] result			= new Object[(int)Columns.MaxColumns];
 
-			bool isQuantityOk		= (m_SelectedAssets != null) && m_Engine.m_Settings.Options[0].UseAssetQuantities;
+			bool isQuantityOk		= (m_SelectedAssets != null) && m_Engine.m_Settings.Appearance.UseAssetQuantities;
 			UInt32 quantity			= isQuantityOk ? a_ListItem.Quantity : 1;
 
 			bool isTotals = (a_ListItem.ItemData.TypeID == SpecialTypeID_Totals);
@@ -304,7 +304,7 @@ namespace EveRefinery
 
 			a_QueryArgs.Item		= new ListViewItem();
 			ListViewItem.ListViewSubItemCollection subitems = a_QueryArgs.Item.SubItems;
-			bool isQuantityOk		= (m_SelectedAssets != null) && m_Engine.m_Settings.Options[0].UseAssetQuantities;
+			bool isQuantityOk		= (m_SelectedAssets != null) && m_Engine.m_Settings.Appearance.UseAssetQuantities;
 		
 			for (int i = 0; i < (int)Columns.MaxColumns; i++)
 			{
@@ -385,7 +385,7 @@ namespace EveRefinery
 			newItem = new TextItemWithUInt32("[Edit list...]", character_EditApiKeys);
 			currCombo.Items.Add(newItem);
 
-			foreach (Settings.ApiCharactersRow currChar in m_Engine.m_Settings.ApiCharacters.Rows)
+			foreach (Settings._ApiAccess.Char currChar in m_Engine.m_Settings.ApiAccess.Chars)
 			{
 				newItem = new TextItemWithUInt32(currChar.CharacterName, currChar.CharacterID);
 				currCombo.Items.Add(newItem);
@@ -484,15 +484,15 @@ namespace EveRefinery
 			this.Text = this.Text + " " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
 	
 			#if (!DEBUG)
-				if (m_Engine.m_Settings.Options[0].CheckUpdates)
+				if (m_Engine.m_Settings.Options.CheckUpdates)
 					CheckUpdates(true);
 			#endif
 
             ShowBuildWarnings();
 		
-			while (!m_ItemsDB.LoadEveDatabase(m_EveDatabase, m_Engine.m_Settings.Options[0].DBPath))
+			while (!m_ItemsDB.LoadEveDatabase(m_EveDatabase, m_Engine.m_Settings.Options.DBPath))
 			{
-				FrmInvalidDB frmInvalidDB = new FrmInvalidDB(m_Engine.m_Settings.Options[0].DBPath);
+				FrmInvalidDB frmInvalidDB = new FrmInvalidDB(m_Engine.m_Settings.Options.DBPath);
 				frmInvalidDB.ShowDialog(this);
 				if (frmInvalidDB.m_SelectedDbPath == null)
 				{
@@ -500,7 +500,7 @@ namespace EveRefinery
 					return;
 				}
 
-				m_Engine.m_Settings.Options[0].DBPath = frmInvalidDB.m_SelectedDbPath;
+				m_Engine.m_Settings.Options.DBPath = frmInvalidDB.m_SelectedDbPath;
 			}
 			
 			Init_TlbCmbCharacter(true);
@@ -526,13 +526,13 @@ namespace EveRefinery
 		{
 			try
 			{
-				PriceSettings settings	= m_Engine.m_Settings.Options[0].PriceSettings_Items;
+				PriceSettings settings	= m_Engine.m_Settings.PriceLoad.SourceItems;
 
 				if (a_DeleteOld)
 					m_MarketPrices.DropPrices(settings);
 
 				IPriceProvider provider = new PriceProviderAuto(m_Engine.m_Settings);
-				m_MarketPrices.LoadPrices(provider, settings, m_Engine.m_OptionsCache.PriceExpiryDays, a_Silent);
+				m_MarketPrices.LoadPrices(provider, settings, m_Engine.m_Settings.PriceLoad.ItemsExpiryDays, a_Silent);
 			}
 			catch (System.Exception a_Exception)
 			{
@@ -548,7 +548,7 @@ namespace EveRefinery
 
 		private void CheckMineralPricesExpiry()
 		{
-			DateTime expiryDate = m_Engine.m_Settings.Stats[0].LastMineralPricesEdit.AddDays(m_Engine.m_Settings.Options[0].MineralPriceExpiryDays);
+			DateTime expiryDate = m_Engine.m_Settings.Stats.LastMineralPricesEdit.AddDays(m_Engine.m_Settings.PriceLoad.MineralExpiryDays);
 			if (DateTime.UtcNow < expiryDate)
 				return;
 
@@ -569,7 +569,7 @@ namespace EveRefinery
 
 		private void LoadSettings_Columns()
 		{
-			foreach (Settings.ViewColumnsRow currRow in m_Engine.m_Settings.ViewColumns)
+			foreach (Settings._UILocations.Column currRow in m_Engine.m_Settings.UILocations.Columns)
 			{
 				Columns currColumnID = Columns_EnumFromString(currRow.Name);
 				if (Columns.MaxColumns == currColumnID)
@@ -588,8 +588,8 @@ namespace EveRefinery
 
 		private void LoadSettings_Locations()
 		{
-			this.Location	= m_Engine.m_Settings.Locations[0].FormLocation;
-			this.Size		= m_Engine.m_Settings.Locations[0].FormSize;
+			this.Location	= new Point(m_Engine.m_Settings.UILocations.MainWindow.X0, m_Engine.m_Settings.UILocations.MainWindow.Y0);
+			this.Size		= new Size(m_Engine.m_Settings.UILocations.MainWindow.CX, m_Engine.m_Settings.UILocations.MainWindow.CY);
 		}
 
 		private ToolStripPanel GetToolPanel(ToolbarLocations a_Panel)
@@ -629,16 +629,16 @@ namespace EveRefinery
 			return null;
 		}
 		
-		private void LoadSettings_SingleToolbar(Settings.ToolbarsRow a_ToolbarRow)
+		private void LoadSettings_SingleToolbar(Settings._UILocations.Toolbar a_Toolbar)
 		{
-			Control currTool	= RemoveToolbarTool(a_ToolbarRow.Name);
+			Control currTool	= RemoveToolbarTool(a_Toolbar.Name);
 			if (currTool == null)
 				return;
 						
-			currTool.Location	= a_ToolbarRow.Location;
-			currTool.Size		= a_ToolbarRow.Size;
+			currTool.Location	= new Point(a_Toolbar.Location.X0, a_Toolbar.Location.Y0);
+			currTool.Size		= new Size(a_Toolbar.Location.CX, a_Toolbar.Location.CY);
 
-			GetToolPanel((ToolbarLocations)a_ToolbarRow.Panel).Controls.Add(currTool);
+			GetToolPanel((ToolbarLocations)a_Toolbar.Panel).Controls.Add(currTool);
 		}
 		
 		private void LoadSettings_Toolbars()
@@ -655,7 +655,7 @@ namespace EveRefinery
 			foreach (Control currControl in suspendList)
 				currControl.SuspendLayout();
 				
-			foreach (Settings.ToolbarsRow currRow in m_Engine.m_Settings.Toolbars.Rows)
+			foreach (Settings._UILocations.Toolbar currRow in m_Engine.m_Settings.UILocations.Toolbars)
 			{
 				LoadSettings_SingleToolbar(currRow);
 			}
@@ -666,32 +666,36 @@ namespace EveRefinery
 
 		private void LoadSettings_Generic()
 		{
-			TlbChkUseQuantities.Checked = m_Engine.m_Settings.Options[0].UseAssetQuantities;
+			TlbChkUseQuantities.Checked = m_Engine.m_Settings.Appearance.UseAssetQuantities;
 		}
 
 		private void UpdateSettings_Locations()
 		{
 			if (this.WindowState == FormWindowState.Normal)
 			{
-				m_Engine.m_Settings.Locations[0].FormLocation = this.Location;
-				m_Engine.m_Settings.Locations[0].FormSize = this.Size;
+				m_Engine.m_Settings.UILocations.MainWindow.X0 = this.Location.X;
+                m_Engine.m_Settings.UILocations.MainWindow.Y0 = this.Location.Y;
+                m_Engine.m_Settings.UILocations.MainWindow.CX = this.Size.Width;
+                m_Engine.m_Settings.UILocations.MainWindow.CY = this.Size.Height;
 			}
 		}
 		
 		private void UpdateSettings_SingleToolbar(Control a_ToolControl, ToolbarLocations a_Panel)
 		{
-			Settings.ToolbarsRow newRow = m_Engine.m_Settings.Toolbars.NewToolbarsRow();
-			newRow.Name		= a_ToolControl.Name;
-			newRow.Location	= a_ToolControl.Location;
-			newRow.Size		= a_ToolControl.Size;
-			newRow.Panel	= (UInt32)a_Panel;
+			Settings._UILocations.Toolbar currToolbar = new Settings._UILocations.Toolbar();
+			currToolbar.Name		= a_ToolControl.Name;
+			currToolbar.Location.X0	= a_ToolControl.Location.X;
+            currToolbar.Location.Y0	= a_ToolControl.Location.Y;
+            currToolbar.Location.CX	= a_ToolControl.Size.Width;
+            currToolbar.Location.CY	= a_ToolControl.Size.Height;
+			currToolbar.Panel	    = (UInt32)a_Panel;
 
-			m_Engine.m_Settings.Toolbars.Rows.Add(newRow);
+			m_Engine.m_Settings.UILocations.Toolbars.Add(currToolbar);
 		}
 
 		private void UpdateSettings_Toolbars()
 		{
-			m_Engine.m_Settings.Toolbars.Clear();
+			m_Engine.m_Settings.UILocations.Toolbars.Clear();
 		
 			foreach (Control currControl in TlcToolContainer.TopToolStripPanel.Controls)
 			{
@@ -716,19 +720,19 @@ namespace EveRefinery
 
 		private void UpdateSettings_Columns()
 		{
-			m_Engine.m_Settings.ViewColumns.Clear();
+			m_Engine.m_Settings.UILocations.Columns.Clear();
 			
 			for (int i = 0; i < LstRefinery.Columns.Count; i++)
 			{
-				ColumnHeader currColumn = LstRefinery.Columns[i];
+				ColumnHeader currColumnHdr = LstRefinery.Columns[i];
 				Columns currColumnID = (Columns)i;
 
-				Settings.ViewColumnsRow newRow = m_Engine.m_Settings.ViewColumns.NewViewColumnsRow();
-				newRow.Name		= currColumnID.ToString();
-				newRow.Index	= (UInt32)currColumn.DisplayIndex;
-				newRow.Visible	= ListViewEx.IsColumnVisible(currColumn);
-				newRow.Width	= ListViewEx.GetHideableColumnWidth(currColumn);
-				m_Engine.m_Settings.ViewColumns.Rows.Add(newRow);
+				Settings._UILocations.Column currColumn = new Settings._UILocations.Column();
+				currColumn.Name		= currColumnID.ToString();
+				currColumn.Index	= (UInt32)currColumnHdr.DisplayIndex;
+				currColumn.Visible	= ListViewEx.IsColumnVisible(currColumnHdr);
+				currColumn.Width	= ListViewEx.GetHideableColumnWidth(currColumnHdr);
+				m_Engine.m_Settings.UILocations.Columns.Add(currColumn);
 			}
 		}
 
@@ -864,7 +868,7 @@ namespace EveRefinery
 
 		private void TlbChkUseQuantities_CheckedChanged(object sender, EventArgs e)
 		{
-			m_Engine.m_Settings.Options[0].UseAssetQuantities = TlbChkUseQuantities.Checked;
+			m_Engine.m_Settings.Appearance.UseAssetQuantities = TlbChkUseQuantities.Checked;
 			UpdateToolbarIcons();
 			UpdateLstRefinery();
 		}
@@ -891,7 +895,7 @@ namespace EveRefinery
 					m_TotalsItem.Quantity			+= listItem.Quantity;
 					m_TotalsItem.ItemData.Volume	+= listItem.Quantity * currRecord.Volume;
 
-					bool isPriceExpired	= !currRecord.IsPricesOk(m_Engine.m_OptionsCache.PriceExpiryDays);
+					bool isPriceExpired	= !currRecord.IsPricesOk(m_Engine.m_Settings.PriceLoad.ItemsExpiryDays);
 					bool isZeroPrice	= (currRecord.Price == 0);
 
 					if (!isPriceExpired && !isZeroPrice)
@@ -1089,17 +1093,17 @@ namespace EveRefinery
 
 		private void UpdatePricesSettingsHint()
 		{
-			TlbLblPricesType.Text = m_Engine.m_Settings.Options[0].PriceSettings_Items.GetHintText(m_EveDatabase);
+			TlbLblPricesType.Text = m_Engine.m_Settings.PriceLoad.SourceItems.GetHintText(m_EveDatabase);
 		}
 
 		private void TlbBtnPricesType_Click(object sender, EventArgs e)
 		{
 			FrmPriceType dialog = new FrmPriceType(m_EveDatabase);
-			dialog.m_Settings = m_Engine.m_Settings.Options[0].PriceSettings_Items;
+			dialog.m_Settings = m_Engine.m_Settings.PriceLoad.SourceItems;
 			if (DialogResult.OK != dialog.ShowDialog(this))
 				return;
 
-			m_Engine.m_Settings.Options[0].PriceSettings_Items = dialog.m_Settings;
+			m_Engine.m_Settings.PriceLoad.SourceItems = dialog.m_Settings;
 			UpdatePricesSettingsHint();
 			LoadMarketPrices(false, false);
 		}

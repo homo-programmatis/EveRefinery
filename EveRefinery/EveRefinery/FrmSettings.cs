@@ -60,8 +60,6 @@ namespace EveRefinery
 			if (!SavePage_Other())
 				return;
 				
-			m_Engine.UpdateSettingsCache();
-
 			this.DialogResult = DialogResult.OK;
 			Close();
 		}
@@ -74,16 +72,14 @@ namespace EveRefinery
 
 		private void InitPage_ApiKeys()
 		{
-			for (int i = 0; i < m_Engine.m_Settings.ApiKeys.Count; i++)
+			foreach (Settings._ApiAccess.Key currKey in m_Engine.m_Settings.ApiAccess.Keys)
 			{
-				Settings.ApiKeysRow currKey = m_Engine.m_Settings.ApiKeys[i];
 				ListViewItem newItem = LstUsers.Items.Add(currKey.KeyID.ToString());
 				newItem.SubItems.Add(currKey.Verification);
 			}
 
-			for (int i = 0; i < m_Engine.m_Settings.ApiCharacters.Count; i++)
+            foreach (Settings._ApiAccess.Char currCharacter in m_Engine.m_Settings.ApiAccess.Chars)
 			{
-				Settings.ApiCharactersRow currCharacter = m_Engine.m_Settings.ApiCharacters[i];
 				ListViewItem newItem = LstCharacters.Items.Add(currCharacter.KeyID.ToString());
 				newItem.SubItems.Add(currCharacter.CharacterID.ToString());
 				newItem.SubItems.Add(currCharacter.CharacterName);
@@ -99,20 +95,20 @@ namespace EveRefinery
 					return false;
 			}
 
-			m_Engine.m_Settings.ApiKeys.Clear();
+			m_Engine.m_Settings.ApiAccess.Keys.Clear();
 			for (int i = 0; i < LstUsers.Items.Count; i++)
 			{
 				ListViewItem currItem = LstUsers.Items[i];
 				string userID	= currItem.Text;
 				string apiKey	= currItem.SubItems[1].Text;
 
-				Settings.ApiKeysRow newRow = m_Engine.m_Settings.ApiKeys.NewApiKeysRow();
+				Settings._ApiAccess.Key newRow = new Settings._ApiAccess.Key();
 				newRow.KeyID		= Convert.ToUInt32(userID);
 				newRow.Verification	= apiKey;
-				m_Engine.m_Settings.ApiKeys.AddApiKeysRow(newRow);
+				m_Engine.m_Settings.ApiAccess.Keys.Add(newRow);
 			}
 
-			m_Engine.m_Settings.ApiCharacters.Clear();
+			m_Engine.m_Settings.ApiAccess.Chars.Clear();
 			for (int i = 0; i < LstCharacters.Items.Count; i++)
 			{
 				ListViewItem currItem = LstCharacters.Items[i];
@@ -121,12 +117,12 @@ namespace EveRefinery
 				string charName = currItem.SubItems[2].Text;
 				string charCorp = currItem.SubItems[3].Text;
 
-				Settings.ApiCharactersRow newRow = m_Engine.m_Settings.ApiCharacters.NewApiCharactersRow();
+				Settings._ApiAccess.Char newRow = new Settings._ApiAccess.Char();
 				newRow.KeyID			= Convert.ToUInt32(keyID);
 				newRow.CharacterID		= Convert.ToUInt32(charID);
 				newRow.CharacterName	= charName;
 				newRow.CorporationName	= charCorp;
-				m_Engine.m_Settings.ApiCharacters.AddApiCharactersRow(newRow);
+				m_Engine.m_Settings.ApiAccess.Chars.Add(newRow);
 			}
 
 			return true;
@@ -134,19 +130,20 @@ namespace EveRefinery
 
 		private void InitPage_Minerals()
 		{
-			TxtTritanium.Value	= (decimal)m_Engine.m_MaterialPrices[(UInt32)Materials.Tritanium];
-			TxtPyerite.Value	= (decimal)m_Engine.m_MaterialPrices[(UInt32)Materials.Pyerite];
-			TxtMexallon.Value	= (decimal)m_Engine.m_MaterialPrices[(UInt32)Materials.Mexallon];
-			TxtIsogen.Value		= (decimal)m_Engine.m_MaterialPrices[(UInt32)Materials.Isogen];
-			TxtNoxcium.Value	= (decimal)m_Engine.m_MaterialPrices[(UInt32)Materials.Noxcium];
-			TxtZydrine.Value	= (decimal)m_Engine.m_MaterialPrices[(UInt32)Materials.Zydrine];
-			TxtMegacyte.Value	= (decimal)m_Engine.m_MaterialPrices[(UInt32)Materials.Megacyte];
-			TxtMorphite.Value	= (decimal)m_Engine.m_MaterialPrices[(UInt32)Materials.Morphite];
+			TxtTritanium.Value	= (decimal)m_Engine.m_Settings.MaterialPrices[(UInt32)Materials.Tritanium];
+			TxtPyerite.Value	= (decimal)m_Engine.m_Settings.MaterialPrices[(UInt32)Materials.Pyerite];
+			TxtMexallon.Value	= (decimal)m_Engine.m_Settings.MaterialPrices[(UInt32)Materials.Mexallon];
+			TxtIsogen.Value		= (decimal)m_Engine.m_Settings.MaterialPrices[(UInt32)Materials.Isogen];
+			TxtNoxcium.Value	= (decimal)m_Engine.m_Settings.MaterialPrices[(UInt32)Materials.Noxcium];
+			TxtZydrine.Value	= (decimal)m_Engine.m_Settings.MaterialPrices[(UInt32)Materials.Zydrine];
+			TxtMegacyte.Value	= (decimal)m_Engine.m_Settings.MaterialPrices[(UInt32)Materials.Megacyte];
+			TxtMorphite.Value	= (decimal)m_Engine.m_Settings.MaterialPrices[(UInt32)Materials.Morphite];
 			
-			Settings.OptionsRow options = m_Engine.m_Settings.Options[0];
-			m_MineralPriceSettings		= options.PriceSettings_Minerals;
-			TxtRefineryEfficiency.Value = (decimal)options.RefineryEfficiency * 100;
-			TxtRefineryTax.Value		= (decimal)options.RefineryTax * 100;
+			m_MineralPriceSettings		= m_Engine.m_Settings.PriceLoad.SourceMinerals;
+			
+            // @@@@ Remove controls
+            TxtRefineryEfficiency.Value = 100;
+			TxtRefineryTax.Value		= 0;
 
 			UpdateMineralPricesTypeLabel();
 		}
@@ -156,7 +153,7 @@ namespace EveRefinery
 			Boolean mineralPricesChanged = false;
 			for (int i = 0; i < a_OldPrices.Length; i++)
 			{
-				if (a_OldPrices[i] != m_Engine.m_MaterialPrices[i])
+				if (a_OldPrices[i] != m_Engine.m_Settings.MaterialPrices[i])
 				{
 					mineralPricesChanged = true;
 					break;
@@ -164,26 +161,23 @@ namespace EveRefinery
 			}
 
 			if (mineralPricesChanged)
-				m_Engine.m_Settings.Stats[0].LastMineralPricesEdit = DateTime.UtcNow;
+				m_Engine.m_Settings.Stats.LastMineralPricesEdit = DateTime.UtcNow;
 		}
 
 		private bool SavePage_Minerals()
 		{
-			double[] oldMaterialPrices = (double[])m_Engine.m_MaterialPrices.Clone();
+			double[] oldMaterialPrices = (double[])m_Engine.m_Settings.MaterialPrices.Clone();
 
-			m_Engine.m_MaterialPrices[(UInt32)Materials.Tritanium]	= (double)TxtTritanium.Value;
-			m_Engine.m_MaterialPrices[(UInt32)Materials.Pyerite]	= (double)TxtPyerite.Value;
-			m_Engine.m_MaterialPrices[(UInt32)Materials.Mexallon]	= (double)TxtMexallon.Value;
-			m_Engine.m_MaterialPrices[(UInt32)Materials.Isogen]		= (double)TxtIsogen.Value;
-			m_Engine.m_MaterialPrices[(UInt32)Materials.Noxcium]	= (double)TxtNoxcium.Value;
-			m_Engine.m_MaterialPrices[(UInt32)Materials.Zydrine]	= (double)TxtZydrine.Value;
-			m_Engine.m_MaterialPrices[(UInt32)Materials.Megacyte]	= (double)TxtMegacyte.Value;
-			m_Engine.m_MaterialPrices[(UInt32)Materials.Morphite]	= (double)TxtMorphite.Value;
+			m_Engine.m_Settings.MaterialPrices[(UInt32)Materials.Tritanium]	= (double)TxtTritanium.Value;
+			m_Engine.m_Settings.MaterialPrices[(UInt32)Materials.Pyerite]	= (double)TxtPyerite.Value;
+			m_Engine.m_Settings.MaterialPrices[(UInt32)Materials.Mexallon]	= (double)TxtMexallon.Value;
+			m_Engine.m_Settings.MaterialPrices[(UInt32)Materials.Isogen]		= (double)TxtIsogen.Value;
+			m_Engine.m_Settings.MaterialPrices[(UInt32)Materials.Noxcium]	= (double)TxtNoxcium.Value;
+			m_Engine.m_Settings.MaterialPrices[(UInt32)Materials.Zydrine]	= (double)TxtZydrine.Value;
+			m_Engine.m_Settings.MaterialPrices[(UInt32)Materials.Megacyte]	= (double)TxtMegacyte.Value;
+			m_Engine.m_Settings.MaterialPrices[(UInt32)Materials.Morphite]	= (double)TxtMorphite.Value;
 
-			Settings.OptionsRow options		= m_Engine.m_Settings.Options[0];
-			options.PriceSettings_Minerals	= m_MineralPriceSettings;
-			options.RefineryEfficiency		= (double)(TxtRefineryEfficiency.Value / 100);
-			options.RefineryTax				= (double)(TxtRefineryTax.Value / 100);
+			m_Engine.m_Settings.PriceLoad.SourceMinerals = m_MineralPriceSettings;
 
 			HandleMineralPricesChange(oldMaterialPrices);
 			return true;
@@ -200,14 +194,12 @@ namespace EveRefinery
 				LstColumns.Items.Add(newItem);
 			}
 
-			Settings.OptionsRow options = m_Engine.m_Settings.Options[0];
-
-			TxtRedPrice.Value				= (int)(options.RedPrice * 100);
-			TxtGreenPrice.Value				= (int)(options.GreenPrice * 100);
+			TxtRedPrice.Value				= (int)(m_Engine.m_Settings.Appearance.RedPrice * 100);
+			TxtGreenPrice.Value				= (int)(m_Engine.m_Settings.Appearance.GreenPrice * 100);
 			
-			ChkOverrideColorsISK.Checked	= options.OverrideAssetsColors;
-			TxtGreenIskLoss.Value			= (decimal)options.GreenIskLoss;
-			TxtRedIskLoss.Value				= (decimal)options.RedIskLoss;
+			ChkOverrideColorsISK.Checked	= m_Engine.m_Settings.Appearance.OverrideAssetsColors;
+			TxtGreenIskLoss.Value			= (decimal)m_Engine.m_Settings.Appearance.GreenIskLoss;
+			TxtRedIskLoss.Value				= (decimal)m_Engine.m_Settings.Appearance.RedIskLoss;
 			Update_OverrideColorsControls_Enabled();
 		}
 		
@@ -224,36 +216,30 @@ namespace EveRefinery
 					ListViewEx.HideColumn(m_ListColumns[columnIndex]);
 			}
 
-			Settings.OptionsRow options = m_Engine.m_Settings.Options[0];
-
-			options.RedPrice				= ((double)TxtRedPrice.Value) / 100;
-			options.GreenPrice				= ((double)TxtGreenPrice.Value) / 100;
+			m_Engine.m_Settings.Appearance.RedPrice				= ((double)TxtRedPrice.Value) / 100;
+			m_Engine.m_Settings.Appearance.GreenPrice			= ((double)TxtGreenPrice.Value) / 100;
 			
-			options.OverrideAssetsColors	= ChkOverrideColorsISK.Checked;
-			options.GreenIskLoss			= (double)TxtGreenIskLoss.Value;
-			options.RedIskLoss				= (double)TxtRedIskLoss.Value;
+			m_Engine.m_Settings.Appearance.OverrideAssetsColors	= ChkOverrideColorsISK.Checked;
+			m_Engine.m_Settings.Appearance.GreenIskLoss			= (double)TxtGreenIskLoss.Value;
+			m_Engine.m_Settings.Appearance.RedIskLoss			= (double)TxtRedIskLoss.Value;
 			
 			return true;
 		}
 		
 		private void InitPage_Other()
 		{
-			Settings.OptionsRow options = m_Engine.m_Settings.Options[0];
-
-			ChkCheckUpdates.Checked			= options.CheckUpdates;
-			TxtPriceHistory.Value			= options.PriceHistoryDays;
-			TxtPricesExpiryDays.Value		= options.PriceExpiryDays;
-			TxtMineralPricesExpiryDays.Value = options.MineralPriceExpiryDays;
+			ChkCheckUpdates.Checked			= m_Engine.m_Settings.Options.CheckUpdates;
+			TxtPriceHistory.Value			= m_Engine.m_Settings.PriceLoad.ItemsHistoryDays;
+			TxtPricesExpiryDays.Value		= m_Engine.m_Settings.PriceLoad.ItemsExpiryDays;
+			TxtMineralPricesExpiryDays.Value = m_Engine.m_Settings.PriceLoad.MineralExpiryDays;
 		}
 		
 		private bool SavePage_Other()
 		{
-			Settings.OptionsRow options = m_Engine.m_Settings.Options[0];
-
-			options.CheckUpdates			= ChkCheckUpdates.Checked;
-			options.PriceHistoryDays		= (UInt32)TxtPriceHistory.Value;
-			options.PriceExpiryDays			= (UInt32)TxtPricesExpiryDays.Value;
-			options.MineralPriceExpiryDays	= (UInt32)TxtMineralPricesExpiryDays.Value;
+			m_Engine.m_Settings.Options.CheckUpdates		= ChkCheckUpdates.Checked;
+			m_Engine.m_Settings.PriceLoad.ItemsHistoryDays	= (UInt32)TxtPriceHistory.Value;
+			m_Engine.m_Settings.PriceLoad.ItemsExpiryDays	= (UInt32)TxtPricesExpiryDays.Value;
+			m_Engine.m_Settings.PriceLoad.MineralExpiryDays	= (UInt32)TxtMineralPricesExpiryDays.Value;
 			return true;
 		}
 
