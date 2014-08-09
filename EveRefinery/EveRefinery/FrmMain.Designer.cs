@@ -37,9 +37,12 @@
 			this.LstRefinery = new SpecialFNs.ListViewEx();
 			this.ClmItemName = new System.Windows.Forms.ColumnHeader();
 			this.ClmMetaLevel = new System.Windows.Forms.ColumnHeader();
+			this.ClmQuantity = new System.Windows.Forms.ColumnHeader();
+			this.ClmLossPercent = new System.Windows.Forms.ColumnHeader();
 			this.ClmRefinedCost = new System.Windows.Forms.ColumnHeader();
 			this.ClmSellPrice = new System.Windows.Forms.ColumnHeader();
 			this.ClmDeltaPrice = new System.Windows.Forms.ColumnHeader();
+			this.ClmYield = new System.Windows.Forms.ColumnHeader();
 			this.ClmTritanium = new System.Windows.Forms.ColumnHeader();
 			this.ClmPyerite = new System.Windows.Forms.ColumnHeader();
 			this.ClmMexallon = new System.Windows.Forms.ColumnHeader();
@@ -48,9 +51,7 @@
 			this.ClmZydrine = new System.Windows.Forms.ColumnHeader();
 			this.ClmMegacyte = new System.Windows.Forms.ColumnHeader();
 			this.ClmMorphite = new System.Windows.Forms.ColumnHeader();
-			this.ClmQuantity = new System.Windows.Forms.ColumnHeader();
 			this.ClmItemType = new System.Windows.Forms.ColumnHeader();
-			this.ClmLossPercent = new System.Windows.Forms.ColumnHeader();
 			this.ClmVolume = new System.Windows.Forms.ColumnHeader();
 			this.ClmRefinedVolume = new System.Windows.Forms.ColumnHeader();
 			this.TblStatusBar = new System.Windows.Forms.TableLayoutPanel();
@@ -148,6 +149,7 @@
             this.ClmRefinedCost,
             this.ClmSellPrice,
             this.ClmDeltaPrice,
+            this.ClmYield,
             this.ClmTritanium,
             this.ClmPyerite,
             this.ClmMexallon,
@@ -184,6 +186,17 @@
 			this.ClmMetaLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.ClmMetaLevel.Width = 40;
 			// 
+			// ClmQuantity
+			// 
+			this.ClmQuantity.Text = "Qty";
+			this.ClmQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.ClmQuantity.Width = 50;
+			// 
+			// ClmLossPercent
+			// 
+			this.ClmLossPercent.Text = "Loss %";
+			this.ClmLossPercent.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			// 
 			// ClmRefinedCost
 			// 
 			this.ClmRefinedCost.Text = "Refined Cost";
@@ -201,6 +214,11 @@
 			this.ClmDeltaPrice.Text = "Delta";
 			this.ClmDeltaPrice.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.ClmDeltaPrice.Width = 80;
+			// 
+			// ClmYield
+			// 
+			this.ClmYield.Text = "Yield%";
+			this.ClmYield.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
 			// ClmTritanium
 			// 
@@ -242,21 +260,10 @@
 			this.ClmMorphite.Text = "Morphite";
 			this.ClmMorphite.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
-			// ClmQuantity
-			// 
-			this.ClmQuantity.Text = "Qty";
-			this.ClmQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.ClmQuantity.Width = 50;
-			// 
 			// ClmItemType
 			// 
 			this.ClmItemType.Text = "Type";
 			this.ClmItemType.Width = 200;
-			// 
-			// ClmLossPercent
-			// 
-			this.ClmLossPercent.Text = "Loss %";
-			this.ClmLossPercent.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
 			// ClmVolume
 			// 
@@ -619,6 +626,7 @@
 		private System.Windows.Forms.ColumnHeader ClmRefinedVolume;
 		private System.Windows.Forms.ToolStripButton TlbBtnPricesType;
 		private System.Windows.Forms.ToolStripLabel TlbLblPricesType;
+		private System.Windows.Forms.ColumnHeader ClmYield;
 
     }
 }

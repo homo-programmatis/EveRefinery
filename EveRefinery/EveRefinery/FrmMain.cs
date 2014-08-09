@@ -23,6 +23,7 @@ namespace EveRefinery
 		RefinedCost,
 		MarketPrice,
 		PriceDelta,
+		Yield,
 		Tritanium,
 		Pyerite,
 		Mexallon,
@@ -261,6 +262,7 @@ namespace EveRefinery
                 result[(int)Columns.RefinedCost]	= prices.RefinedCost;
 				result[(int)Columns.MarketPrice]	= prices.MarketPrice;
 				result[(int)Columns.PriceDelta]		= prices.PriceDelta;
+				result[(int)Columns.Yield]			= m_Engine.GetEffectiveYield(a_ListItem.ItemData, m_ItemsDB.GetMutators());
 
 				double		refinedVolume	= 0;
 				Columns[]	materialColumns = new Columns[] { Columns.Tritanium, Columns.Pyerite, Columns.Mexallon, Columns.Isogen, Columns.Noxcium, Columns.Zydrine, Columns.Megacyte, Columns.Morphite };
@@ -321,6 +323,7 @@ namespace EveRefinery
 			subitems[(int)Columns.RefinedCost].Text	= ItemPrice.FormatPrice((double)columnData[(int)Columns.RefinedCost]);
 			subitems[(int)Columns.MarketPrice].Text	= ItemPrice.FormatPrice((double)columnData[(int)Columns.MarketPrice]);
 			subitems[(int)Columns.PriceDelta].Text	= ItemPrice.FormatPrice((double)columnData[(int)Columns.PriceDelta]);
+			subitems[(int)Columns.Yield].Text		= String.Format("{0:0.00%}", (double)columnData[(int)Columns.Yield]);
 
 			subitems[(int)Columns.Tritanium].Text	= Engine.FormatDouble((double)columnData[(int)Columns.Tritanium]);
 			subitems[(int)Columns.Pyerite].Text		= Engine.FormatDouble((double)columnData[(int)Columns.Pyerite]);
