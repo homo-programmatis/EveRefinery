@@ -6,16 +6,20 @@ using System.Xml.Serialization;
 
 namespace EveRefinery
 {
+	[Serializable]
     public class Settings
     {
+		[Serializable]
         public class _ApiAccess
         {
+			[Serializable]
             public class Key
             {
                 public UInt32       KeyID;
                 public string       Verification;
             }
 
+			[Serializable]
             public class Char
             {
                 public UInt32       KeyID;
@@ -28,8 +32,10 @@ namespace EveRefinery
             public List<Char>       Chars                   = new List<Char>();
         }
 
+		[Serializable]
         public class _UILocations
         {
+			[Serializable]
             public struct Rect
             {
                 public Int32        X0;
@@ -38,6 +44,7 @@ namespace EveRefinery
                 public Int32        CY;
             }
 
+			[Serializable]
             public class Column
             {
                 public String       Name;
@@ -46,6 +53,7 @@ namespace EveRefinery
                 public UInt32       Width;
             }
 
+			[Serializable]
             public class Toolbar
             {
                 public String       Name;
@@ -58,6 +66,7 @@ namespace EveRefinery
             public List<Toolbar>    Toolbars                = new List<Toolbar>();
         }
 
+		[Serializable]
         public class _PriceLoad
         {
             public PriceSettings    SourceMinerals          = new PriceSettings{Provider = PriceProviders.EveCentral, RegionID = (UInt32)EveRegions.Forge, PriceType = PriceTypes.SellMedian};
@@ -67,6 +76,7 @@ namespace EveRefinery
             public UInt32           MineralExpiryDays       = 7;
         }
 
+		[Serializable]
         public class _Appearance
         {
             public double           RedPrice                = 0.50;
@@ -77,12 +87,14 @@ namespace EveRefinery
             public bool             OverrideAssetsColors    = true;
         }
 
+		[Serializable]
         public class _Options
         {
             public String           DBPath                  = "EveDatabase.db";
             public bool             CheckUpdates            = true;
         }
 
+		[Serializable]
         public class _Stats
         {
             public DateTime         LastMineralPricesEdit   = DateTime.FromFileTime(0);
@@ -96,6 +108,11 @@ namespace EveRefinery
         public _ApiAccess           ApiAccess               = new _ApiAccess();
         public _UILocations         UILocations             = new _UILocations();
         public _Stats               Stats                   = new _Stats();
+
+		public Settings				Clone()
+		{
+			return SpecialFNs.Utility.CloneUsingBinary(this);
+		}
     }
 
     class SettingsStorage

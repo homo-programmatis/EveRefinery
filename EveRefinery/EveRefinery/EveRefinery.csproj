@@ -71,6 +71,9 @@
     <Compile Include="..\..\!ENGINES\!SpecialFNs_CS\AssertEnumCount.cs">
       <Link>SpecialFNs\AssertEnumCount.cs</Link>
     </Compile>
+    <Compile Include="..\..\!Engines\!SpecialFNs_CS\CloneUsingBinary.cs">
+      <Link>SpecialFNs\CloneUsingBinary.cs</Link>
+    </Compile>
     <Compile Include="..\..\!ENGINES\!SpecialFNs_CS\ErrorMessageBox.cs">
       <Link>SpecialFNs\ErrorMessageBox.cs</Link>
     </Compile>

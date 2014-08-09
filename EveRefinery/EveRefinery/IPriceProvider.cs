@@ -8,6 +8,7 @@ namespace EveRefinery
 		EveCentral,
 	}
 
+	[Serializable]
 	public struct PriceSettings
 	{
 		public PriceProviders		Provider;

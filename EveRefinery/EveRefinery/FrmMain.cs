@@ -789,10 +789,11 @@ namespace EveRefinery
 
 		private void ShowSettings(FrmSettings.Pages a_Page)
 		{
-			FrmSettings frmSettings = new FrmSettings(a_Page, m_Engine, m_EveDatabase, LstRefinery.Columns);
+			FrmSettings frmSettings = new FrmSettings(a_Page, (Settings)m_Engine.m_Settings.Clone(), m_EveDatabase, LstRefinery.Columns);
 			if (DialogResult.OK != frmSettings.ShowDialog(this))
 				return;
 
+			m_Engine.m_Settings = frmSettings.GetSettings();
 			Init_TlbCmbCharacter(false);
 			UpdateLstRefinery();
 		}
