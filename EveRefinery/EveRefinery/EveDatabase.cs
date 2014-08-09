@@ -504,6 +504,22 @@ namespace EveRefinery
 			return result;
 		}
 
+		private static String MakeUsefulAttributeList()
+		{
+			StringBuilder result = new StringBuilder();
+
+			EveAttributes[] attributeIDs = (EveAttributes[])Enum.GetValues(typeof(EveAttributes));
+			foreach (EveAttributes currAttribute in attributeIDs)
+			{
+				if (0 != result.Length)
+					result.Append(',');
+
+				result.Append((int)currAttribute);
+			}
+
+			return result.ToString();
+		}
+
 		public static void StripDatabase(String a_DBPath)
 		{
 			SQLiteConnectionStringBuilder connBuilder = new SQLiteConnectionStringBuilder();
@@ -531,7 +547,7 @@ namespace EveRefinery
 
 			// Leave only MetaLevel in attributes
 			{
-				String sqlText = "DELETE FROM " + Tables.dgmTypeAttributes + " WHERE attributeID != " + (int)EveAttributes.MetaLevel;
+				String sqlText = "DELETE FROM " + Tables.dgmTypeAttributes + " WHERE attributeID NOT IN (" + MakeUsefulAttributeList() + ")";
 				SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, connection);
 				sqlCommand.ExecuteNonQuery();
 			}
