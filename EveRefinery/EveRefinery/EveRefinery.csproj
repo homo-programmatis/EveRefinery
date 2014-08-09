@@ -81,6 +81,9 @@
       <Link>SpecialFNs\ListViewEx.cs</Link>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="..\..\!Engines\!SpecialFNs_CS\SerializableDictionary.cs">
+      <Link>SpecialFNs\SerializableDictionary.cs</Link>
+    </Compile>
     <Compile Include="..\..\!ENGINES\!SpecialFNs_CS\SQLiteDesign.cs">
       <Link>SpecialFNs\SQLiteDesign.cs</Link>
     </Compile>
