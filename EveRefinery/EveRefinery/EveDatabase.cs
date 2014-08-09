@@ -234,10 +234,33 @@ namespace EveRefinery
 						currItem.MetaLevel  = (UInt32)dataReader.GetFloat(10);
 
 					if (!dataReader.IsDBNull(11))
-						currItem.RefineSkill = (UInt32)dataReader.GetInt32(11);
+						currItem.RefineSkill  = (UInt32)dataReader.GetInt32(11);
 					else if (!dataReader.IsDBNull(12))
-						currItem.RefineSkill = (UInt32)dataReader.GetFloat(12);
+						currItem.RefineSkill  = (UInt32)dataReader.GetFloat(12);
 				}
+			}
+		}
+
+		private void LoadRefiningMutators(RefiningMutators a_Result)
+		{
+			String sqlText = 
+				"SELECT\n" +
+				"	" + DbField(Tables.dgmTypeAttributes, "typeID") + ",\n" +		// 0
+				"	" + DbField(Tables.dgmTypeAttributes, "valueInt") + ",\n" +		// 1
+				"	" + DbField(Tables.dgmTypeAttributes, "valueFloat") + "\n" +	// 2
+				"FROM\n" + 
+				"	" + Tables.dgmTypeAttributes + "\n" +
+				"WHERE\n" +
+				"	(" + DbField(Tables.dgmTypeAttributes, "attributeID") + " = " + (int)EveAttributes.RefiningMutator + ")";
+
+			SQLiteCommand sqlCommand	= new SQLiteCommand(sqlText, m_DbConnection);
+			SQLiteDataReader dataReader	= sqlCommand.ExecuteReader();
+
+			while (dataReader.Read())
+			{
+				UInt32 typeID	= (UInt32)dataReader.GetInt32(0);
+				double value	= !dataReader.IsDBNull(1) ? dataReader.GetInt32(1) : dataReader.GetFloat(2);
+				a_Result[typeID] = value / 100.0;
 			}
 		}
 		
@@ -450,9 +473,10 @@ namespace EveRefinery
 			return true;
 		}
 		
-		public Hashtable LoadDatabase(String a_DBPath)
+		public bool LoadDatabase(String a_DBPath, out Hashtable a_Items, out RefiningMutators a_RefiningMutators)
 		{
-			Hashtable items = new Hashtable();
+			a_Items = new Hashtable();
+			a_RefiningMutators = new RefiningMutators();
 		
 			try
 			{
@@ -466,18 +490,19 @@ namespace EveRefinery
 				m_DbConnection.Open();
 				
 				if (!TestEveDatabaseTables())
-					return null;
+					return false;
 
-				LoadMineralCompositions(items);
-				LoadItemsProperties(items);
+				LoadMineralCompositions(a_Items);
+				LoadItemsProperties(a_Items);
+				LoadRefiningMutators(a_RefiningMutators);
 			}
 			catch (System.Exception a_Exception)
 			{
 				System.Diagnostics.Debug.WriteLine(a_Exception.Message);
-				return null;
+				return false;
 			}
 
-			return items;
+			return true;
 		}
 
 		private static List<String> GetUsedTableNames()

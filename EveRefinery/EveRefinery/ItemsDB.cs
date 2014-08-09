@@ -77,6 +77,11 @@ namespace EveRefinery
         public UInt32       MetaLevel       = 0;
 		public UInt32		RefineSkill		= 0;	// SkillID of skill that improves refining of this item
     }
+
+	// Dictionary SkillID -> refining bonus
+	public class RefiningMutators : Dictionary<UInt32, double>
+	{
+	}
     
     public enum TristateFilter
     {
@@ -128,7 +133,8 @@ namespace EveRefinery
 
     public class ItemsDB
     {
-        Hashtable			m_Items = new Hashtable();
+        private Hashtable					m_Items;
+		private RefiningMutators			m_RefiningMutators;
 
 		public void ResetItemPrices()
 		{
@@ -170,8 +176,7 @@ namespace EveRefinery
 
 		public Boolean LoadEveDatabase(EveDatabase a_Database, string a_DBPath)
 		{
-			m_Items = a_Database.LoadDatabase(a_DBPath);
-			return (m_Items != null);
+			return a_Database.LoadDatabase(a_DBPath, out m_Items, out m_RefiningMutators);
 		}
 		
 		public ItemRecord GetItemByTypeID(UInt32 a_TypeID)
@@ -180,6 +185,11 @@ namespace EveRefinery
 				return null;
 
 			return (ItemRecord)m_Items[a_TypeID];
+		}
+
+		public RefiningMutators GetMutators()
+		{
+			return m_RefiningMutators;
 		}
 	}
 

@@ -254,7 +254,7 @@ namespace EveRefinery
 
 			lock (a_ListItem.ItemData)
 			{
-				ItemPrice prices = m_Engine.GetItemPrices(a_ListItem.ItemData, quantity);
+				ItemPrice prices = m_Engine.GetItemPrices(a_ListItem.ItemData, m_ItemsDB.GetMutators(), quantity);
 
 				result[(int)Columns.Name]			= a_ListItem.ItemData.ItemName;
                 result[(int)Columns.MetaLevel]		= a_ListItem.ItemData.MetaLevel;
@@ -274,7 +274,7 @@ namespace EveRefinery
 					if (isTotals)
 						materialAmount = a_ListItem.ItemData.MaterialAmount[(UInt32)currMaterial];
 					else
-						materialAmount = m_Engine.GetItemRefinedQuota(a_ListItem.ItemData, quantity, currMaterial);
+						materialAmount = m_Engine.GetEffectiveRefineQuota(a_ListItem.ItemData, m_ItemsDB.GetMutators(), quantity, currMaterial);
 
 					refinedVolume += materialAmount * MaterialsInfo.GetMaterialVolume(currMaterial);
 					result[(int)currColumn] = materialAmount;
@@ -904,7 +904,7 @@ namespace EveRefinery
 					
 					for (int i = 0; i < currRecord.MaterialAmount.Count(); i++)
 					{
-						double currAmount = m_Engine.GetItemRefinedMaterial(currRecord, listItem.Quantity, (Materials)i);
+						double currAmount = m_Engine.GetPerfectRefiningQuota(currRecord, listItem.Quantity, (Materials)i);
 						totalRecord.MaterialAmount[i] += currAmount;
 					}
 				}
