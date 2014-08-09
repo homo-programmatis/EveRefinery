@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using SpecialFNs;
 using System.Xml;
+using System.Globalization;
 
 namespace EveRefinery
 {
@@ -44,6 +45,7 @@ namespace EveRefinery
 		{
 			InitPage_ApiKeys();
 			InitPage_Minerals();
+			InitPage_Refining();
 			InitPage_Appearance();
 			InitPage_Other();
 			InitPage_Developer();
@@ -57,6 +59,9 @@ namespace EveRefinery
 				return;
 			
 			if (!SavePage_Minerals())
+				return;
+
+			if (!SavePage_Refining())
 				return;
 
 			if (!SavePage_Appearance())
@@ -210,6 +215,328 @@ namespace EveRefinery
 		#endregion
 
 		#region Page Refining
+
+
+		private void InitPage_Refining()
+		{
+			InitializeSkillValues();
+			PrpRefining.SelectedObject = new RefiningSettings(m_Settings);
+		}
+
+		private bool SavePage_Refining()
+		{
+			return true;
+		}
+
+		private void InitializeSkillValues()
+		{
+			EveSkills[] skillIDs = (EveSkills[])Enum.GetValues(typeof(EveSkills));
+			foreach (EveSkills currSkill in skillIDs)
+			{
+				if (!m_Settings.Refining.Skills.ContainsKey((UInt32)currSkill))
+					m_Settings.Refining.Skills[(UInt32)currSkill] = 0;
+			}
+		}
+
+		static UInt32[] m_SkillLevels = new UInt32[]{0, 1, 2, 3, 4, 5};
+
+		class StringOnlyConverter : TypeConverter
+		{
+			public override bool CanConvertFrom(ITypeDescriptorContext a_Context, Type a_Type)
+			{
+				return a_Type == typeof(string);
+			}
+
+			public override bool CanConvertTo(ITypeDescriptorContext a_Context, Type a_Type)
+			{
+				return a_Type == typeof(string);
+			}
+		}
+
+		class SkillConverter : StringOnlyConverter
+		{
+			public override bool GetStandardValuesSupported(ITypeDescriptorContext a_Context)
+			{
+				return true;
+			}
+
+			public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext a_Context)
+			{
+				return new StandardValuesCollection(m_SkillLevels);
+			}
+
+			public override object ConvertFrom(ITypeDescriptorContext a_Context, CultureInfo a_Culture, object a_Value)
+			{
+				UInt32 value = UInt32.Parse((String)a_Value);
+				if (value > 5)
+					return (UInt32)5;
+
+				return value;
+			}
+		}
+
+		public static double ParseDouble(String a_String)
+		{
+			StringBuilder cleaned = new StringBuilder();
+			foreach (char currChar in a_String)
+			{
+				if (Char.IsDigit(currChar))
+				{
+					cleaned.Append(currChar);
+					continue;
+				}
+
+				if ((currChar == '.') || (currChar == ','))
+				{
+					cleaned.Append('.');
+					continue;
+				}
+			}
+
+			return double.Parse(cleaned.ToString(), CultureInfo.InvariantCulture);
+		}
+
+		class PercentConverter : StringOnlyConverter
+		{
+			public override object ConvertFrom(ITypeDescriptorContext a_Context, CultureInfo a_Culture, object a_Value)
+			{
+				return ParseDouble((String)a_Value) / 100.0;
+			}
+
+			public override object ConvertTo(ITypeDescriptorContext a_Context, CultureInfo a_Culture, object a_Value, Type a_Type)
+			{
+				return String.Format(CultureInfo.InvariantCulture, "{0:0%}", a_Value);
+			}
+		}
+
+		class MultiplierConverter : StringOnlyConverter
+		{
+			public override object ConvertFrom(ITypeDescriptorContext a_Context, CultureInfo a_Culture, object a_Value)
+			{
+				return ParseDouble((String)a_Value);
+			}
+
+			public override object ConvertTo(ITypeDescriptorContext a_Context, CultureInfo a_Culture, object a_Value, Type a_Type)
+			{
+				return String.Format(CultureInfo.InvariantCulture, "x{0:0.00####}", (double)a_Value);
+			}
+		}
+
+		class RefiningSettings
+		{
+			#region Yield
+			[Category("1. Station equipment")]
+			[Description("Your station's [base yield]. See tooltip on refining meter in EVE.")]
+			[TypeConverter(typeof(PercentConverter))]
+			public double BaseYield
+			{
+				get {return m_Settings.Refining.BaseYield;}
+				set {m_Settings.Refining.BaseYield = value;}
+			}
+
+			[Category("1. Station equipment")]
+			[Description("Your station's [reduction from station owner tax]. See tooltip on refining meter in EVE.")]
+			[TypeConverter(typeof(MultiplierConverter))]
+			public double TaxMultiplier
+			{
+				get { return m_Settings.Refining.TaxMultiplier; }
+				set { m_Settings.Refining.TaxMultiplier = value; }
+			}
+			#endregion
+
+			#region Skills
+			[Category("2. Non-Ore refining")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 ScrapmetalProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.ScrapmetalProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.ScrapmetalProcessing] = value; }
+			}
+
+			#region Ore refining
+			[Category("3. Ore refining - generic")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 Reprocessing
+			{
+				get {return m_Settings.Refining.Skills[(UInt32)EveSkills.Reprocessing];}
+				set {m_Settings.Refining.Skills[(UInt32)EveSkills.Reprocessing] = value;}
+			}
+
+			[Category("3. Ore refining - generic")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 ReprocessingEfficiency
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.ReprocessingEfficiency]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.ReprocessingEfficiency] = value; }
+			}
+
+			[Category("3. Ore refining - generic")]
+			[Description("Bonus from implants, if any.")]
+			[TypeConverter(typeof(PercentConverter))]
+			public double ImplantBonus
+			{
+				get { return m_Settings.Refining.ImplantBonus; }
+				set { m_Settings.Refining.ImplantBonus = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 ArkonorProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.ArkonorProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.ArkonorProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 BistotProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.BistotProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.BistotProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 CrokiteProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.CrokiteProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.CrokiteProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 DarkOchreProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.DarkOchreProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.DarkOchreProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 GneissProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.GneissProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.GneissProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 HedbergiteProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.HedbergiteProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.HedbergiteProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 HemorphiteProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.HemorphiteProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.HemorphiteProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 JaspetProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.JaspetProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.JaspetProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 KerniteProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.KerniteProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.KerniteProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 MercoxitProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.MercoxitProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.MercoxitProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 OmberProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.OmberProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.OmberProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 PlagioclaseProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.PlagioclaseProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.PlagioclaseProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 PyroxeresProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.PyroxeresProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.PyroxeresProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 ScorditeProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.ScorditeProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.ScorditeProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 SpodumainProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.SpodumainProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.SpodumainProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 VeldsparProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.VeldsparProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.VeldsparProcessing] = value; }
+			}
+			#endregion
+			#endregion
+
+			#region Settings reference
+			private Settings m_Settings;
+
+			public RefiningSettings(Settings a_Settings)
+			{
+				m_Settings = a_Settings;
+			}
+			#endregion
+		}
 		#endregion
 
 		#region Page API

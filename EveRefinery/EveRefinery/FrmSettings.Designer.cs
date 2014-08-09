@@ -30,7 +30,7 @@
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmSettings));
 			this.TabMain = new System.Windows.Forms.TabControl();
-			this.TbpRefining = new System.Windows.Forms.TabPage();
+			this.TbpMinerals = new System.Windows.Forms.TabPage();
 			this.TblMinerals = new System.Windows.Forms.TableLayoutPanel();
 			this.TblPricesMinerals = new System.Windows.Forms.TableLayoutPanel();
 			this.label1 = new System.Windows.Forms.Label();
@@ -61,6 +61,8 @@
 			this.TxtRefineryEfficiency = new System.Windows.Forms.NumericUpDown();
 			this.TxtRefineryTax = new System.Windows.Forms.NumericUpDown();
 			this.BtnRefineryCalculator = new System.Windows.Forms.Button();
+			this.TbpRefining = new System.Windows.Forms.TabPage();
+			this.PrpRefining = new System.Windows.Forms.PropertyGrid();
 			this.TbpApiKeys = new System.Windows.Forms.TabPage();
 			this.TblApiTable = new System.Windows.Forms.TableLayoutPanel();
 			this.LblContextHelp = new System.Windows.Forms.Label();
@@ -126,7 +128,7 @@
 			this.trackBar2 = new System.Windows.Forms.TrackBar();
 			this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
 			this.TabMain.SuspendLayout();
-			this.TbpRefining.SuspendLayout();
+			this.TbpMinerals.SuspendLayout();
 			this.TblMinerals.SuspendLayout();
 			this.TblPricesMinerals.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.TxtTritanium)).BeginInit();
@@ -141,6 +143,7 @@
 			this.TblRefineryEfficiency.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.TxtRefineryEfficiency)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.TxtRefineryTax)).BeginInit();
+			this.TbpRefining.SuspendLayout();
 			this.TbpApiKeys.SuspendLayout();
 			this.TblApiTable.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
@@ -177,6 +180,7 @@
 			// 
 			// TabMain
 			// 
+			this.TabMain.Controls.Add(this.TbpMinerals);
 			this.TabMain.Controls.Add(this.TbpRefining);
 			this.TabMain.Controls.Add(this.TbpApiKeys);
 			this.TabMain.Controls.Add(this.TbpAppearance);
@@ -190,16 +194,16 @@
 			this.TabMain.Size = new System.Drawing.Size(369, 390);
 			this.TabMain.TabIndex = 0;
 			// 
-			// TbpRefining
+			// TbpMinerals
 			// 
-			this.TbpRefining.Controls.Add(this.TblMinerals);
-			this.TbpRefining.Location = new System.Drawing.Point(4, 22);
-			this.TbpRefining.Name = "TbpRefining";
-			this.TbpRefining.Padding = new System.Windows.Forms.Padding(3);
-			this.TbpRefining.Size = new System.Drawing.Size(361, 364);
-			this.TbpRefining.TabIndex = 0;
-			this.TbpRefining.Text = "Refining";
-			this.TbpRefining.UseVisualStyleBackColor = true;
+			this.TbpMinerals.Controls.Add(this.TblMinerals);
+			this.TbpMinerals.Location = new System.Drawing.Point(4, 22);
+			this.TbpMinerals.Name = "TbpMinerals";
+			this.TbpMinerals.Padding = new System.Windows.Forms.Padding(3);
+			this.TbpMinerals.Size = new System.Drawing.Size(361, 364);
+			this.TbpMinerals.TabIndex = 0;
+			this.TbpMinerals.Text = "Minerals";
+			this.TbpMinerals.UseVisualStyleBackColor = true;
 			// 
 			// TblMinerals
 			// 
@@ -652,6 +656,24 @@
 			this.BtnRefineryCalculator.Text = "Calc...";
 			this.BtnRefineryCalculator.UseVisualStyleBackColor = true;
 			this.BtnRefineryCalculator.Click += new System.EventHandler(this.BtnRefineryCalculator_Click);
+			// 
+			// TbpRefining
+			// 
+			this.TbpRefining.Controls.Add(this.PrpRefining);
+			this.TbpRefining.Location = new System.Drawing.Point(4, 22);
+			this.TbpRefining.Name = "TbpRefining";
+			this.TbpRefining.Size = new System.Drawing.Size(361, 364);
+			this.TbpRefining.TabIndex = 5;
+			this.TbpRefining.Text = "Refining";
+			this.TbpRefining.UseVisualStyleBackColor = true;
+			// 
+			// PrpRefining
+			// 
+			this.PrpRefining.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PrpRefining.Location = new System.Drawing.Point(0, 0);
+			this.PrpRefining.Name = "PrpRefining";
+			this.PrpRefining.Size = new System.Drawing.Size(361, 364);
+			this.PrpRefining.TabIndex = 0;
 			// 
 			// TbpApiKeys
 			// 
@@ -1541,7 +1563,7 @@
 			this.Text = "Settings";
 			this.Load += new System.EventHandler(this.FrmSettings_Load);
 			this.TabMain.ResumeLayout(false);
-			this.TbpRefining.ResumeLayout(false);
+			this.TbpMinerals.ResumeLayout(false);
 			this.TblMinerals.ResumeLayout(false);
 			this.TblMinerals.PerformLayout();
 			this.TblPricesMinerals.ResumeLayout(false);
@@ -1559,6 +1581,7 @@
 			this.TblRefineryEfficiency.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.TxtRefineryEfficiency)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.TxtRefineryTax)).EndInit();
+			this.TbpRefining.ResumeLayout(false);
 			this.TbpApiKeys.ResumeLayout(false);
 			this.TblApiTable.ResumeLayout(false);
 			this.tableLayoutPanel2.ResumeLayout(false);
@@ -1608,7 +1631,7 @@
 		#endregion
 
 		private System.Windows.Forms.TabControl TabMain;
-		private System.Windows.Forms.TabPage TbpRefining;
+		private System.Windows.Forms.TabPage TbpMinerals;
 		private System.Windows.Forms.TabPage TbpApiKeys;
 		private System.Windows.Forms.TableLayoutPanel TblSettings;
 		private System.Windows.Forms.TableLayoutPanel TblPricesMinerals;
@@ -1703,5 +1726,7 @@
 		private System.Windows.Forms.NumericUpDown TxtPricesExpiryDays;
 		private System.Windows.Forms.NumericUpDown TxtMineralPricesExpiryDays;
 		private System.Windows.Forms.Button BtnMineralPricesType;
+		private System.Windows.Forms.TabPage TbpRefining;
+		private System.Windows.Forms.PropertyGrid PrpRefining;
 	}
 }
