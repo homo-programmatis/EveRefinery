@@ -182,6 +182,7 @@ namespace EveRefinery
             // Load .ItemName, .IsPublished, .GroupID, .MarketGroupID, .BatchSize, .Volume
 			{
 				String tableMetaLevel = "MetaLevel";
+				String tableRefineSkill = "RefineSkill";
 
 				String sqlText = 
 					"SELECT\n" +
@@ -195,12 +196,15 @@ namespace EveRefinery
 					"	" + DbField(Tables.invCategories, "CategoryName") + ",\n" +		// 7
 					"	" + DbField(Tables.invGroups, "GroupName") + ",\n" +			// 8
 					"	" + DbField(tableMetaLevel, "valueInt") + ",\n" +				// 9
-					"	" + DbField(tableMetaLevel, "valueFloat") + "\n" +				// 10
+					"	" + DbField(tableMetaLevel, "valueFloat") + ",\n" +				// 10
+					"	" + DbField(tableRefineSkill, "valueInt") + ",\n" +				// 11
+					"	" + DbField(tableRefineSkill, "valueFloat") + "\n" +			// 12
 					"FROM \n" +
 					"	" + Tables.invTypes + "\n" +
 					"	INNER JOIN " + Tables.invGroups + " ON (" + DbField(Tables.invGroups, "GroupID") + " = " + DbField(Tables.invTypes, "GroupID") + ")\n" +
 					"	INNER JOIN " + Tables.invCategories + " ON (" + DbField(Tables.invCategories, "CategoryID") + " = " + DbField(Tables.invGroups, "CategoryID") + ")\n" +
 					"	LEFT JOIN " + Tables.dgmTypeAttributes + " " + tableMetaLevel + " ON ((" + DbField(tableMetaLevel, "typeID") + " = " + DbField(Tables.invTypes, "typeID") + ") AND (" + DbField(tableMetaLevel, "attributeID") + " = " + (int)EveAttributes.MetaLevel + "))\n" +
+					"	LEFT JOIN " + Tables.dgmTypeAttributes + " " + tableRefineSkill + " ON ((" + DbField(tableRefineSkill, "typeID") + " = " + DbField(Tables.invTypes, "typeID") + ") AND (" + DbField(tableRefineSkill, "attributeID") + " = " + (int)EveAttributes.ReprocessingSkill + "))\n" +
 					"WHERE\n" + 
 					"	(" + Tables.invTypes + ".typeID IN (" + typeIdList + "))\n" +
 					"";
@@ -228,6 +232,11 @@ namespace EveRefinery
 						currItem.MetaLevel  = (UInt32)dataReader.GetInt32(9);
 					else if (!dataReader.IsDBNull(10))
 						currItem.MetaLevel  = (UInt32)dataReader.GetFloat(10);
+
+					if (!dataReader.IsDBNull(11))
+						currItem.RefineSkill = (UInt32)dataReader.GetInt32(11);
+					else if (!dataReader.IsDBNull(12))
+						currItem.RefineSkill = (UInt32)dataReader.GetFloat(12);
 				}
 			}
 		}

@@ -75,6 +75,7 @@ namespace EveRefinery
 		public DateTime		PriceDate;
 		public double		Price			= 0;
         public UInt32       MetaLevel       = 0;
+		public UInt32		RefineSkill		= 0;	// SkillID of skill that improves refining of this item
     }
     
     public enum TristateFilter
