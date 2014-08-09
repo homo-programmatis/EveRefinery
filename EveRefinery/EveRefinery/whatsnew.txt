@@ -1,3 +1,13 @@
+1.0.5335.6039 [10aug14]
+! NOTE: You need to configure refining settings, they are all new
+* Full Crius support
+* New Yield column indicates refining yield percentage
+* New page in settings to specify refining skills, base yield, taxes, implants
+* Items requiring specific skills are now calculated correctly
+  (previously, there was one refining percentage for everything)
+* New settings format (hopefully you don't notice that)
+* Preliminary Crius support warning removed
+
 1.0.5329.39470 [04aug14]
 ! Warning about preliminary Crius support on program start. Please read!
 * Database upgrade to Crius 1.6
