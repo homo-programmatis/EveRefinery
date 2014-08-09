@@ -469,15 +469,8 @@ namespace EveRefinery
 
         private void ShowBuildWarnings()
         {
-            String message = 
-                "WARNING: This is preliminary Crius support. I'm going to release full support until 11aug14.\n" +
-                "\n" +
-                "The database has been updated and item compositions are correct, but be very careful with refining yields! Pre-Crius, most of you had 100% yield. In Crius however, CCP has changed yield percentages dramatically. For now, you can choose only one percentage for everything in EveRefinery. Please note that non-ore refinables are NOT affected by skills other then Scrapmetal processing.\n" +
-                "\n" +
-                "Also, I'm not quite sure if EveRefinery is still needed. CCP did a good job improving in-game refining UI. I haven't been playing EVE for a couple years now, so can't say for sure. I need your help! Please let me know, either by posting on forum or mailing me, what future do you see for EveRefinery. You can find both contacts in program's about box.";
 
-            ErrorMessageBox.Show(message);
-        }
+		}
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
