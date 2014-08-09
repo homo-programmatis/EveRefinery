@@ -48,7 +48,33 @@ namespace EveRefinery
 
 	public enum EveAttributes
 	{
-		MetaLevel = 633,
+		RefiningMutator		= 379,
+		MetaLevel			= 633,
+		ReprocessingSkill	= 790,
+	}
+
+	public enum EveSkills
+	{
+		Reprocessing			= 3385,
+		ReprocessingEfficiency	= 3389,
+		ArkonorProcessing		= 12180,
+		BistotProcessing		= 12181,
+		CrokiteProcessing		= 12182,
+		DarkOchreProcessing		= 12183,
+		GneissProcessing		= 12184,
+		HedbergiteProcessing	= 12185,
+		HemorphiteProcessing	= 12186,
+		JaspetProcessing		= 12187,
+		KerniteProcessing		= 12188,
+		MercoxitProcessing		= 12189,
+		OmberProcessing			= 12190,
+		PlagioclaseProcessing	= 12191,
+		PyroxeresProcessing		= 12192,
+		ScorditeProcessing		= 12193,
+		SpodumainProcessing		= 12194,
+		VeldsparProcessing		= 12195,
+		ScrapmetalProcessing	= 12196,
+		IceProcessing			= 18025,
 	}
 
 	public class EveDatabase
