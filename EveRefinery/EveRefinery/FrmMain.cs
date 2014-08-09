@@ -18,6 +18,8 @@ namespace EveRefinery
 	{
 		Name,
         MetaLevel,
+		Quantity,
+		LossPercent,
 		RefinedCost,
 		MarketPrice,
 		PriceDelta,
@@ -29,9 +31,7 @@ namespace EveRefinery
 		Zydrine,
 		Megacyte,
 		Morphite,
-		Quantity,
 		Type,
-		LossPercent,
 		Volume,
 		RefinedVolume,
 		
