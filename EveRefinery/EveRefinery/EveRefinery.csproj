@@ -81,6 +81,9 @@
       <Link>SpecialFNs\ListViewEx.cs</Link>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="..\..\!Engines\!SpecialFNs_CS\SerializableDictionary.cs">
+      <Link>SpecialFNs\SerializableDictionary.cs</Link>
+    </Compile>
     <Compile Include="..\..\!ENGINES\!SpecialFNs_CS\SQLiteDesign.cs">
       <Link>SpecialFNs\SQLiteDesign.cs</Link>
     </Compile>
@@ -112,6 +115,7 @@
     </Compile>
     <Compile Include="Engine.cs">
     </Compile>
+    <Compile Include="EveApi.cs" />
     <Compile Include="EveAssets.cs" />
     <Compile Include="EveDatabase.cs" />
     <Compile Include="Export.cs" />
@@ -132,12 +136,6 @@
     </Compile>
     <Compile Include="FrmPriceType.Designer.cs">
       <DependentUpon>FrmPriceType.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FrmRefineCalc.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmRefineCalc.Designer.cs">
-      <DependentUpon>FrmRefineCalc.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmSettings.cs">
       <SubType>Form</SubType>
@@ -178,9 +176,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmPriceType.resx">
       <DependentUpon>FrmPriceType.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FrmRefineCalc.resx">
-      <DependentUpon>FrmRefineCalc.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmSettings.resx">
       <DependentUpon>FrmSettings.cs</DependentUpon>

@@ -18,9 +18,12 @@ namespace EveRefinery
 	{
 		Name,
         MetaLevel,
+		Quantity,
+		LossPercent,
 		RefinedCost,
 		MarketPrice,
 		PriceDelta,
+		Yield,
 		Tritanium,
 		Pyerite,
 		Mexallon,
@@ -29,9 +32,7 @@ namespace EveRefinery
 		Zydrine,
 		Megacyte,
 		Morphite,
-		Quantity,
 		Type,
-		LossPercent,
 		Volume,
 		RefinedVolume,
 		
@@ -254,13 +255,14 @@ namespace EveRefinery
 
 			lock (a_ListItem.ItemData)
 			{
-				ItemPrice prices = m_Engine.GetItemPrices(a_ListItem.ItemData, quantity);
+				ItemPrice prices = m_Engine.GetItemPrices(a_ListItem.ItemData, m_ItemsDB.GetMutators(), quantity);
 
 				result[(int)Columns.Name]			= a_ListItem.ItemData.ItemName;
                 result[(int)Columns.MetaLevel]		= a_ListItem.ItemData.MetaLevel;
                 result[(int)Columns.RefinedCost]	= prices.RefinedCost;
 				result[(int)Columns.MarketPrice]	= prices.MarketPrice;
 				result[(int)Columns.PriceDelta]		= prices.PriceDelta;
+				result[(int)Columns.Yield]			= m_Engine.GetEffectiveYield(a_ListItem.ItemData, m_ItemsDB.GetMutators());
 
 				double		refinedVolume	= 0;
 				Columns[]	materialColumns = new Columns[] { Columns.Tritanium, Columns.Pyerite, Columns.Mexallon, Columns.Isogen, Columns.Noxcium, Columns.Zydrine, Columns.Megacyte, Columns.Morphite };
@@ -274,7 +276,7 @@ namespace EveRefinery
 					if (isTotals)
 						materialAmount = a_ListItem.ItemData.MaterialAmount[(UInt32)currMaterial];
 					else
-						materialAmount = m_Engine.GetItemRefinedQuota(a_ListItem.ItemData, quantity, currMaterial);
+						materialAmount = m_Engine.GetEffectiveRefineQuota(a_ListItem.ItemData, m_ItemsDB.GetMutators(), quantity, currMaterial);
 
 					refinedVolume += materialAmount * MaterialsInfo.GetMaterialVolume(currMaterial);
 					result[(int)currColumn] = materialAmount;
@@ -321,6 +323,7 @@ namespace EveRefinery
 			subitems[(int)Columns.RefinedCost].Text	= ItemPrice.FormatPrice((double)columnData[(int)Columns.RefinedCost]);
 			subitems[(int)Columns.MarketPrice].Text	= ItemPrice.FormatPrice((double)columnData[(int)Columns.MarketPrice]);
 			subitems[(int)Columns.PriceDelta].Text	= ItemPrice.FormatPrice((double)columnData[(int)Columns.PriceDelta]);
+			subitems[(int)Columns.Yield].Text		= String.Format("{0:0.00%}", (double)columnData[(int)Columns.Yield]);
 
 			subitems[(int)Columns.Tritanium].Text	= Engine.FormatDouble((double)columnData[(int)Columns.Tritanium]);
 			subitems[(int)Columns.Pyerite].Text		= Engine.FormatDouble((double)columnData[(int)Columns.Pyerite]);
@@ -469,15 +472,8 @@ namespace EveRefinery
 
         private void ShowBuildWarnings()
         {
-            String message = 
-                "WARNING: This is preliminary Crius support. I'm going to release full support until 11aug14.\n" +
-                "\n" +
-                "The database has been updated and item compositions are correct, but be very careful with refining yields! Pre-Crius, most of you had 100% yield. In Crius however, CCP has changed yield percentages dramatically. For now, you can choose only one percentage for everything in EveRefinery. Please note that non-ore refinables are NOT affected by skills other then Scrapmetal processing.\n" +
-                "\n" +
-                "Also, I'm not quite sure if EveRefinery is still needed. CCP did a good job improving in-game refining UI. I haven't been playing EVE for a couple years now, so can't say for sure. I need your help! Please let me know, either by posting on forum or mailing me, what future do you see for EveRefinery. You can find both contacts in program's about box.";
 
-            ErrorMessageBox.Show(message);
-        }
+		}
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
@@ -904,7 +900,7 @@ namespace EveRefinery
 					
 					for (int i = 0; i < currRecord.MaterialAmount.Count(); i++)
 					{
-						double currAmount = m_Engine.GetItemRefinedMaterial(currRecord, listItem.Quantity, (Materials)i);
+						double currAmount = m_Engine.GetPerfectRefiningQuota(currRecord, listItem.Quantity, (Materials)i);
 						totalRecord.MaterialAmount[i] += currAmount;
 					}
 				}

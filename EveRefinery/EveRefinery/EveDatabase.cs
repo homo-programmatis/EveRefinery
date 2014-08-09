@@ -48,7 +48,33 @@ namespace EveRefinery
 
 	public enum EveAttributes
 	{
-		MetaLevel = 633,
+		RefiningMutator		= 379,
+		MetaLevel			= 633,
+		ReprocessingSkill	= 790,
+	}
+
+	public enum EveSkills
+	{
+		Reprocessing			= 3385,
+		ReprocessingEfficiency	= 3389,
+		ArkonorProcessing		= 12180,
+		BistotProcessing		= 12181,
+		CrokiteProcessing		= 12182,
+		DarkOchreProcessing		= 12183,
+		GneissProcessing		= 12184,
+		HedbergiteProcessing	= 12185,
+		HemorphiteProcessing	= 12186,
+		JaspetProcessing		= 12187,
+		KerniteProcessing		= 12188,
+		MercoxitProcessing		= 12189,
+		OmberProcessing			= 12190,
+		PlagioclaseProcessing	= 12191,
+		PyroxeresProcessing		= 12192,
+		ScorditeProcessing		= 12193,
+		SpodumainProcessing		= 12194,
+		VeldsparProcessing		= 12195,
+		ScrapmetalProcessing	= 12196,
+		IceProcessing			= 18025,
 	}
 
 	public class EveDatabase
@@ -128,6 +154,16 @@ namespace EveRefinery
 			}
 		}
 
+		private static String DbField(Tables a_Table, String a_Field)
+		{
+			return a_Table + "." + a_Field;
+		}
+
+		private static String DbField(String a_Table, String a_Field)
+		{
+			return a_Table + "." + a_Field;
+		}
+
 		private void LoadItemsProperties(Hashtable a_Items)
 		{
 			//////////////////////////////////////////////////////////////////////////
@@ -140,53 +176,38 @@ namespace EveRefinery
 				typeIDs[typeIdIndex++] = ((UInt32)currKey).ToString();
 			}
 			
-			String typeIdList		= "(" + String.Join(", ", typeIDs) + ")";
+			String typeIdList		= String.Join(",", typeIDs);
 			//////////////////////////////////////////////////////////////////////////
 
             // Load .ItemName, .IsPublished, .GroupID, .MarketGroupID, .BatchSize, .Volume
 			{
-				String sqlText				= "SELECT * FROM " + Tables.invTypes + " WHERE typeID in " + typeIdList;
-				SQLiteCommand sqlCommand	= new SQLiteCommand(sqlText, m_DbConnection);
-				SQLiteDataReader dataReader	= sqlCommand.ExecuteReader();
+				String tableMetaLevel = "MetaLevel";
+				String tableRefineSkill = "RefineSkill";
 
-				// Optimization: accessing columns by index (saves over 1 sec)
-				bool idx_Inited = false;
-				int idx_typeID = 0, idx_typeName = 0, idx_published = 0, idx_groupID = 0, idx_marketGroupID = 0, idx_portionSize = 0, idx_volume = 0;
-
-				while (dataReader.Read())
-				{
-					if (!idx_Inited)
-					{
-						idx_Inited			= true;
-						idx_typeID			= dataReader.GetOrdinal("typeID");
-						idx_typeName		= dataReader.GetOrdinal("typeName");
-						idx_published		= dataReader.GetOrdinal("published");
-						idx_groupID			= dataReader.GetOrdinal("groupID");
-						idx_marketGroupID	= dataReader.GetOrdinal("marketGroupID");
-						idx_portionSize		= dataReader.GetOrdinal("portionSize");
-						idx_volume			= dataReader.GetOrdinal("volume");
-					}
-				
-					UInt32 currTypeID		= (UInt32)dataReader.GetInt32(idx_typeID);
-					ItemRecord currItem		= (ItemRecord)a_Items[currTypeID];
-
-					currItem.ItemName		= (String)dataReader[idx_typeName];
-					currItem.IsPublished	= (0 != dataReader.GetInt32(idx_published));
-					currItem.GroupID		= (UInt32)dataReader.GetInt32(idx_groupID);
-					currItem.MarketGroupID	= dataReader.IsDBNull(idx_marketGroupID) ? 0 : (UInt32)dataReader.GetInt32(idx_marketGroupID);
-					currItem.BatchSize		= (UInt32)dataReader.GetInt32(idx_portionSize);
-					currItem.Volume			= dataReader.GetDouble(idx_volume);
-				}
-			}
-
-            // Load Category and Group names for composing sort string
-			{
 				String sqlText = 
-					"SELECT " + Tables.invTypes + ".typeID, " + Tables.invCategories + ".CategoryName, " + Tables.invGroups + ".GroupName FROM " +
-					Tables.invTypes + ", " + Tables.invCategories + ", " + Tables.invGroups + " where " +
-					"(" + Tables.invCategories + ".CategoryID = " + Tables.invGroups + ".CategoryID) and" +
-					"(" + Tables.invGroups + ".GroupID = " + Tables.invTypes + ".GroupID) and " +
-					"(" + Tables.invTypes + ".TypeID in " + typeIdList + ")";
+					"SELECT\n" +
+					"	" + DbField(Tables.invTypes, "typeID") + ",\n" +				// 0
+					"	" + DbField(Tables.invTypes, "typeName") + ",\n" +				// 1
+					"	" + DbField(Tables.invTypes, "published") + ",\n" +				// 2
+					"	" + DbField(Tables.invTypes, "groupID") + ",\n" +				// 3
+					"	" + DbField(Tables.invTypes, "marketGroupID") + ",\n" +			// 4
+					"	" + DbField(Tables.invTypes, "portionSize") + ",\n" +			// 5
+					"	" + DbField(Tables.invTypes, "volume") + ",\n" +				// 6
+					"	" + DbField(Tables.invCategories, "CategoryName") + ",\n" +		// 7
+					"	" + DbField(Tables.invGroups, "GroupName") + ",\n" +			// 8
+					"	" + DbField(tableMetaLevel, "valueInt") + ",\n" +				// 9
+					"	" + DbField(tableMetaLevel, "valueFloat") + ",\n" +				// 10
+					"	" + DbField(tableRefineSkill, "valueInt") + ",\n" +				// 11
+					"	" + DbField(tableRefineSkill, "valueFloat") + "\n" +			// 12
+					"FROM \n" +
+					"	" + Tables.invTypes + "\n" +
+					"	INNER JOIN " + Tables.invGroups + " ON (" + DbField(Tables.invGroups, "GroupID") + " = " + DbField(Tables.invTypes, "GroupID") + ")\n" +
+					"	INNER JOIN " + Tables.invCategories + " ON (" + DbField(Tables.invCategories, "CategoryID") + " = " + DbField(Tables.invGroups, "CategoryID") + ")\n" +
+					"	LEFT JOIN " + Tables.dgmTypeAttributes + " " + tableMetaLevel + " ON ((" + DbField(tableMetaLevel, "typeID") + " = " + DbField(Tables.invTypes, "typeID") + ") AND (" + DbField(tableMetaLevel, "attributeID") + " = " + (int)EveAttributes.MetaLevel + "))\n" +
+					"	LEFT JOIN " + Tables.dgmTypeAttributes + " " + tableRefineSkill + " ON ((" + DbField(tableRefineSkill, "typeID") + " = " + DbField(Tables.invTypes, "typeID") + ") AND (" + DbField(tableRefineSkill, "attributeID") + " = " + (int)EveAttributes.ReprocessingSkill + "))\n" +
+					"WHERE\n" + 
+					"	(" + Tables.invTypes + ".typeID IN (" + typeIdList + "))\n" +
+					"";
 
 				SQLiteCommand sqlCommand	= new SQLiteCommand(sqlText, m_DbConnection);
 				SQLiteDataReader dataReader	= sqlCommand.ExecuteReader();
@@ -196,34 +217,51 @@ namespace EveRefinery
 					UInt32 currTypeID		= (UInt32)dataReader.GetInt32(0);
 					ItemRecord currItem		= (ItemRecord)a_Items[currTypeID];
 
-					String categoryName		= dataReader.GetString(1);
-					String groupName		= dataReader.GetString(2);
+					currItem.ItemName		= (String)dataReader[1];
+					currItem.IsPublished	= (0 != dataReader.GetInt32(2));
+					currItem.GroupID		= (UInt32)dataReader.GetInt32(3);
+					currItem.MarketGroupID	= dataReader.IsDBNull(4) ? 0 : (UInt32)dataReader.GetInt32(4);
+					currItem.BatchSize		= (UInt32)dataReader.GetInt32(5);
+					currItem.Volume			= dataReader.GetDouble(6);
+
+					String categoryName		= dataReader.GetString(7);
+					String groupName		= dataReader.GetString(8);
 					currItem.TypeSortString = categoryName + " " + groupName + " " + currItem.ItemName;
+
+					if (!dataReader.IsDBNull(9))
+						currItem.MetaLevel  = (UInt32)dataReader.GetInt32(9);
+					else if (!dataReader.IsDBNull(10))
+						currItem.MetaLevel  = (UInt32)dataReader.GetFloat(10);
+
+					if (!dataReader.IsDBNull(11))
+						currItem.RefineSkill  = (UInt32)dataReader.GetInt32(11);
+					else if (!dataReader.IsDBNull(12))
+						currItem.RefineSkill  = (UInt32)dataReader.GetFloat(12);
 				}
 			}
+		}
 
-            // Load .MetaLevel
-            {
-                String sqlText = 
-					"SELECT typeID, valueInt, valueFloat FROM " + 
-					Tables.dgmTypeAttributes + " WHERE " +
-					"(attributeID = " + (int)EveAttributes.MetaLevel + ") and " +
-					"(TypeID in " + typeIdList + ")";
+		private void LoadRefiningMutators(RefiningMutators a_Result)
+		{
+			String sqlText = 
+				"SELECT\n" +
+				"	" + DbField(Tables.dgmTypeAttributes, "typeID") + ",\n" +		// 0
+				"	" + DbField(Tables.dgmTypeAttributes, "valueInt") + ",\n" +		// 1
+				"	" + DbField(Tables.dgmTypeAttributes, "valueFloat") + "\n" +	// 2
+				"FROM\n" + 
+				"	" + Tables.dgmTypeAttributes + "\n" +
+				"WHERE\n" +
+				"	(" + DbField(Tables.dgmTypeAttributes, "attributeID") + " = " + (int)EveAttributes.RefiningMutator + ")";
 
-                SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, m_DbConnection);
-                SQLiteDataReader dataReader = sqlCommand.ExecuteReader();
+			SQLiteCommand sqlCommand	= new SQLiteCommand(sqlText, m_DbConnection);
+			SQLiteDataReader dataReader	= sqlCommand.ExecuteReader();
 
-                while (dataReader.Read())
-                {
-                    UInt32 currTypeID   = (UInt32)dataReader.GetInt32(0);
-                    ItemRecord currItem = (ItemRecord)a_Items[currTypeID];
-
-                    if (!dataReader.IsDBNull(1))
-                        currItem.MetaLevel  = (UInt32)dataReader.GetInt32(1);
-                    else if (!dataReader.IsDBNull(2))
-                        currItem.MetaLevel  = (UInt32)dataReader.GetFloat(2);
-                }
-            }
+			while (dataReader.Read())
+			{
+				UInt32 typeID	= (UInt32)dataReader.GetInt32(0);
+				double value	= !dataReader.IsDBNull(1) ? dataReader.GetInt32(1) : dataReader.GetFloat(2);
+				a_Result[typeID] = value / 100.0;
+			}
 		}
 		
 		public List<EveRegion> GetRegions()
@@ -435,9 +473,10 @@ namespace EveRefinery
 			return true;
 		}
 		
-		public Hashtable LoadDatabase(String a_DBPath)
+		public bool LoadDatabase(String a_DBPath, out Hashtable a_Items, out RefiningMutators a_RefiningMutators)
 		{
-			Hashtable items = new Hashtable();
+			a_Items = new Hashtable();
+			a_RefiningMutators = new RefiningMutators();
 		
 			try
 			{
@@ -451,18 +490,19 @@ namespace EveRefinery
 				m_DbConnection.Open();
 				
 				if (!TestEveDatabaseTables())
-					return null;
+					return false;
 
-				LoadMineralCompositions(items);
-				LoadItemsProperties(items);
+				LoadMineralCompositions(a_Items);
+				LoadItemsProperties(a_Items);
+				LoadRefiningMutators(a_RefiningMutators);
 			}
 			catch (System.Exception a_Exception)
 			{
 				System.Diagnostics.Debug.WriteLine(a_Exception.Message);
-				return null;
+				return false;
 			}
 
-			return items;
+			return true;
 		}
 
 		private static List<String> GetUsedTableNames()
@@ -476,6 +516,22 @@ namespace EveRefinery
 			}
 
 			return result;
+		}
+
+		private static String MakeUsefulAttributeList()
+		{
+			StringBuilder result = new StringBuilder();
+
+			EveAttributes[] attributeIDs = (EveAttributes[])Enum.GetValues(typeof(EveAttributes));
+			foreach (EveAttributes currAttribute in attributeIDs)
+			{
+				if (0 != result.Length)
+					result.Append(',');
+
+				result.Append((int)currAttribute);
+			}
+
+			return result.ToString();
 		}
 
 		public static void StripDatabase(String a_DBPath)
@@ -505,7 +561,7 @@ namespace EveRefinery
 
 			// Leave only MetaLevel in attributes
 			{
-				String sqlText = "DELETE FROM " + Tables.dgmTypeAttributes + " WHERE attributeID != " + (int)EveAttributes.MetaLevel;
+				String sqlText = "DELETE FROM " + Tables.dgmTypeAttributes + " WHERE attributeID NOT IN (" + MakeUsefulAttributeList() + ")";
 				SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, connection);
 				sqlCommand.ExecuteNonQuery();
 			}

@@ -129,28 +129,66 @@ namespace EveRefinery
 				ErrorMessageBox.Show("Failed to save settings:\n" + a_Exception.Message);
 			}
 		}
-		
-		public Settings._ApiAccess.Key GetCharacterKey(UInt32 a_CharacterID)
+
+		public static Settings._ApiAccess.Key GetCharacterKey(Settings a_Settings, UInt32 a_CharacterID)
 		{
-            Settings._ApiAccess.Char character = m_Settings.ApiAccess.Chars.FirstOrDefault(a => a.CharacterID == a_CharacterID);
+            Settings._ApiAccess.Char character = a_Settings.ApiAccess.Chars.FirstOrDefault(a => a.CharacterID == a_CharacterID);
 			if (null == character)
 				return null;
 
-            Settings._ApiAccess.Key key = m_Settings.ApiAccess.Keys.FirstOrDefault(a => a.KeyID == character.KeyID);
+            Settings._ApiAccess.Key key = a_Settings.ApiAccess.Keys.FirstOrDefault(a => a.KeyID == character.KeyID);
 			return key;
 		}
 
-		public double GetRefineQuota(double a_OriginalAmount)
+		public Settings._ApiAccess.Key GetCharacterKey(UInt32 a_CharacterID)
 		{
-            // @@@@ Fix quota
-			return a_OriginalAmount;
+			return GetCharacterKey(m_Settings, a_CharacterID);
+		}
+
+		private TValue DictionaryGetValue<TKey, TValue>(Dictionary<TKey, TValue> a_Dictionary, TKey a_Key, TValue a_Default)
+		{
+			if (!a_Dictionary.ContainsKey(a_Key))
+				return a_Default;
+
+			return a_Dictionary[a_Key];
+		}
+
+		private double GetSkillMultiplier(UInt32 a_SkillID, RefiningMutators a_Mutators)
+		{
+			UInt32 skillLevel = DictionaryGetValue(m_Settings.Refining.Skills, a_SkillID, (UInt32)0);
+			double skillMutator = DictionaryGetValue(a_Mutators, a_SkillID, 0.0);
+			return 1 + (skillLevel*skillMutator);
+		}
+
+		private double GetRefiningSkillBonus(ItemRecord a_Item, RefiningMutators a_Mutators)
+		{
+			if (0 == a_Item.RefineSkill)
+				return GetSkillMultiplier((UInt32)EveSkills.ScrapmetalProcessing, a_Mutators);
+
+			double result = 1;
+			result *= GetSkillMultiplier((UInt32)EveSkills.Reprocessing, a_Mutators);
+			result *= GetSkillMultiplier((UInt32)EveSkills.ReprocessingEfficiency, a_Mutators);
+			result *= GetSkillMultiplier(a_Item.RefineSkill, a_Mutators);
+
+			return result;
+		}
+
+		public double GetEffectiveYield(ItemRecord a_Item, RefiningMutators a_Mutators)
+		{
+			double skillBonus = GetRefiningSkillBonus(a_Item, a_Mutators);
+			return m_Settings.Refining.BaseYield * skillBonus * m_Settings.Refining.TaxMultiplier;
+		}
+
+		public double GetEffectiveRefineQuota(ItemRecord a_Item, RefiningMutators a_Mutators, double a_PerfectAmount)
+		{
+			return a_PerfectAmount * GetEffectiveYield(a_Item, a_Mutators);
 		}
 
 		/// <summary>
 		/// Gets amount of material after perfect refining
 		/// Refines incomplete batches too
 		/// </summary>
-		public double GetItemRefinedMaterial(ItemRecord a_Item, UInt32 a_Quantity, Materials a_Material)
+		public double GetPerfectRefiningQuota(ItemRecord a_Item, UInt32 a_Quantity, Materials a_Material)
 		{
 			return (a_Quantity * a_Item.MaterialAmount[(UInt32)a_Material]) / a_Item.BatchSize;
 		}
@@ -159,18 +197,20 @@ namespace EveRefinery
 		/// Gets amount of material after refining with your efficiency and skill
 		/// Refines incomplete batches too
 		/// </summary>
-		public double GetItemRefinedQuota(ItemRecord a_Item, UInt32 a_Quantity, Materials a_Material)
+		public double GetEffectiveRefineQuota(ItemRecord a_Item, RefiningMutators a_Mutators, UInt32 a_Quantity, Materials a_Material)
 		{
-			return GetRefineQuota(GetItemRefinedMaterial(a_Item, a_Quantity, a_Material));
+			double perfectRefinedAmount = GetPerfectRefiningQuota(a_Item, a_Quantity, a_Material);
+			return GetEffectiveRefineQuota(a_Item, a_Mutators, perfectRefinedAmount);
 		}
 
-		public double GetItemRefinedPrice(ItemRecord a_Item, UInt32 a_Quantity)
+		public double GetItemRefinedPrice(ItemRecord a_Item, RefiningMutators a_Mutators, UInt32 a_Quantity)
 		{
 			double result = 0;
 
 			for (UInt32 i = 0; i < (UInt32)Materials.MaxMaterials; i++)
 			{
-				result += (GetRefineQuota(a_Quantity * a_Item.MaterialAmount[i]) * m_Settings.MaterialPrices[i]);
+				double refinedAmount = GetEffectiveRefineQuota(a_Item, a_Mutators, a_Quantity * a_Item.MaterialAmount[i]);
+				result += (refinedAmount * m_Settings.MaterialPrices[i]);
 			}
 
 			return result / a_Item.BatchSize;
@@ -229,11 +269,11 @@ namespace EveRefinery
 		/// <param name="a_Quantity">Quantity of the item</param>
 		/// <param name="a_QuantityOK">true means that quantity is valid (ie assets mode + use quantities enabled)</param>
 		/// <returns>Prices and color</returns>
-		public ItemPrice GetItemPrices(ItemRecord a_Item, UInt32 a_Quantity)
+		public ItemPrice GetItemPrices(ItemRecord a_Item, RefiningMutators a_Mutators, UInt32 a_Quantity)
 		{
 			ItemPrice result = new ItemPrice();
 
-			result.RefinedCost		= GetItemRefinedPrice(a_Item, a_Quantity);
+			result.RefinedCost		= GetItemRefinedPrice(a_Item, a_Mutators, a_Quantity);
 			result.MarketPrice		= a_Quantity * a_Item.Price;
 
 			bool isError = false;
@@ -269,7 +309,7 @@ namespace EveRefinery
 			{
                 string errorHint = "";
                 if (errorNode.InnerText == "Current security level not high enough.")
-                    errorHint = " (Did you provide Limited API key instead of Full one?)";
+                    errorHint = " (Did you provide API key with insufficient access?)";
 
 				message += (errorNode.InnerText + errorHint + "\n");
 			}

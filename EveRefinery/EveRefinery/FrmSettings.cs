@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using SpecialFNs;
 using System.Xml;
+using System.Globalization;
 
 namespace EveRefinery
 {
@@ -44,6 +45,7 @@ namespace EveRefinery
 		{
 			InitPage_ApiKeys();
 			InitPage_Minerals();
+			InitPage_Refining();
 			InitPage_Appearance();
 			InitPage_Other();
 			InitPage_Developer();
@@ -57,6 +59,9 @@ namespace EveRefinery
 				return;
 			
 			if (!SavePage_Minerals())
+				return;
+
+			if (!SavePage_Refining())
 				return;
 
 			if (!SavePage_Appearance())
@@ -75,6 +80,536 @@ namespace EveRefinery
 			Close();
 		}
 
+		private void TabMain_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (TabMain.SelectedTab == TbpRefining)
+			{
+				SavePage_ApiKeys();
+				UpdateCmbLoadSkills();
+			}
+		}
+
+
+		#region Page Minerals
+		private void InitPage_Minerals()
+		{
+			TxtTritanium.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Tritanium];
+			TxtPyerite.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Pyerite];
+			TxtMexallon.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Mexallon];
+			TxtIsogen.Value		= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Isogen];
+			TxtNoxcium.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Noxcium];
+			TxtZydrine.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Zydrine];
+			TxtMegacyte.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Megacyte];
+			TxtMorphite.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Morphite];
+			
+			m_MineralPriceSettings		= m_Settings.PriceLoad.SourceMinerals;
+			
+			UpdateMineralPricesTypeLabel();
+		}
+
+		private void HandleMineralPricesChange(double[] a_OldPrices)
+		{
+			Boolean mineralPricesChanged = false;
+			for (int i = 0; i < a_OldPrices.Length; i++)
+			{
+				if (a_OldPrices[i] != m_Settings.MaterialPrices[i])
+				{
+					mineralPricesChanged = true;
+					break;
+				}
+			}
+
+			if (mineralPricesChanged)
+				m_Settings.Stats.LastMineralPricesEdit = DateTime.UtcNow;
+		}
+
+		private bool SavePage_Minerals()
+		{
+			double[] oldMaterialPrices = (double[])m_Settings.MaterialPrices.Clone();
+
+			m_Settings.MaterialPrices[(UInt32)Materials.Tritanium]	= (double)TxtTritanium.Value;
+			m_Settings.MaterialPrices[(UInt32)Materials.Pyerite]	= (double)TxtPyerite.Value;
+			m_Settings.MaterialPrices[(UInt32)Materials.Mexallon]	= (double)TxtMexallon.Value;
+			m_Settings.MaterialPrices[(UInt32)Materials.Isogen]		= (double)TxtIsogen.Value;
+			m_Settings.MaterialPrices[(UInt32)Materials.Noxcium]	= (double)TxtNoxcium.Value;
+			m_Settings.MaterialPrices[(UInt32)Materials.Zydrine]	= (double)TxtZydrine.Value;
+			m_Settings.MaterialPrices[(UInt32)Materials.Megacyte]	= (double)TxtMegacyte.Value;
+			m_Settings.MaterialPrices[(UInt32)Materials.Morphite]	= (double)TxtMorphite.Value;
+
+			m_Settings.PriceLoad.SourceMinerals = m_MineralPriceSettings;
+
+			HandleMineralPricesChange(oldMaterialPrices);
+			return true;
+		}
+
+		private void BtnLoadMineralPrices_Click(object sender, EventArgs e)
+		{
+			List<UInt32> loadPricesFor = new List<UInt32>();
+			loadPricesFor.Add((UInt32)EveTypeIDs.Tritanium);
+			loadPricesFor.Add((UInt32)EveTypeIDs.Pyerite);
+			loadPricesFor.Add((UInt32)EveTypeIDs.Mexallon);
+			loadPricesFor.Add((UInt32)EveTypeIDs.Isogen);
+			loadPricesFor.Add((UInt32)EveTypeIDs.Noxcium);
+			loadPricesFor.Add((UInt32)EveTypeIDs.Zydrine);
+			loadPricesFor.Add((UInt32)EveTypeIDs.Megacyte);
+			loadPricesFor.Add((UInt32)EveTypeIDs.Morphite);
+
+			IPriceProvider provider = new PriceProviderAuto(m_Settings);
+
+			// @@@@ Check for exceptions?
+			List<PriceRecord> prices = provider.GetPrices(loadPricesFor, m_MineralPriceSettings);
+			foreach (PriceRecord currRecord in prices)
+			{
+				if (!currRecord.Settings.Matches(m_MineralPriceSettings))
+					continue;
+
+				switch ((EveTypeIDs)currRecord.TypeID)
+				{
+				case EveTypeIDs.Tritanium:
+					TxtTritanium.Value	= (decimal)currRecord.Price;
+					break;
+				case EveTypeIDs.Pyerite:
+					TxtPyerite.Value	= (decimal)currRecord.Price;
+					break;
+				case EveTypeIDs.Mexallon:
+					TxtMexallon.Value	= (decimal)currRecord.Price;
+					break;
+				case EveTypeIDs.Isogen:
+					TxtIsogen.Value		= (decimal)currRecord.Price;
+					break;
+				case EveTypeIDs.Noxcium:
+					TxtNoxcium.Value	= (decimal)currRecord.Price;
+					break;
+				case EveTypeIDs.Zydrine:
+					TxtZydrine.Value	= (decimal)currRecord.Price;
+					break;
+				case EveTypeIDs.Megacyte:
+					TxtMegacyte.Value	= (decimal)currRecord.Price;
+					break;
+				case EveTypeIDs.Morphite:
+					TxtMorphite.Value	= (decimal)currRecord.Price;
+					break;
+				}
+			}
+		}
+
+		private void UpdateMineralPricesTypeLabel()
+		{
+			BtnMineralPricesType.Text = m_MineralPriceSettings.GetHintText(m_EveDatabase);
+		}
+
+		private void BtnMineralPricesType_Click(object sender, EventArgs e)
+		{
+			FrmPriceType dialog = new FrmPriceType(m_EveDatabase);
+			dialog.m_Settings = m_MineralPriceSettings;
+			if (DialogResult.OK != dialog.ShowDialog(this))
+				return;
+
+			m_MineralPriceSettings = dialog.m_Settings;
+			UpdateMineralPricesTypeLabel();
+		}
+		#endregion
+
+		#region Page Refining
+		private void InitPage_Refining()
+		{
+			InitializeSkillValues();
+			UpdateCmbLoadSkills();
+			PrpRefining.SelectedObject = new RefiningSettings(m_Settings);
+		}
+
+		private bool SavePage_Refining()
+		{
+			return true;
+		}
+
+		private void UpdateCmbLoadSkills()
+		{
+			CmbLoadSkills.Items.Clear();
+
+			foreach (Settings._ApiAccess.Char currChar in m_Settings.ApiAccess.Chars)
+			{
+				TextItemWithUInt32 newItem = new TextItemWithUInt32(currChar.CharacterName, currChar.CharacterID);
+				CmbLoadSkills.Items.Add(newItem);
+			}
+
+			CmbLoadSkills.SelectedIndex = 0;
+		}
+
+		private void InitializeSkillValues()
+		{
+			EveSkills[] skillIDs = (EveSkills[])Enum.GetValues(typeof(EveSkills));
+			foreach (EveSkills currSkill in skillIDs)
+			{
+				if (!m_Settings.Refining.Skills.ContainsKey((UInt32)currSkill))
+					m_Settings.Refining.Skills[(UInt32)currSkill] = 0;
+			}
+		}
+
+		#region PropertyGrid
+		static UInt32[] m_SkillLevels = new UInt32[]{0, 1, 2, 3, 4, 5};
+
+		class StringOnlyConverter : TypeConverter
+		{
+			public override bool CanConvertFrom(ITypeDescriptorContext a_Context, Type a_Type)
+			{
+				return a_Type == typeof(string);
+			}
+
+			public override bool CanConvertTo(ITypeDescriptorContext a_Context, Type a_Type)
+			{
+				return a_Type == typeof(string);
+			}
+		}
+
+		class SkillConverter : StringOnlyConverter
+		{
+			public override bool GetStandardValuesSupported(ITypeDescriptorContext a_Context)
+			{
+				return true;
+			}
+
+			public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext a_Context)
+			{
+				return new StandardValuesCollection(m_SkillLevels);
+			}
+
+			public override object ConvertFrom(ITypeDescriptorContext a_Context, CultureInfo a_Culture, object a_Value)
+			{
+				UInt32 value = UInt32.Parse((String)a_Value);
+				if (value > 5)
+					return (UInt32)5;
+
+				return value;
+			}
+		}
+
+		public static double ParseDouble(String a_String)
+		{
+			StringBuilder cleaned = new StringBuilder();
+			foreach (char currChar in a_String)
+			{
+				if (Char.IsDigit(currChar))
+				{
+					cleaned.Append(currChar);
+					continue;
+				}
+
+				if ((currChar == '.') || (currChar == ','))
+				{
+					cleaned.Append('.');
+					continue;
+				}
+			}
+
+			return double.Parse(cleaned.ToString(), CultureInfo.InvariantCulture);
+		}
+
+		class PercentConverter : StringOnlyConverter
+		{
+			public override object ConvertFrom(ITypeDescriptorContext a_Context, CultureInfo a_Culture, object a_Value)
+			{
+				return ParseDouble((String)a_Value) / 100.0;
+			}
+
+			public override object ConvertTo(ITypeDescriptorContext a_Context, CultureInfo a_Culture, object a_Value, Type a_Type)
+			{
+				return String.Format(CultureInfo.InvariantCulture, "{0:0%}", a_Value);
+			}
+		}
+
+		class MultiplierConverter : StringOnlyConverter
+		{
+			public override object ConvertFrom(ITypeDescriptorContext a_Context, CultureInfo a_Culture, object a_Value)
+			{
+				return ParseDouble((String)a_Value);
+			}
+
+			public override object ConvertTo(ITypeDescriptorContext a_Context, CultureInfo a_Culture, object a_Value, Type a_Type)
+			{
+				return String.Format(CultureInfo.InvariantCulture, "x{0:0.00####}", (double)a_Value);
+			}
+		}
+
+		class RefiningSettings
+		{
+			#region Yield
+			[Category("1. Station equipment")]
+			[Description("Your station's [base yield]. See tooltip on refining meter in EVE.")]
+			[TypeConverter(typeof(PercentConverter))]
+			public double BaseYield
+			{
+				get {return m_Settings.Refining.BaseYield;}
+				set {m_Settings.Refining.BaseYield = value;}
+			}
+
+			[Category("1. Station equipment")]
+			[Description("Your station's [reduction from station owner tax]. See tooltip on refining meter in EVE.")]
+			[TypeConverter(typeof(MultiplierConverter))]
+			public double TaxMultiplier
+			{
+				get { return m_Settings.Refining.TaxMultiplier; }
+				set { m_Settings.Refining.TaxMultiplier = value; }
+			}
+			#endregion
+
+			#region Skills
+			[Category("2. Non-Ore refining")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 ScrapmetalProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.ScrapmetalProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.ScrapmetalProcessing] = value; }
+			}
+
+			#region Ore refining
+			[Category("3. Ore refining - generic")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 Reprocessing
+			{
+				get {return m_Settings.Refining.Skills[(UInt32)EveSkills.Reprocessing];}
+				set {m_Settings.Refining.Skills[(UInt32)EveSkills.Reprocessing] = value;}
+			}
+
+			[Category("3. Ore refining - generic")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 ReprocessingEfficiency
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.ReprocessingEfficiency]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.ReprocessingEfficiency] = value; }
+			}
+
+			[Category("3. Ore refining - generic")]
+			[Description("Bonus from implants, if any.")]
+			[TypeConverter(typeof(PercentConverter))]
+			public double ImplantBonus
+			{
+				get { return m_Settings.Refining.ImplantBonus; }
+				set { m_Settings.Refining.ImplantBonus = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 ArkonorProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.ArkonorProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.ArkonorProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 BistotProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.BistotProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.BistotProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 CrokiteProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.CrokiteProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.CrokiteProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 DarkOchreProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.DarkOchreProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.DarkOchreProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 GneissProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.GneissProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.GneissProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 HedbergiteProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.HedbergiteProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.HedbergiteProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 HemorphiteProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.HemorphiteProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.HemorphiteProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 JaspetProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.JaspetProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.JaspetProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 KerniteProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.KerniteProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.KerniteProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 MercoxitProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.MercoxitProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.MercoxitProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 OmberProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.OmberProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.OmberProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 PlagioclaseProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.PlagioclaseProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.PlagioclaseProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 PyroxeresProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.PyroxeresProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.PyroxeresProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 ScorditeProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.ScorditeProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.ScorditeProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 SpodumainProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.SpodumainProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.SpodumainProcessing] = value; }
+			}
+
+			[Category("4. Ore refining - specific")]
+			[Description("Relevant skill level.")]
+			[TypeConverter(typeof(SkillConverter))]
+			public UInt32 VeldsparProcessing
+			{
+				get { return m_Settings.Refining.Skills[(UInt32)EveSkills.VeldsparProcessing]; }
+				set { m_Settings.Refining.Skills[(UInt32)EveSkills.VeldsparProcessing] = value; }
+			}
+			#endregion
+			#endregion
+
+			#region Settings reference
+			private Settings m_Settings;
+
+			public RefiningSettings(Settings a_Settings)
+			{
+				m_Settings = a_Settings;
+			}
+			#endregion
+		}
+		#endregion
+
+		private bool LoadSkills(Settings._ApiAccess.Key a_ApiKey, UInt32 a_UserID, Dictionary<UInt32, UInt32> a_Result)
+		{
+			String errorHeader = "Failed to load skills";
+			XmlDocument xmlReply = EveApi.MakeRequest("char/CharacterSheet.xml.aspx", a_ApiKey, a_UserID, errorHeader);
+			if (null == xmlReply)
+				return false;
+
+			try
+			{
+				XmlNodeList skillNodes = xmlReply.SelectNodes("/eveapi/result/rowset[@name='skills']/row");
+				foreach (XmlNode currNode in skillNodes)
+				{
+					UInt32 typeID	= UInt32.Parse(currNode.Attributes["typeID"].Value);
+					UInt32 level	= UInt32.Parse(currNode.Attributes["level"].Value);
+					a_Result[typeID]= level;
+				}
+			}
+			catch (System.Exception a_Exception)
+			{
+				ErrorMessageBox.Show(errorHeader + ":\n" + "Failed to parse EVE API reply:\n" + a_Exception.Message);
+				return false;
+			}
+
+			// Safety check for possible XML format change
+			if (0 == a_Result.Count)
+				return false;
+
+			return true;
+		}
+
+		private void BtnLoadSkills_Click(object sender, EventArgs e)
+		{
+			if (null == CmbLoadSkills.SelectedItem)
+				return;
+
+			UInt32 userID = TextItemWithUInt32.GetData(CmbLoadSkills.SelectedItem);
+			Settings._ApiAccess.Key apiKey = Engine.GetCharacterKey(m_Settings, userID);
+			if (null == apiKey)
+			{
+				ErrorMessageBox.Show("Can't find API key for selected character");
+				return;
+			}
+
+			Dictionary<UInt32, UInt32> skills = new Dictionary<UInt32, UInt32>();
+			if (!LoadSkills(apiKey, userID, skills))
+				return;
+
+			EveSkills[] skillIDs = (EveSkills[])Enum.GetValues(typeof(EveSkills));
+			foreach (EveSkills currSkill in skillIDs)
+			{
+				UInt32 skillLevel = 0;
+				if (skills.ContainsKey((UInt32)currSkill))
+					skillLevel = skills[(UInt32)currSkill];
+
+				m_Settings.Refining.Skills[(UInt32)currSkill] = skillLevel;
+			}
+
+			PrpRefining.Refresh();
+		}
+		#endregion
+
+		#region Page API
 		private void InitPage_ApiKeys()
 		{
 			foreach (Settings._ApiAccess.Key currKey in m_Settings.ApiAccess.Keys)
@@ -133,136 +668,6 @@ namespace EveRefinery
 			return true;
 		}
 
-		private void InitPage_Minerals()
-		{
-			TxtTritanium.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Tritanium];
-			TxtPyerite.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Pyerite];
-			TxtMexallon.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Mexallon];
-			TxtIsogen.Value		= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Isogen];
-			TxtNoxcium.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Noxcium];
-			TxtZydrine.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Zydrine];
-			TxtMegacyte.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Megacyte];
-			TxtMorphite.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Morphite];
-			
-			m_MineralPriceSettings		= m_Settings.PriceLoad.SourceMinerals;
-			
-            // @@@@ Remove controls
-            TxtRefineryEfficiency.Value = 100;
-			TxtRefineryTax.Value		= 0;
-
-			UpdateMineralPricesTypeLabel();
-		}
-
-		private void HandleMineralPricesChange(double[] a_OldPrices)
-		{
-			Boolean mineralPricesChanged = false;
-			for (int i = 0; i < a_OldPrices.Length; i++)
-			{
-				if (a_OldPrices[i] != m_Settings.MaterialPrices[i])
-				{
-					mineralPricesChanged = true;
-					break;
-				}
-			}
-
-			if (mineralPricesChanged)
-				m_Settings.Stats.LastMineralPricesEdit = DateTime.UtcNow;
-		}
-
-		private bool SavePage_Minerals()
-		{
-			double[] oldMaterialPrices = (double[])m_Settings.MaterialPrices.Clone();
-
-			m_Settings.MaterialPrices[(UInt32)Materials.Tritanium]	= (double)TxtTritanium.Value;
-			m_Settings.MaterialPrices[(UInt32)Materials.Pyerite]	= (double)TxtPyerite.Value;
-			m_Settings.MaterialPrices[(UInt32)Materials.Mexallon]	= (double)TxtMexallon.Value;
-			m_Settings.MaterialPrices[(UInt32)Materials.Isogen]		= (double)TxtIsogen.Value;
-			m_Settings.MaterialPrices[(UInt32)Materials.Noxcium]	= (double)TxtNoxcium.Value;
-			m_Settings.MaterialPrices[(UInt32)Materials.Zydrine]	= (double)TxtZydrine.Value;
-			m_Settings.MaterialPrices[(UInt32)Materials.Megacyte]	= (double)TxtMegacyte.Value;
-			m_Settings.MaterialPrices[(UInt32)Materials.Morphite]	= (double)TxtMorphite.Value;
-
-			m_Settings.PriceLoad.SourceMinerals = m_MineralPriceSettings;
-
-			HandleMineralPricesChange(oldMaterialPrices);
-			return true;
-		}
-		
-		private void InitPage_Appearance()
-		{
-			foreach (ColumnHeader column in m_ListColumns)
-			{
-				bool isColumnVisible = (0 != column.Width);
-				ListViewItem newItem = new ListViewItem(column.Text);
-				newItem.Checked = isColumnVisible;
-				newItem.Tag = (Object)column.Index;
-				LstColumns.Items.Add(newItem);
-			}
-
-			TxtRedPrice.Value				= (int)(m_Settings.Appearance.RedPrice * 100);
-			TxtGreenPrice.Value				= (int)(m_Settings.Appearance.GreenPrice * 100);
-			
-			ChkOverrideColorsISK.Checked	= m_Settings.Appearance.OverrideAssetsColors;
-			TxtGreenIskLoss.Value			= (decimal)m_Settings.Appearance.GreenIskLoss;
-			TxtRedIskLoss.Value				= (decimal)m_Settings.Appearance.RedIskLoss;
-			Update_OverrideColorsControls_Enabled();
-		}
-		
-		private bool SavePage_Appearance()
-		{
-			for (int i = 0; i < LstColumns.Items.Count; i++)
-			{
-				ListViewItem currItem = LstColumns.Items[i];
-				Int32 columnIndex = (Int32)currItem.Tag;
-				
-				if (currItem.Checked)
-					ListViewEx.UnhideColumn(m_ListColumns[columnIndex]);
-				else
-					ListViewEx.HideColumn(m_ListColumns[columnIndex]);
-			}
-
-			m_Settings.Appearance.RedPrice				= ((double)TxtRedPrice.Value) / 100;
-			m_Settings.Appearance.GreenPrice			= ((double)TxtGreenPrice.Value) / 100;
-			
-			m_Settings.Appearance.OverrideAssetsColors	= ChkOverrideColorsISK.Checked;
-			m_Settings.Appearance.GreenIskLoss			= (double)TxtGreenIskLoss.Value;
-			m_Settings.Appearance.RedIskLoss			= (double)TxtRedIskLoss.Value;
-			
-			return true;
-		}
-		
-		private void InitPage_Other()
-		{
-			ChkCheckUpdates.Checked			= m_Settings.Options.CheckUpdates;
-			TxtPriceHistory.Value			= m_Settings.PriceLoad.ItemsHistoryDays;
-			TxtPricesExpiryDays.Value		= m_Settings.PriceLoad.ItemsExpiryDays;
-			TxtMineralPricesExpiryDays.Value = m_Settings.PriceLoad.MineralExpiryDays;
-		}
-		
-		private bool SavePage_Other()
-		{
-			m_Settings.Options.CheckUpdates		= ChkCheckUpdates.Checked;
-			m_Settings.PriceLoad.ItemsHistoryDays	= (UInt32)TxtPriceHistory.Value;
-			m_Settings.PriceLoad.ItemsExpiryDays	= (UInt32)TxtPricesExpiryDays.Value;
-			m_Settings.PriceLoad.MineralExpiryDays	= (UInt32)TxtMineralPricesExpiryDays.Value;
-			return true;
-		}
-
-		private void InitPage_Developer()
-		{
-			Boolean isPageShown = false;
-
-			#if (DEBUG)
-				isPageShown = true;
-			#endif
-
-			if (Environment.GetCommandLineArgs().Contains("/dev"))
-				isPageShown = true;
-
-			if (!isPageShown)
-				TabMain.TabPages.Remove(TabDeveloper);
-		}
-
 		private void BtnAddApiKey_Click(object sender, EventArgs e)
 		{
 			FrmAddNewApiKey frmAddNewApiKey = new FrmAddNewApiKey();
@@ -308,27 +713,14 @@ namespace EveRefinery
 
 		private void UpdateSingleUser(string a_KeyID, string a_Verification)
 		{
-			string xmlQueryUrl = "http://api.eve-online.com/account/Characters.xml.aspx?keyID=" + a_KeyID + "&vCode=" + a_Verification;
-			XmlDocument xmlReply = new XmlDocument();
+			Settings._ApiAccess.Key tempKey = new Settings._ApiAccess.Key();
+			UInt32.TryParse(a_KeyID, out tempKey.KeyID);
+			tempKey.Verification = a_Verification;
 
-			string errorHeader = "Failed to update user " + a_KeyID + ":\n";
-
-			try
-			{
-				xmlReply = Engine.LoadXmlWithUserAgent(xmlQueryUrl);
-			}
-			catch (System.Exception a_Exception)
-			{
-				ErrorMessageBox.Show(errorHeader + a_Exception.Message);
+			string errorHeader = "Failed to update user " + a_KeyID;
+			XmlDocument xmlReply = EveApi.MakeRequest("account/Characters.xml.aspx", tempKey, 0, errorHeader);
+			if (null == xmlReply)
 				return;
-			}
-
-			XmlNodeList errorNodes = xmlReply.GetElementsByTagName("error");
-			if (0 != errorNodes.Count)
-			{
-				Engine.ShowXmlRequestErrors(errorHeader, errorNodes);
-				return;
-			}
 
 			XmlNodeList characterNodes = xmlReply.GetElementsByTagName("row");
 			if (0 == characterNodes.Count)
@@ -384,7 +776,57 @@ namespace EveRefinery
 
 			return false;
 		}
+
+		private void LnkGetApiKey_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			System.Diagnostics.Process.Start(((LinkLabel)sender).Text);
+		}
+		#endregion
+
+		#region Page Appearance
+		private void InitPage_Appearance()
+		{
+			foreach (ColumnHeader column in m_ListColumns)
+			{
+				bool isColumnVisible = (0 != column.Width);
+				ListViewItem newItem = new ListViewItem(column.Text);
+				newItem.Checked = isColumnVisible;
+				newItem.Tag = (Object)column.Index;
+				LstColumns.Items.Add(newItem);
+			}
+
+			TxtRedPrice.Value				= (int)(m_Settings.Appearance.RedPrice * 100);
+			TxtGreenPrice.Value				= (int)(m_Settings.Appearance.GreenPrice * 100);
+			
+			ChkOverrideColorsISK.Checked	= m_Settings.Appearance.OverrideAssetsColors;
+			TxtGreenIskLoss.Value			= (decimal)m_Settings.Appearance.GreenIskLoss;
+			TxtRedIskLoss.Value				= (decimal)m_Settings.Appearance.RedIskLoss;
+			Update_OverrideColorsControls_Enabled();
+		}
 		
+		private bool SavePage_Appearance()
+		{
+			for (int i = 0; i < LstColumns.Items.Count; i++)
+			{
+				ListViewItem currItem = LstColumns.Items[i];
+				Int32 columnIndex = (Int32)currItem.Tag;
+				
+				if (currItem.Checked)
+					ListViewEx.UnhideColumn(m_ListColumns[columnIndex]);
+				else
+					ListViewEx.HideColumn(m_ListColumns[columnIndex]);
+			}
+
+			m_Settings.Appearance.RedPrice				= ((double)TxtRedPrice.Value) / 100;
+			m_Settings.Appearance.GreenPrice			= ((double)TxtGreenPrice.Value) / 100;
+			
+			m_Settings.Appearance.OverrideAssetsColors	= ChkOverrideColorsISK.Checked;
+			m_Settings.Appearance.GreenIskLoss			= (double)TxtGreenIskLoss.Value;
+			m_Settings.Appearance.RedIskLoss			= (double)TxtRedIskLoss.Value;
+			
+			return true;
+		}
+
 		private void OnGreenPriceChange(Int32 a_NewValue)
 		{
 			if (TrkGreenPrice.Value != a_NewValue)
@@ -429,72 +871,6 @@ namespace EveRefinery
 			OnGreenPriceChange(TrkGreenPrice.Value);
 		}
 
-		private void BtnLoadMineralPrices_Click(object sender, EventArgs e)
-		{
-			List<UInt32> loadPricesFor = new List<UInt32>();
-			loadPricesFor.Add((UInt32)EveTypeIDs.Tritanium);
-			loadPricesFor.Add((UInt32)EveTypeIDs.Pyerite);
-			loadPricesFor.Add((UInt32)EveTypeIDs.Mexallon);
-			loadPricesFor.Add((UInt32)EveTypeIDs.Isogen);
-			loadPricesFor.Add((UInt32)EveTypeIDs.Noxcium);
-			loadPricesFor.Add((UInt32)EveTypeIDs.Zydrine);
-			loadPricesFor.Add((UInt32)EveTypeIDs.Megacyte);
-			loadPricesFor.Add((UInt32)EveTypeIDs.Morphite);
-
-			IPriceProvider provider = new PriceProviderAuto(m_Settings);
-
-			// @@@@ Check for exceptions?
-			List<PriceRecord> prices = provider.GetPrices(loadPricesFor, m_MineralPriceSettings);
-			foreach (PriceRecord currRecord in prices)
-			{
-				if (!currRecord.Settings.Matches(m_MineralPriceSettings))
-					continue;
-
-				switch ((EveTypeIDs)currRecord.TypeID)
-				{
-				case EveTypeIDs.Tritanium:
-					TxtTritanium.Value	= (decimal)currRecord.Price;
-					break;
-				case EveTypeIDs.Pyerite:
-					TxtPyerite.Value	= (decimal)currRecord.Price;
-					break;
-				case EveTypeIDs.Mexallon:
-					TxtMexallon.Value	= (decimal)currRecord.Price;
-					break;
-				case EveTypeIDs.Isogen:
-					TxtIsogen.Value		= (decimal)currRecord.Price;
-					break;
-				case EveTypeIDs.Noxcium:
-					TxtNoxcium.Value	= (decimal)currRecord.Price;
-					break;
-				case EveTypeIDs.Zydrine:
-					TxtZydrine.Value	= (decimal)currRecord.Price;
-					break;
-				case EveTypeIDs.Megacyte:
-					TxtMegacyte.Value	= (decimal)currRecord.Price;
-					break;
-				case EveTypeIDs.Morphite:
-					TxtMorphite.Value	= (decimal)currRecord.Price;
-					break;
-				}
-			}
-		}
-
-		private void BtnRefineryCalculator_Click(object sender, EventArgs e)
-		{
-			FrmRefineCalc frmRefineCalc = new FrmRefineCalc();
-			if (DialogResult.OK != frmRefineCalc.ShowDialog(this))
-				return;
-				
-			TxtRefineryEfficiency.Value = (decimal)frmRefineCalc.m_RefineryEfficiency * 100;
-			TxtRefineryTax.Value		= (decimal)frmRefineCalc.m_TaxesTaken * 100;
-		}
-
-		private void LnkGetApiKey_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			System.Diagnostics.Process.Start(((LinkLabel)sender).Text);
-		}
-		
 		private void Update_OverrideColorsControls_Enabled()
 		{
 			TxtGreenIskLoss.Enabled = ChkOverrideColorsISK.Checked;
@@ -504,6 +880,42 @@ namespace EveRefinery
 		private void ChkOverrideColorsISK_CheckedChanged(object sender, EventArgs e)
 		{
 			Update_OverrideColorsControls_Enabled();
+		}
+		#endregion
+
+		#region Page Other
+		private void InitPage_Other()
+		{
+			ChkCheckUpdates.Checked			= m_Settings.Options.CheckUpdates;
+			TxtPriceHistory.Value			= m_Settings.PriceLoad.ItemsHistoryDays;
+			TxtPricesExpiryDays.Value		= m_Settings.PriceLoad.ItemsExpiryDays;
+			TxtMineralPricesExpiryDays.Value = m_Settings.PriceLoad.MineralExpiryDays;
+		}
+		
+		private bool SavePage_Other()
+		{
+			m_Settings.Options.CheckUpdates		= ChkCheckUpdates.Checked;
+			m_Settings.PriceLoad.ItemsHistoryDays	= (UInt32)TxtPriceHistory.Value;
+			m_Settings.PriceLoad.ItemsExpiryDays	= (UInt32)TxtPricesExpiryDays.Value;
+			m_Settings.PriceLoad.MineralExpiryDays	= (UInt32)TxtMineralPricesExpiryDays.Value;
+			return true;
+		}
+		#endregion
+
+		#region Page Developer
+		private void InitPage_Developer()
+		{
+			Boolean isPageShown = false;
+
+			#if (DEBUG)
+				isPageShown = true;
+			#endif
+
+			if (Environment.GetCommandLineArgs().Contains("/dev"))
+				isPageShown = true;
+
+			if (!isPageShown)
+				TabMain.TabPages.Remove(TabDeveloper);
 		}
 
 		private void BtnStripDatabase_Click(object sender, EventArgs e)
@@ -525,21 +937,6 @@ namespace EveRefinery
 				ErrorMessageBox.Show("Failed to strip database:\n" + a_Exception.Message);
 			}
 		}
-
-		private void UpdateMineralPricesTypeLabel()
-		{
-			BtnMineralPricesType.Text = m_MineralPriceSettings.GetHintText(m_EveDatabase);
-		}
-
-		private void BtnMineralPricesType_Click(object sender, EventArgs e)
-		{
-			FrmPriceType dialog = new FrmPriceType(m_EveDatabase);
-			dialog.m_Settings = m_MineralPriceSettings;
-			if (DialogResult.OK != dialog.ShowDialog(this))
-				return;
-
-			m_MineralPriceSettings = dialog.m_Settings;
-			UpdateMineralPricesTypeLabel();
-		}
+		#endregion
 	}
 }

@@ -4,6 +4,8 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 
+using SkillDictionary = SpecialFNs.SerializableDictionary<System.UInt32, System.UInt32>;
+
 namespace EveRefinery
 {
 	[Serializable]
@@ -100,14 +102,24 @@ namespace EveRefinery
             public DateTime         LastMineralPricesEdit   = DateTime.FromFileTime(0);
         }
 
+		[Serializable]
+        public class _Refining
+        {
+			public SkillDictionary	Skills					= new SkillDictionary();
+			public double			BaseYield				= 0.30;
+			public double			TaxMultiplier			= 1.00;
+			public double			ImplantBonus			= 0;
+		}
+
         public UInt32               Version                 = 1;
         public _Options             Options                 = new _Options();
         public _PriceLoad           PriceLoad               = new _PriceLoad();
         public double[]             MaterialPrices          = new double[(UInt32)Materials.MaxMaterials];
+		public _ApiAccess           ApiAccess               = new _ApiAccess();
+		public _Stats               Stats                   = new _Stats();
+		public _Refining			Refining				= new _Refining();
         public _Appearance          Appearance              = new _Appearance();
-        public _ApiAccess           ApiAccess               = new _ApiAccess();
         public _UILocations         UILocations             = new _UILocations();
-        public _Stats               Stats                   = new _Stats();
 
 		public Settings				Clone()
 		{
@@ -351,9 +363,9 @@ namespace EveRefinery
                     return new Settings();
                 }
             }
-            catch (System.Exception)
+            catch (System.Exception a_Exception)
             {
-            
+				System.Diagnostics.Debug.WriteLine(a_Exception.Message);
             }
 
             return new Settings();

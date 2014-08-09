@@ -289,28 +289,12 @@ namespace EveRefinery
 			if (null == apiKey)
 				return false;
 
-			string requestUrl = "http://api.eve-online.com/char/AssetList.xml.aspx?KeyID=" + apiKey.KeyID + "&vCode=" + apiKey.Verification + "&characterID=" + a_CharID;
-			string errorHeader = "Failed to update assets:\n";
-			XmlDocument assetsXml = new XmlDocument();
-
-			try
-			{
-				assetsXml = Engine.LoadXmlWithUserAgent(requestUrl);
-
-				XmlNodeList errorNodes = assetsXml.GetElementsByTagName("error");
-				if (0 != errorNodes.Count)
-				{
-					Engine.ShowXmlRequestErrors(errorHeader, errorNodes);
-					return false;
-				}
-
-				ParseAssetsXML(assetsXml);
-			}
-			catch (System.Exception a_Exception)
-			{
-				ErrorMessageBox.Show(errorHeader + a_Exception.Message);
+			string errorHeader = "Failed to update assets";
+			XmlDocument assetsXml = EveApi.MakeRequest("char/AssetList.xml.aspx", apiKey, a_CharID, errorHeader);
+			if (null == assetsXml)
 				return false;
-			}
+
+			ParseAssetsXML(assetsXml);
 
 			// Ignore saving errors
 			try

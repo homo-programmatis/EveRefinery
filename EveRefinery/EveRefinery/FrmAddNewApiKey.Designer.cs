@@ -68,7 +68,7 @@
 			this.SplTable1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
 			this.SplTable1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.SplTable1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.SplTable1.Size = new System.Drawing.Size(327, 194);
+			this.SplTable1.Size = new System.Drawing.Size(327, 258);
 			this.SplTable1.TabIndex = 0;
 			// 
 			// tableLayoutPanel1
@@ -80,7 +80,7 @@
 			this.tableLayoutPanel1.Controls.Add(this.BtnOk, 1, 0);
 			this.tableLayoutPanel1.Controls.Add(this.BtnCancel, 2, 0);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 174);
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 238);
 			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 1;
@@ -116,7 +116,7 @@
 			this.LblContextHelp.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LblContextHelp.Location = new System.Drawing.Point(3, 0);
 			this.LblContextHelp.Name = "LblContextHelp";
-			this.LblContextHelp.Size = new System.Drawing.Size(321, 69);
+			this.LblContextHelp.Size = new System.Drawing.Size(321, 133);
 			this.LblContextHelp.TabIndex = 1;
 			this.LblContextHelp.Text = resources.GetString("LblContextHelp.Text");
 			// 
@@ -124,12 +124,12 @@
 			// 
 			this.LnkCreateKey.AutoSize = true;
 			this.LnkCreateKey.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LnkCreateKey.Location = new System.Drawing.Point(3, 109);
+			this.LnkCreateKey.Location = new System.Drawing.Point(3, 173);
 			this.LnkCreateKey.Name = "LnkCreateKey";
 			this.LnkCreateKey.Size = new System.Drawing.Size(321, 20);
 			this.LnkCreateKey.TabIndex = 2;
 			this.LnkCreateKey.TabStop = true;
-			this.LnkCreateKey.Text = "https://support.eveonline.com/api/key/createpredefined/2";
+			this.LnkCreateKey.Text = "https://support.eveonline.com/api/key/createpredefined/10";
 			this.LnkCreateKey.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnLinkClicked);
 			// 
 			// SplTable3
@@ -142,7 +142,7 @@
 			this.SplTable3.Controls.Add(this.TxtUserID, 1, 0);
 			this.SplTable3.Controls.Add(this.TxtApiKey, 1, 1);
 			this.SplTable3.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SplTable3.Location = new System.Drawing.Point(0, 129);
+			this.SplTable3.Location = new System.Drawing.Point(0, 193);
 			this.SplTable3.Margin = new System.Windows.Forms.Padding(0);
 			this.SplTable3.Name = "SplTable3";
 			this.SplTable3.RowCount = 2;
@@ -195,7 +195,7 @@
 			// 
 			this.LblCreateKey.AutoSize = true;
 			this.LblCreateKey.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LblCreateKey.Location = new System.Drawing.Point(3, 89);
+			this.LblCreateKey.Location = new System.Drawing.Point(3, 153);
 			this.LblCreateKey.Name = "LblCreateKey";
 			this.LblCreateKey.Size = new System.Drawing.Size(321, 20);
 			this.LblCreateKey.TabIndex = 4;
@@ -205,7 +205,7 @@
 			// 
 			this.LnkKeysManagement.AutoSize = true;
 			this.LnkKeysManagement.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LnkKeysManagement.Location = new System.Drawing.Point(3, 69);
+			this.LnkKeysManagement.Location = new System.Drawing.Point(3, 133);
 			this.LnkKeysManagement.Name = "LnkKeysManagement";
 			this.LnkKeysManagement.Size = new System.Drawing.Size(321, 20);
 			this.LnkKeysManagement.TabIndex = 5;
@@ -217,7 +217,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(327, 194);
+			this.ClientSize = new System.Drawing.Size(327, 258);
 			this.Controls.Add(this.SplTable1);
 			this.Name = "FrmAddNewApiKey";
 			this.ShowIcon = false;
