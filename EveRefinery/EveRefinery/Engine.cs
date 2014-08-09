@@ -129,15 +129,20 @@ namespace EveRefinery
 				ErrorMessageBox.Show("Failed to save settings:\n" + a_Exception.Message);
 			}
 		}
-		
-		public Settings._ApiAccess.Key GetCharacterKey(UInt32 a_CharacterID)
+
+		public static Settings._ApiAccess.Key GetCharacterKey(Settings a_Settings, UInt32 a_CharacterID)
 		{
-            Settings._ApiAccess.Char character = m_Settings.ApiAccess.Chars.FirstOrDefault(a => a.CharacterID == a_CharacterID);
+            Settings._ApiAccess.Char character = a_Settings.ApiAccess.Chars.FirstOrDefault(a => a.CharacterID == a_CharacterID);
 			if (null == character)
 				return null;
 
-            Settings._ApiAccess.Key key = m_Settings.ApiAccess.Keys.FirstOrDefault(a => a.KeyID == character.KeyID);
+            Settings._ApiAccess.Key key = a_Settings.ApiAccess.Keys.FirstOrDefault(a => a.KeyID == character.KeyID);
 			return key;
+		}
+
+		public Settings._ApiAccess.Key GetCharacterKey(UInt32 a_CharacterID)
+		{
+			return GetCharacterKey(m_Settings, a_CharacterID);
 		}
 
 		private TValue DictionaryGetValue<TKey, TValue>(Dictionary<TKey, TValue> a_Dictionary, TKey a_Key, TValue a_Default)
@@ -304,7 +309,7 @@ namespace EveRefinery
 			{
                 string errorHint = "";
                 if (errorNode.InnerText == "Current security level not high enough.")
-                    errorHint = " (Did you provide Limited API key instead of Full one?)";
+                    errorHint = " (Did you provide API key with insufficient access?)";
 
 				message += (errorNode.InnerText + errorHint + "\n");
 			}

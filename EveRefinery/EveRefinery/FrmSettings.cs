@@ -80,6 +80,16 @@ namespace EveRefinery
 			Close();
 		}
 
+		private void TabMain_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (TabMain.SelectedTab == TbpRefining)
+			{
+				SavePage_ApiKeys();
+				UpdateCmbLoadSkills();
+			}
+		}
+
+
 		#region Page Minerals
 		private void InitPage_Minerals()
 		{
@@ -201,17 +211,29 @@ namespace EveRefinery
 		#endregion
 
 		#region Page Refining
-
-
 		private void InitPage_Refining()
 		{
 			InitializeSkillValues();
+			UpdateCmbLoadSkills();
 			PrpRefining.SelectedObject = new RefiningSettings(m_Settings);
 		}
 
 		private bool SavePage_Refining()
 		{
 			return true;
+		}
+
+		private void UpdateCmbLoadSkills()
+		{
+			CmbLoadSkills.Items.Clear();
+
+			foreach (Settings._ApiAccess.Char currChar in m_Settings.ApiAccess.Chars)
+			{
+				TextItemWithUInt32 newItem = new TextItemWithUInt32(currChar.CharacterName, currChar.CharacterID);
+				CmbLoadSkills.Items.Add(newItem);
+			}
+
+			CmbLoadSkills.SelectedIndex = 0;
 		}
 
 		private void InitializeSkillValues()
@@ -224,6 +246,7 @@ namespace EveRefinery
 			}
 		}
 
+		#region PropertyGrid
 		static UInt32[] m_SkillLevels = new UInt32[]{0, 1, 2, 3, 4, 5};
 
 		class StringOnlyConverter : TypeConverter
@@ -525,6 +548,67 @@ namespace EveRefinery
 		}
 		#endregion
 
+		private bool LoadSkills(Settings._ApiAccess.Key a_ApiKey, UInt32 a_UserID, Dictionary<UInt32, UInt32> a_Result)
+		{
+			String errorHeader = "Failed to load skills";
+			XmlDocument xmlReply = EveApi.MakeRequest("char/CharacterSheet.xml.aspx", a_ApiKey, a_UserID, errorHeader);
+			if (null == xmlReply)
+				return false;
+
+			try
+			{
+				XmlNodeList skillNodes = xmlReply.SelectNodes("/eveapi/result/rowset[@name='skills']/row");
+				foreach (XmlNode currNode in skillNodes)
+				{
+					UInt32 typeID	= UInt32.Parse(currNode.Attributes["typeID"].Value);
+					UInt32 level	= UInt32.Parse(currNode.Attributes["level"].Value);
+					a_Result[typeID]= level;
+				}
+			}
+			catch (System.Exception a_Exception)
+			{
+				ErrorMessageBox.Show(errorHeader + ":\n" + "Failed to parse EVE API reply:\n" + a_Exception.Message);
+				return false;
+			}
+
+			// Safety check for possible XML format change
+			if (0 == a_Result.Count)
+				return false;
+
+			return true;
+		}
+
+		private void BtnLoadSkills_Click(object sender, EventArgs e)
+		{
+			if (null == CmbLoadSkills.SelectedItem)
+				return;
+
+			UInt32 userID = TextItemWithUInt32.GetData(CmbLoadSkills.SelectedItem);
+			Settings._ApiAccess.Key apiKey = Engine.GetCharacterKey(m_Settings, userID);
+			if (null == apiKey)
+			{
+				ErrorMessageBox.Show("Can't find API key for selected character");
+				return;
+			}
+
+			Dictionary<UInt32, UInt32> skills = new Dictionary<UInt32, UInt32>();
+			if (!LoadSkills(apiKey, userID, skills))
+				return;
+
+			EveSkills[] skillIDs = (EveSkills[])Enum.GetValues(typeof(EveSkills));
+			foreach (EveSkills currSkill in skillIDs)
+			{
+				UInt32 skillLevel = 0;
+				if (skills.ContainsKey((UInt32)currSkill))
+					skillLevel = skills[(UInt32)currSkill];
+
+				m_Settings.Refining.Skills[(UInt32)currSkill] = skillLevel;
+			}
+
+			PrpRefining.Refresh();
+		}
+		#endregion
+
 		#region Page API
 		private void InitPage_ApiKeys()
 		{
@@ -629,27 +713,14 @@ namespace EveRefinery
 
 		private void UpdateSingleUser(string a_KeyID, string a_Verification)
 		{
-			string xmlQueryUrl = "http://api.eve-online.com/account/Characters.xml.aspx?keyID=" + a_KeyID + "&vCode=" + a_Verification;
-			XmlDocument xmlReply = new XmlDocument();
+			Settings._ApiAccess.Key tempKey = new Settings._ApiAccess.Key();
+			UInt32.TryParse(a_KeyID, out tempKey.KeyID);
+			tempKey.Verification = a_Verification;
 
-			string errorHeader = "Failed to update user " + a_KeyID + ":\n";
-
-			try
-			{
-				xmlReply = Engine.LoadXmlWithUserAgent(xmlQueryUrl);
-			}
-			catch (System.Exception a_Exception)
-			{
-				ErrorMessageBox.Show(errorHeader + a_Exception.Message);
+			string errorHeader = "Failed to update user " + a_KeyID;
+			XmlDocument xmlReply = EveApi.MakeRequest("account/Characters.xml.aspx", tempKey, 0, errorHeader);
+			if (null == xmlReply)
 				return;
-			}
-
-			XmlNodeList errorNodes = xmlReply.GetElementsByTagName("error");
-			if (0 != errorNodes.Count)
-			{
-				Engine.ShowXmlRequestErrors(errorHeader, errorNodes);
-				return;
-			}
 
 			XmlNodeList characterNodes = xmlReply.GetElementsByTagName("row");
 			if (0 == characterNodes.Count)

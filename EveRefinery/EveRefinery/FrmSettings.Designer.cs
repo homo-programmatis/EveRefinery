@@ -55,7 +55,11 @@
 			this.BtnMineralPricesType = new System.Windows.Forms.Button();
 			this.LblMineralPrices = new System.Windows.Forms.Label();
 			this.TbpRefining = new System.Windows.Forms.TabPage();
+			this.TblRefining = new System.Windows.Forms.TableLayoutPanel();
 			this.PrpRefining = new System.Windows.Forms.PropertyGrid();
+			this.TblLoadSkills = new System.Windows.Forms.TableLayoutPanel();
+			this.CmbLoadSkills = new System.Windows.Forms.ComboBox();
+			this.BtnLoadSkills = new System.Windows.Forms.Button();
 			this.TbpApiKeys = new System.Windows.Forms.TabPage();
 			this.TblApiTable = new System.Windows.Forms.TableLayoutPanel();
 			this.LblContextHelp = new System.Windows.Forms.Label();
@@ -134,6 +138,8 @@
 			((System.ComponentModel.ISupportInitialize)(this.TxtMorphite)).BeginInit();
 			this.tableLayoutPanel4.SuspendLayout();
 			this.TbpRefining.SuspendLayout();
+			this.TblRefining.SuspendLayout();
+			this.TblLoadSkills.SuspendLayout();
 			this.TbpApiKeys.SuspendLayout();
 			this.TblApiTable.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
@@ -183,6 +189,7 @@
 			this.TabMain.SelectedIndex = 0;
 			this.TabMain.Size = new System.Drawing.Size(369, 390);
 			this.TabMain.TabIndex = 0;
+			this.TabMain.SelectedIndexChanged += new System.EventHandler(this.TabMain_SelectedIndexChanged);
 			// 
 			// TbpMinerals
 			// 
@@ -564,7 +571,7 @@
 			// 
 			// TbpRefining
 			// 
-			this.TbpRefining.Controls.Add(this.PrpRefining);
+			this.TbpRefining.Controls.Add(this.TblRefining);
 			this.TbpRefining.Location = new System.Drawing.Point(4, 22);
 			this.TbpRefining.Name = "TbpRefining";
 			this.TbpRefining.Size = new System.Drawing.Size(361, 364);
@@ -572,13 +579,65 @@
 			this.TbpRefining.Text = "Refining";
 			this.TbpRefining.UseVisualStyleBackColor = true;
 			// 
+			// TblRefining
+			// 
+			this.TblRefining.ColumnCount = 1;
+			this.TblRefining.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.TblRefining.Controls.Add(this.PrpRefining, 0, 0);
+			this.TblRefining.Controls.Add(this.TblLoadSkills, 0, 1);
+			this.TblRefining.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.TblRefining.Location = new System.Drawing.Point(0, 0);
+			this.TblRefining.Name = "TblRefining";
+			this.TblRefining.RowCount = 2;
+			this.TblRefining.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.TblRefining.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
+			this.TblRefining.Size = new System.Drawing.Size(361, 364);
+			this.TblRefining.TabIndex = 1;
+			// 
 			// PrpRefining
 			// 
 			this.PrpRefining.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PrpRefining.Location = new System.Drawing.Point(0, 0);
+			this.PrpRefining.Location = new System.Drawing.Point(3, 3);
 			this.PrpRefining.Name = "PrpRefining";
-			this.PrpRefining.Size = new System.Drawing.Size(361, 364);
+			this.PrpRefining.Size = new System.Drawing.Size(355, 330);
 			this.PrpRefining.TabIndex = 0;
+			// 
+			// TblLoadSkills
+			// 
+			this.TblLoadSkills.ColumnCount = 2;
+			this.TblLoadSkills.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 210F));
+			this.TblLoadSkills.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.TblLoadSkills.Controls.Add(this.CmbLoadSkills, 0, 0);
+			this.TblLoadSkills.Controls.Add(this.BtnLoadSkills, 1, 0);
+			this.TblLoadSkills.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.TblLoadSkills.Location = new System.Drawing.Point(0, 336);
+			this.TblLoadSkills.Margin = new System.Windows.Forms.Padding(0);
+			this.TblLoadSkills.Name = "TblLoadSkills";
+			this.TblLoadSkills.RowCount = 1;
+			this.TblLoadSkills.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.TblLoadSkills.Size = new System.Drawing.Size(361, 28);
+			this.TblLoadSkills.TabIndex = 1;
+			// 
+			// CmbLoadSkills
+			// 
+			this.CmbLoadSkills.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.CmbLoadSkills.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.CmbLoadSkills.FormattingEnabled = true;
+			this.CmbLoadSkills.Location = new System.Drawing.Point(3, 3);
+			this.CmbLoadSkills.Name = "CmbLoadSkills";
+			this.CmbLoadSkills.Size = new System.Drawing.Size(204, 21);
+			this.CmbLoadSkills.TabIndex = 0;
+			// 
+			// BtnLoadSkills
+			// 
+			this.BtnLoadSkills.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.BtnLoadSkills.Location = new System.Drawing.Point(213, 3);
+			this.BtnLoadSkills.Name = "BtnLoadSkills";
+			this.BtnLoadSkills.Size = new System.Drawing.Size(145, 22);
+			this.BtnLoadSkills.TabIndex = 1;
+			this.BtnLoadSkills.Text = "Load";
+			this.BtnLoadSkills.UseVisualStyleBackColor = true;
+			this.BtnLoadSkills.Click += new System.EventHandler(this.BtnLoadSkills_Click);
 			// 
 			// TbpApiKeys
 			// 
@@ -1483,6 +1542,8 @@
 			((System.ComponentModel.ISupportInitialize)(this.TxtMorphite)).EndInit();
 			this.tableLayoutPanel4.ResumeLayout(false);
 			this.TbpRefining.ResumeLayout(false);
+			this.TblRefining.ResumeLayout(false);
+			this.TblLoadSkills.ResumeLayout(false);
 			this.TbpApiKeys.ResumeLayout(false);
 			this.TblApiTable.ResumeLayout(false);
 			this.tableLayoutPanel2.ResumeLayout(false);
@@ -1622,5 +1683,9 @@
 		private System.Windows.Forms.Button BtnMineralPricesType;
 		private System.Windows.Forms.TabPage TbpRefining;
 		private System.Windows.Forms.PropertyGrid PrpRefining;
+		private System.Windows.Forms.TableLayoutPanel TblRefining;
+		private System.Windows.Forms.TableLayoutPanel TblLoadSkills;
+		private System.Windows.Forms.ComboBox CmbLoadSkills;
+		private System.Windows.Forms.Button BtnLoadSkills;
 	}
 }
