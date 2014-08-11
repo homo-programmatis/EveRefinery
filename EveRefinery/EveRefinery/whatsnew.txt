@@ -1,3 +1,7 @@
+1.0.5336.39179 [10aug14]
+- Bugfix: attempting to edit API keys should open correct Settings page
+- Bugfix: fixed exception when opening Settings without API keys added
+
 1.0.5335.6039 [10aug14]
 * Database fix: "Civilian miner" removed from list.
   Currently, it refines to negative amount of Tritanium, even in game.
