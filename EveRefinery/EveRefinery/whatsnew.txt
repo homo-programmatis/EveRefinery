@@ -1,4 +1,8 @@
 1.0.5335.6039 [10aug14]
+* Database fix: "Civilian miner" removed from list.
+  Currently, it refines to negative amount of Tritanium, even in game.
+
+1.0.5335.6039 [10aug14]
 ! NOTE: You need to configure refining settings, they are all new
 * Full Crius support
 * New Yield column indicates refining yield percentage
