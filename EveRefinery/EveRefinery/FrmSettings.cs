@@ -23,7 +23,11 @@ namespace EveRefinery
 		public enum Pages
 		{
 			Minerals,
+			Refining,
 			ApiKeys,
+			Appearance,
+			Other,
+			Developer,
 		}
 
 		public FrmSettings(Pages a_StartPage, Settings a_Settings, EveDatabase a_EveDatabase, ListView.ColumnHeaderCollection a_ListColumns)
