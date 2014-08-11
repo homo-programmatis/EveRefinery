@@ -237,7 +237,8 @@ namespace EveRefinery
 				CmbLoadSkills.Items.Add(newItem);
 			}
 
-			CmbLoadSkills.SelectedIndex = 0;
+			if (0 != CmbLoadSkills.Items.Count)
+				CmbLoadSkills.SelectedIndex = 0;
 		}
 
 		private void InitializeSkillValues()
