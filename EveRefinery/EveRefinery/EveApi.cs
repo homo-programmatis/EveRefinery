@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Xml;
+using System.Globalization;
 
 namespace EveRefinery
 {
@@ -78,6 +79,30 @@ namespace EveRefinery
 			}
 
 			return requestUrl;
+		}
+
+		public static DateTime GetCacheTime(XmlDocument a_RequestXml)
+		{
+			try
+			{
+				XmlNodeList cacheTimeNode = a_RequestXml.GetElementsByTagName("cachedUntil");
+				if (0 == cacheTimeNode.Count)
+					return new DateTime();
+
+				string cachedUntilStr = cacheTimeNode[0].InnerText;
+				DateTime result = DateTime.ParseExact(cachedUntilStr, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+				return result;
+			}
+			catch (System.Exception a_Exception)
+			{
+				System.Diagnostics.Debug.WriteLine(a_Exception.Message);
+				return new DateTime();
+			}
+		}
+
+		public static bool IsCacheExpired(XmlDocument a_RequestXml)
+		{
+			return GetCacheTime(a_RequestXml) < DateTime.UtcNow;
 		}
 	}
 }

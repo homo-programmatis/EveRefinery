@@ -5,7 +5,6 @@ using System.Text;
 using System.IO;
 using System.Collections;
 using System.Xml;
-using System.Globalization;
 using System.Windows.Forms;
 using SpecialFNs;
 using System.Diagnostics;
@@ -153,25 +152,6 @@ namespace EveRefinery
 			return result;
 		}
 
-		private DateTime GetCacheTime(XmlDocument a_AssetsXml)
-		{
-			try
-			{
-				XmlNodeList cacheTimeNode = a_AssetsXml.GetElementsByTagName("cachedUntil");
-				if (0 == cacheTimeNode.Count)
-					return new DateTime();
-
-				string cachedUntilStr = cacheTimeNode[0].InnerText;
-				DateTime result = DateTime.ParseExact(cachedUntilStr, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-				return result;
-			}
-			catch (System.Exception a_Exception)
-			{
-				System.Diagnostics.Debug.WriteLine(a_Exception.Message);
-				return new DateTime();
-			}
-		}
-
 		ItemAssets GetOrInsert_LocationAssets(UInt32 a_LocationID)
 		{
 			if (Assets.ContainsKey(a_LocationID))
@@ -244,7 +224,7 @@ namespace EveRefinery
 					ParseNestedAssets(currNode, currAsset);
 			}
 			
-			m_CacheTime = GetCacheTime(a_AssetsXml);
+			m_CacheTime = EveApi.GetCacheTime(a_AssetsXml);
 		}
 		
 		private Boolean LoadAssetsXml(string a_FilePath, bool a_TestCacheDate)
@@ -255,7 +235,7 @@ namespace EveRefinery
 			XmlDocument assetsXml = new XmlDocument();
 			assetsXml.Load(a_FilePath);
 
-			if (a_TestCacheDate && (GetCacheTime(assetsXml) < DateTime.UtcNow))
+			if (a_TestCacheDate && EveApi.IsCacheExpired(assetsXml))
 			{
 				if (DialogResult.No != MessageBox.Show("Your assets information expired. Would you like to update now?\nWARNING: Due to CCP limitations, you can only update assets once every 7 hours.", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question))
 					return false;
