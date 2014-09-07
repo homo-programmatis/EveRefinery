@@ -271,13 +271,18 @@ namespace EveRefinery
 			m_CacheTime = DateTime.UtcNow;
 		}
 		
+		private String GetAssetsCacheFilePath(UInt32 a_CharID)
+		{
+			return Program.GetCacheFolder() + "Assets_" + a_CharID.ToString() + ".xml";
+		}
+
 		public Boolean LoadAssets(UInt32 a_CharID)
 		{
-			string cacheFilename = "Assets_" + a_CharID.ToString() + ".xml";
+			string assetsCachePath = GetAssetsCacheFilePath(a_CharID);
 
 			try
 			{
-				if (LoadAssetsXml(cacheFilename, true))
+				if (LoadAssetsXml(assetsCachePath, true))
 					return true;
 			}
 			catch (System.Exception a_Exception)
@@ -299,7 +304,7 @@ namespace EveRefinery
 			// Ignore saving errors
 			try
 			{
-				assetsXml.Save(cacheFilename);
+				assetsXml.Save(assetsCachePath);
 			}
 			catch (System.Exception a_Exception)
 			{

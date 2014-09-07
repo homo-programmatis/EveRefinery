@@ -26,7 +26,7 @@ namespace EveRefinery
 		public MarketPricesDB(ItemsDB a_ItemsDB)
 		{
 			SQLiteConnectionStringBuilder connectionString = new SQLiteConnectionStringBuilder();
-			connectionString.DataSource		= "MarketPrices_v1.db3";
+			connectionString.DataSource		= Program.GetCacheFolder() + "MarketPrices_v1.db3";
 			m_DbConnection.ConnectionString = connectionString.ConnectionString;
 			m_DbConnection.Open();
 
