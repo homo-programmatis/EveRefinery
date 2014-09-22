@@ -477,7 +477,7 @@ namespace EveRefinery
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
-			this.Text = this.Text + " " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+			this.Text = this.Text + " " + Assembly.GetExecutingAssembly().GetName().Version.ToString(2);
 	
 			#if (!DEBUG)
 				if (m_Engine.m_Settings.Options.CheckUpdates)
