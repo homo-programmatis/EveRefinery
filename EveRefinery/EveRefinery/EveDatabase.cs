@@ -80,6 +80,7 @@ namespace EveRefinery
 	public class EveDatabase
 	{
 		protected SQLiteConnection	m_DbConnection;
+		protected EveOutposts		m_Outposts = new EveOutposts();
 
 		protected enum Tables
 		{
@@ -355,6 +356,10 @@ namespace EveRefinery
 				return result;
 
 			result = GetSolarName(a_LocationID);
+			if (result != null)
+				return result;
+
+			result = m_Outposts.GetLocationName(a_LocationID);
 			if (result != null)
 				return result;
 

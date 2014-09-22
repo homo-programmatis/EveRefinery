@@ -118,6 +118,7 @@
     <Compile Include="EveApi.cs" />
     <Compile Include="EveAssets.cs" />
     <Compile Include="EveDatabase.cs" />
+    <Compile Include="EveOutposts.cs" />
     <Compile Include="Export.cs" />
     <Compile Include="FrmAddNewApiKey.cs">
       <SubType>Form</SubType>
