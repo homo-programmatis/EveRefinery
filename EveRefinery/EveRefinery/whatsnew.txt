@@ -1,3 +1,12 @@
+2.1 [22sep14]
++ Location combobox in main window now shows Outpost names
+  correctly instead of naming them "Unknown location".
+* Cache files (such as assets, market prices, outposts)
+  were moved to "Cache" subdirectory to clean up main directory.
+* I decided to change version numbering scheme to more common.
+  I started with 2.1 this time, since EveRefinery is definitely
+  more mature then 1.0 now. This doesn't mean great features, sorry.
+
 1.0.5336.39179 [10aug14]
 - Bugfix: attempting to edit API keys should open correct Settings page
 - Bugfix: fixed exception when opening Settings without API keys added
