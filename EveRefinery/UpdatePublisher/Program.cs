@@ -11,11 +11,21 @@ namespace UpdatePublisher
 {
 	class Program
 	{
-		static void Main(string[] args)
+		static void Main(string[] a_CommandLineArgs)
 		{
-			try
+            if (a_CommandLineArgs.Length < 2)
+            {
+                String exeFileName = Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location);
+                Console.WriteLine("Usage:");
+                Console.WriteLine("{0} PathToEveRefinerySln OutputPath", exeFileName);
+                Console.WriteLine("----");
+                Console.WriteLine("PathToEveRefinerySln - Path to EveRefinery.sln file");
+                Console.WriteLine("OutputPath           - Folder where to store results");
+            }
+
+            try
 			{
-				DoWork();
+				DoWork(a_CommandLineArgs[0], a_CommandLineArgs[1]);
 			}
 			catch (System.Exception a_Exception)
 			{
@@ -25,20 +35,30 @@ namespace UpdatePublisher
 			Console.WriteLine("Done");
 		}
 		
-		static void DoWork()
+		static void DoWork(String a_PathToEveRefinerySln, String a_OutputDir)
 		{
-			List<string> publishedFiles = new List<string>();
-			publishedFiles.Add(@"C:\Program Files (x86)\SQLite.NET\bin\System.Data.SQLite.dll");
-			publishedFiles.Add(@"Q:\SourceForge\everefinery\EveRefinery\bin\Release\EveDatabase.db");
-			publishedFiles.Add(@"Q:\SourceForge\everefinery\EveRefinery\bin\Release\EveRefinery.exe");
-			publishedFiles.Add(@"Q:\SourceForge\everefinery\EveRefinery\bin\Release\EveRefineryUpdater.exe");
-			publishedFiles.Add(@"Q:\SourceForge\everefinery\EveRefinery\EveRefinery\whatsnew.txt");
+            if (0 != String.Compare("EveRefinery.sln", Path.GetFileName(a_PathToEveRefinerySln), true))
+                throw new System.ArgumentException("You must specify path to EveRefinery.sln");
 
-			Publisher publisher = new Publisher();
-			foreach (string currFile in publishedFiles)
-			{
-				publisher.PublishFile(currFile);
-			}
+            if (!File.Exists(a_PathToEveRefinerySln))
+                throw new System.ArgumentException("Specified EveRefinery.sln does not exist");
+
+            ////////////////////////////////////////////////////////////////////////////////
+
+            String folderSolution = Path.GetDirectoryName(a_PathToEveRefinerySln);
+            String folderProgramFiles86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+
+            ////////////////////////////////////////////////////////////////////////////////
+
+            Publisher publisher = new Publisher();
+            publisher.SetOutputDir(a_OutputDir);
+            publisher.SetDownloadUrl("http://www.homo-programmatis.com/EveRefinery/Files/");
+
+			publisher.PublishFile(Path.Combine(folderProgramFiles86, @"SQLite.NET\bin\System.Data.SQLite.dll"));
+			publisher.PublishFile(Path.Combine(folderSolution,       @"bin\Release\EveDatabase.db"));
+			publisher.PublishFile(Path.Combine(folderSolution,       @"bin\Release\EveRefinery.exe"));
+			publisher.PublishFile(Path.Combine(folderSolution,       @"bin\Release\EveRefineryUpdater.exe"));
+            publisher.PublishFile(Path.Combine(folderSolution,       @"EveRefinery\whatsnew.txt"));
 
 			publisher.SaveUpdatesXml();
 		}
@@ -51,84 +71,35 @@ namespace UpdatePublisher
 		public string	m_AttribName_PackHash	= "packedhash";
 		public string	m_AttribName_Url		= "url";
 
-		public string		m_7z_Location		= @"C:\Program Files (x86)\7-Zip\7z.exe";
-		public string		m_OutputDir			= @"Q:\SourceForge\EveRefinery_Package\";
-		public string		m_DownloadUrl		= "http://www.homo-programmatis.com/EveRefinery/Files/";
+		public string		m_7z_Location;
+		public string		m_OutputDir;
+		public string		m_DownloadUrl;
 		public string		m_UpdatesXmlName	= "updates.xml";
 		public XmlDocument	m_UpdatesXml		= new XmlDocument();
 		public XmlNode		m_RootNode;
 		
-		public Publisher()
+		public          Publisher()
 		{
-			ReloadUpdatesXml();
-			Directory.CreateDirectory(m_OutputDir);
-		}
-		
-		public void ReloadUpdatesXml()
-		{
-			m_UpdatesXml = new XmlDocument();
-
-			try
-			{
-				m_UpdatesXml.Load(m_OutputDir + m_UpdatesXmlName);
-			}
-			catch (System.Exception a_Exception)
-			{
-				Debug.WriteLine(a_Exception.Message);
-			}
-			
-			XmlNodeList rootNodes = m_UpdatesXml.GetElementsByTagName("files");
-			if (0 != rootNodes.Count)
-				m_RootNode = rootNodes[0];
-			else
-			{
-				m_RootNode = m_UpdatesXml.CreateNode("element", "files", "");
-				m_UpdatesXml.AppendChild(m_RootNode);
-			}
-		}
-		
-		protected XmlNode GetFileNode(string a_FileName)
-		{
-			string fileXPath = "/files/file[@" + m_AttribName_Name + "='" + a_FileName + "']";
-			XmlNode fileNode = m_UpdatesXml.SelectSingleNode(fileXPath);
-			if (null == fileNode)
-			{
-				fileNode = m_UpdatesXml.CreateNode("element", "file", "");
-				fileNode.Attributes.Append(m_UpdatesXml.CreateAttribute(m_AttribName_Name));
-				fileNode.Attributes.Append(m_UpdatesXml.CreateAttribute(m_AttribName_FileHash));
-				fileNode.Attributes.Append(m_UpdatesXml.CreateAttribute(m_AttribName_PackHash));
-				fileNode.Attributes.Append(m_UpdatesXml.CreateAttribute(m_AttribName_Url));
-
-				m_RootNode.AppendChild(fileNode);
-			}
-			
-			return fileNode;
+            Locate7zip();
 		}
 
-		private bool GetUserConfirm(String a_Question)
-		{
-			Console.WriteLine(a_Question + " (Y/N)");
+        public void     SetDownloadUrl(String a_Url)
+        {
+            m_DownloadUrl = a_Url;
+        }
 
-			for (; ; )
-			{
-				Char reply = Console.ReadKey(true).KeyChar;
-				switch (reply)
-				{
-					case 'Y':
-					case 'y':
-						return true;
-					case 'N':
-					case 'n':
-						return false;
-				}
-			}
-		}
-		
-		public void PublishFile(string a_FilePath)
+        public void     SetOutputDir(String a_OutputDir)
+        {
+            m_OutputDir = a_OutputDir;
+            Directory.CreateDirectory(m_OutputDir);
+            ReloadUpdatesXml();
+        }
+
+        public void     PublishFile(string a_FilePath)
 		{
 			string fileName = Path.GetFileName(a_FilePath);
 			string packName = fileName + ".gz";
-			string packPath = m_OutputDir + packName;
+			string packPath = Path.Combine(m_OutputDir, packName);
 			
 			XmlNode fileNode = GetFileNode(fileName);
 
@@ -161,10 +132,97 @@ namespace UpdatePublisher
 			fileNode.Attributes[m_AttribName_PackHash].Value	= packHash;
 			fileNode.Attributes[m_AttribName_Url].Value			= m_DownloadUrl + packName;
 		}
-		
-		public void SaveUpdatesXml()
-		{
-			m_UpdatesXml.Save(m_OutputDir + m_UpdatesXmlName);
-		}
-	}
+
+        public void SaveUpdatesXml()
+        {
+            m_UpdatesXml.Save(ComposeUpdatesXmlPath());
+        }
+
+        #region Private functions
+        private void    Locate7zip()
+        {
+            String[] possibleLocations =
+            {
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),    @"7-Zip\7z.exe"),
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"7-Zip\7z.exe"),
+            };
+
+            foreach (String possibleLocation in possibleLocations)
+            {
+                if (File.Exists(possibleLocation))
+                {
+                    m_7z_Location = possibleLocation;
+                    return;
+                }
+            }
+
+            throw new System.Exception("7z.exe not found");
+        }
+
+        private String  ComposeUpdatesXmlPath()
+        {
+            return Path.Combine(m_OutputDir, m_UpdatesXmlName);
+        }
+
+        private void    ReloadUpdatesXml()
+        {
+            m_UpdatesXml = new XmlDocument();
+
+            try
+            {
+                m_UpdatesXml.Load(ComposeUpdatesXmlPath());
+            }
+            catch (System.Exception a_Exception)
+            {
+                Debug.WriteLine(a_Exception.Message);
+            }
+
+            XmlNodeList rootNodes = m_UpdatesXml.GetElementsByTagName("files");
+            if (0 != rootNodes.Count)
+                m_RootNode = rootNodes[0];
+            else
+            {
+                m_RootNode = m_UpdatesXml.CreateNode("element", "files", "");
+                m_UpdatesXml.AppendChild(m_RootNode);
+            }
+        }
+
+        private XmlNode GetFileNode(string a_FileName)
+        {
+            string fileXPath = "/files/file[@" + m_AttribName_Name + "='" + a_FileName + "']";
+            XmlNode fileNode = m_UpdatesXml.SelectSingleNode(fileXPath);
+            if (null == fileNode)
+            {
+                fileNode = m_UpdatesXml.CreateNode("element", "file", "");
+                fileNode.Attributes.Append(m_UpdatesXml.CreateAttribute(m_AttribName_Name));
+                fileNode.Attributes.Append(m_UpdatesXml.CreateAttribute(m_AttribName_FileHash));
+                fileNode.Attributes.Append(m_UpdatesXml.CreateAttribute(m_AttribName_PackHash));
+                fileNode.Attributes.Append(m_UpdatesXml.CreateAttribute(m_AttribName_Url));
+
+                m_RootNode.AppendChild(fileNode);
+            }
+
+            return fileNode;
+        }
+
+        private bool    GetUserConfirm(String a_Question)
+        {
+            Console.WriteLine(a_Question + " (Y/N)");
+
+            for (;;)
+            {
+                Char reply = Console.ReadKey(true).KeyChar;
+                switch (reply)
+                {
+                    case 'Y':
+                    case 'y':
+                        return true;
+                    case 'N':
+                    case 'n':
+                        return false;
+                }
+            }
+        }
+        #endregion
+    }
 }
