@@ -1,3 +1,9 @@
+2.1 [13jan17]
+* Database upgrade to 2017-01-12 "YC119.1"
+
+2.1 [30sep16]
+* Database upgrade to 2016-09-13
+
 2.1 [03may16]
 * Database upgrade to 2016-04-29 "Citadel"
 * Compiler change to VS2015. Everything should work as before.
