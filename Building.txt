@@ -1,4 +1,4 @@
 Building
 --------
-* Compiled with VS2015 C#
-* Requires installed SQLite.Net to build. If it doesn't help, you might want to remove and re-add reference to it in the project.
+* Compiled with Visual Studio 2015 C#
+* No special requirements to build.

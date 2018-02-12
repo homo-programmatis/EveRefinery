@@ -43,7 +43,6 @@ namespace UpdatePublisher
             ////////////////////////////////////////////////////////////////////////////////
 
             String folderSolution = Path.GetDirectoryName(a_PathToEveRefinerySln);
-            String folderProgramFiles86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
 
             ////////////////////////////////////////////////////////////////////////////////
 
@@ -51,11 +50,11 @@ namespace UpdatePublisher
             publisher.SetOutputDir(a_OutputDir);
             publisher.SetDownloadUrl("http://www.homo-programmatis.com/EveRefinery/Files/");
 
-			publisher.PublishFile(Path.Combine(folderProgramFiles86, @"SQLite.NET\bin\System.Data.SQLite.dll"));
-			publisher.PublishFile(Path.Combine(folderSolution,       @"bin\Release\EveDatabase.db"));
-			publisher.PublishFile(Path.Combine(folderSolution,       @"bin\Release\EveRefinery.exe"));
-			publisher.PublishFile(Path.Combine(folderSolution,       @"bin\Release\EveRefineryUpdater.exe"));
-            publisher.PublishFile(Path.Combine(folderSolution,       @"EveRefinery\whatsnew.txt"));
+			publisher.PublishFile(Path.Combine(folderSolution, @"..\ThirdParty\System.Data.SQLite\System.Data.SQLite.dll"));
+			publisher.PublishFile(Path.Combine(folderSolution, @"bin\Release\EveDatabase.db"));
+			publisher.PublishFile(Path.Combine(folderSolution, @"bin\Release\EveRefinery.exe"));
+			publisher.PublishFile(Path.Combine(folderSolution, @"bin\Release\EveRefineryUpdater.exe"));
+            publisher.PublishFile(Path.Combine(folderSolution, @"EveRefinery\whatsnew.txt"));
 
 			publisher.SaveUpdatesXml();
 		}
