@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 
 namespace EveRefinery
 {
@@ -22,6 +20,11 @@ namespace EveRefinery
 			return provider;
 		}
 
+	    public static IPriceProvider CreateFuzzworkProvider()
+	    {
+	        return new PriceProviderFuzzwork();
+	    }
+	    
 		public List<PriceRecord> GetPrices(List<UInt32> a_TypeIDs, PriceSettings a_Settings)
 		{
 			IPriceProvider provider = null;
@@ -31,6 +34,9 @@ namespace EveRefinery
 				case PriceProviders.EveCentral:
 					provider = CreateEveCentralProvider(m_Settings.PriceLoad.ItemsHistoryDays);
 					break;
+			    case PriceProviders.Fuzzwork:
+			        provider = CreateFuzzworkProvider();
+			        break;
 				default:
 					Debug.Assert(false, "Invalid price provider");
 					return null;
