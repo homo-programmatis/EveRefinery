@@ -71,8 +71,8 @@ namespace EveRefinery
 		[Serializable]
         public class _PriceLoad
         {
-            public PriceSettings    SourceMinerals          = new PriceSettings{Provider = PriceProviders.EveCentral, RegionID = (UInt32)EveRegions.Forge, PriceType = PriceTypes.SellMedian};
-            public PriceSettings    SourceItems             = new PriceSettings{Provider = PriceProviders.EveCentral, RegionID = (UInt32)EveRegions.Forge, PriceType = PriceTypes.SellMedian};
+            public PriceSettings    SourceMinerals          = new PriceSettings{Provider = PriceProviders.Fuzzwork, RegionID = (UInt32)EveRegions.Forge, PriceType = PriceTypes.SellMedian};
+            public PriceSettings    SourceItems             = new PriceSettings{Provider = PriceProviders.Fuzzwork, RegionID = (UInt32)EveRegions.Forge, PriceType = PriceTypes.SellMedian};
             public UInt32           ItemsHistoryDays        = 14;
             public UInt32           ItemsExpiryDays         = 7;
             public UInt32           MineralExpiryDays       = 7;

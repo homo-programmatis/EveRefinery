@@ -6,6 +6,9 @@ namespace EveRefinery
 	public enum PriceProviders
 	{
 		EveCentral,
+	    Fuzzwork,
+
+	    MaxPriceProviders,
 	}
 
 	[Serializable]

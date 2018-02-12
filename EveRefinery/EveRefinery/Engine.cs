@@ -9,6 +9,9 @@ using System.Xml;
 using System.Diagnostics;
 using System.Net;
 using System.Globalization;
+using System.IO;
+using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace EveRefinery
 {
@@ -409,5 +412,24 @@ namespace EveRefinery
 				return xmlDocument;
 			}
 		}
+	    
+	    public static XmlDocument LoadXmlFromJsonWithUserAgent(string a_Url)
+	    {
+	        HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(a_Url);
+	        httpRequest.UserAgent = "EveRefinery";
+
+	        using (HttpWebResponse httpResponse = (HttpWebResponse)httpRequest.GetResponse())
+	        {
+	            using (Stream stream = httpResponse.GetResponseStream())
+	            {
+	                // Since types are numbers and XML does NOT allow numbers to be an element names we add ahead '_'
+	                //   as regexp string we are looking for symbol '"' and numbers behind, someting like '3434":{',
+	                //   so it converts strings like '"2107":{' into '"_2107":{'
+	                return JsonConvert.DeserializeXmlNode(new Regex("\"(?=[0-9]*\":{)").
+	                    Replace(new StreamReader(stream, Encoding.UTF8).ReadToEnd(), "\"_"), "root");
+	            }
+	        }
+	    }
+
 	}
 }
