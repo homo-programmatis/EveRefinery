@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.IO;
-using System.Windows.Forms;
-using System.Security.Cryptography;
-using System.Threading;
-using SpecialFNs;
-using System.Diagnostics;
-using System.Net;
 using System.ComponentModel;
 using System.IO.Compression;
+using System.IO;
+using System.Net;
+using System.Threading;
+using System.Windows.Forms;
+using System.Xml;
+using SpecialFNs;
 
 namespace EveRefineryUpdater
 {

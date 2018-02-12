@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data;
-using System.Data.Common;
-using System.Data.SQLite;
 using System.Collections;
-using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Data.SQLite;
+using System.Text;
 using SpecialFNs;
 
 namespace EveRefinery

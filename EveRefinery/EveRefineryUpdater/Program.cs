@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using SpecialFNs;
-using System.Diagnostics;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace EveRefineryUpdater
 {
@@ -20,9 +16,6 @@ namespace EveRefineryUpdater
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
-			//string	m_UpdateXmlUrl	= @"C:\Users\HOMO_PROGRAMMATIS\Desktop\EveRefineryTask\Package\updates.xml";
-			//string	m_UpdateXmlUrl	= @"http://www.homo-programmatis.com/EveRefinery/updates.xml";
-			
 			string	paranoidString	= "If_you_feel_paranoid_Read=http://www.homo-programmatis.com/EveRefinery/userid.html";
 
 			Updater updater			= new Updater();

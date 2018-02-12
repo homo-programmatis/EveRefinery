@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Drawing;
-using SpecialFNs;
-using System.Xml;
 using System.Diagnostics;
-using System.Net;
+using System.Drawing;
 using System.Globalization;
+using System.Linq;
+using System.Net;
+using System.Windows.Forms;
+using System.Xml;
+using SpecialFNs;
 
 namespace EveRefinery
 {

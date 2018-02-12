@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Xml;
 using System.Text;
+using System.Xml;
 
 namespace EveRefinery
 {
@@ -115,7 +115,7 @@ namespace EveRefinery
 				UInt32 itemTypeID = Convert.ToUInt32(currNode.Attributes[0].Value);
 
 				PriceRecord template = new PriceRecord();
-				template.Settings		= a_Filter;
+				template.Settings	= a_Filter;
 				template.TypeID		= itemTypeID;
 				template.UpdateTime	= (UInt64)DateTime.UtcNow.ToFileTimeUtc();
 
