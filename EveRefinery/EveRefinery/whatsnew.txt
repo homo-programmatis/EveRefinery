@@ -1,4 +1,9 @@
 2.1 [13jan17]
+* Database upgrade to 2017-07-12
+* REMINDER: I haven't played EVE for years now, literally.
+  If you want a DB update - let me know by email!
+
+2.1 [13jan17]
 * Database upgrade to 2017-01-12 "YC119.1"
 
 2.1 [30sep16]
@@ -8,7 +13,7 @@
 * Database upgrade to 2016-04-29 "Citadel"
 * Compiler change to VS2015. Everything should work as before.
   -------------------------------------
-* NOTE: Im patch notes, there is a line:
+* NOTE: In patch notes, there is a line:
   "Reprocessing tax has been changed from a material tax to an ISK tax"
   I'm not playing EVE and can't test myself. Does that mean I need to remove
   tax multiplier from EveRefinery settings? Please test and let me know.
