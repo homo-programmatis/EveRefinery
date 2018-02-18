@@ -31,11 +31,11 @@
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
 			this.TblMain = new System.Windows.Forms.TableLayoutPanel();
-			this.LstFiles = new SpecialFNs.ListViewEx();
-			this.ClmFile = new System.Windows.Forms.ColumnHeader();
-			this.ClmStatus = new System.Windows.Forms.ColumnHeader();
 			this.BtnUpdate = new System.Windows.Forms.Button();
 			this.TmrUpdateList = new System.Windows.Forms.Timer(this.components);
+			this.LstFiles = new SpecialFNs.ListViewEx();
+			this.ClmFile = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.ClmStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.TblMain.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -51,8 +51,24 @@
 			this.TblMain.RowCount = 2;
 			this.TblMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.TblMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-			this.TblMain.Size = new System.Drawing.Size(503, 153);
+			this.TblMain.Size = new System.Drawing.Size(503, 209);
 			this.TblMain.TabIndex = 0;
+			// 
+			// BtnUpdate
+			// 
+			this.BtnUpdate.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.BtnUpdate.Location = new System.Drawing.Point(3, 182);
+			this.BtnUpdate.Name = "BtnUpdate";
+			this.BtnUpdate.Size = new System.Drawing.Size(497, 24);
+			this.BtnUpdate.TabIndex = 1;
+			this.BtnUpdate.Text = "Update!";
+			this.BtnUpdate.UseVisualStyleBackColor = true;
+			this.BtnUpdate.Click += new System.EventHandler(this.BtnUpdate_Click);
+			// 
+			// TmrUpdateList
+			// 
+			this.TmrUpdateList.Interval = 1000;
+			this.TmrUpdateList.Tick += new System.EventHandler(this.TmrUpdateList_Tick);
 			// 
 			// LstFiles
 			// 
@@ -66,7 +82,7 @@
 			this.LstFiles.MultiSelect = false;
 			this.LstFiles.Name = "LstFiles";
 			this.LstFiles.ShowItemToolTips = true;
-			this.LstFiles.Size = new System.Drawing.Size(497, 117);
+			this.LstFiles.Size = new System.Drawing.Size(497, 173);
 			this.LstFiles.TabIndex = 0;
 			this.LstFiles.UseCompatibleStateImageBehavior = false;
 			this.LstFiles.View = System.Windows.Forms.View.Details;
@@ -81,27 +97,11 @@
 			this.ClmStatus.Text = "Status";
 			this.ClmStatus.Width = 311;
 			// 
-			// BtnUpdate
-			// 
-			this.BtnUpdate.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.BtnUpdate.Location = new System.Drawing.Point(3, 126);
-			this.BtnUpdate.Name = "BtnUpdate";
-			this.BtnUpdate.Size = new System.Drawing.Size(497, 24);
-			this.BtnUpdate.TabIndex = 1;
-			this.BtnUpdate.Text = "Update!";
-			this.BtnUpdate.UseVisualStyleBackColor = true;
-			this.BtnUpdate.Click += new System.EventHandler(this.BtnUpdate_Click);
-			// 
-			// TmrUpdateList
-			// 
-			this.TmrUpdateList.Interval = 1000;
-			this.TmrUpdateList.Tick += new System.EventHandler(this.TmrUpdateList_Tick);
-			// 
 			// FrmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(503, 153);
+			this.ClientSize = new System.Drawing.Size(503, 209);
 			this.Controls.Add(this.TblMain);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
