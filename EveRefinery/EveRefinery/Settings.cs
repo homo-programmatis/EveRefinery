@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
@@ -245,15 +246,21 @@ namespace EveRefinery
                     return new Settings();
 
                 UInt32 version = DetectSettingsVersion(settingsPath);
+				Settings result = null;
                 switch (version)
                 {
-                case 1:
-                    return V1.Load(settingsPath);
-				case 0:
-                default:
-                    return new Settings();
+					case 1:
+						result = V1.Load(settingsPath);
+						break;
+					case 0:
+					default:
+						result = new Settings();
+						break;
                 }
-            }
+
+				Debug.Assert(result.Version == LAST_VERSION_FORMAT);
+				return result;
+			}
             catch (System.Exception a_Exception)
             {
 				System.Diagnostics.Debug.WriteLine(a_Exception.Message);
