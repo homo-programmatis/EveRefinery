@@ -1,4 +1,4 @@
-﻿﻿namespace EveRefinery
+﻿﻿﻿namespace EveRefinery
 {
 	partial class FrmPriceType
 	{
