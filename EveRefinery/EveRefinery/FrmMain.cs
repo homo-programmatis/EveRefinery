@@ -520,13 +520,13 @@ namespace EveRefinery
 		{
 			try
 			{
-				Settings.V1._PriceSettings settings	= m_Engine.m_Settings.PriceLoad.SourceItems;
-				IPriceProvider provider = new PriceProviderAuto(settings, m_Engine.m_Settings.PriceLoad.ItemsHistoryDays);
+				Settings.V2._PriceSettings settings	= m_Engine.m_Settings.PriceLoad.Items;
+				IPriceProvider provider = new PriceProviderAuto(settings);
 
 				if (a_DeleteOld)
 					m_MarketPrices.DropPrices(provider);
 
-				m_MarketPrices.LoadPrices(provider, settings, m_Engine.m_Settings.PriceLoad.ItemsExpiryDays, a_Silent);
+				m_MarketPrices.LoadPrices(provider, settings, a_Silent);
 			}
 			catch (System.Exception a_Exception)
 			{
@@ -542,7 +542,7 @@ namespace EveRefinery
 
 		private void CheckMineralPricesExpiry()
 		{
-			DateTime expiryDate = m_Engine.m_Settings.Stats.LastMineralPricesEdit.AddDays(m_Engine.m_Settings.PriceLoad.MineralExpiryDays);
+			DateTime expiryDate = m_Engine.m_Settings.Stats.LastMineralPricesEdit.AddDays(m_Engine.m_Settings.PriceLoad.Minerals.ExpiryDays);
 			if (DateTime.UtcNow < expiryDate)
 				return;
 
@@ -890,7 +890,7 @@ namespace EveRefinery
 					m_TotalsItem.Quantity			+= listItem.Quantity;
 					m_TotalsItem.ItemData.Volume	+= listItem.Quantity * currRecord.Volume;
 
-					bool isPriceExpired	= !currRecord.IsPricesOk(m_Engine.m_Settings.PriceLoad.ItemsExpiryDays);
+					bool isPriceExpired	= !currRecord.IsPricesOk(m_Engine.m_Settings.PriceLoad.Items.ExpiryDays);
 					bool isZeroPrice	= (currRecord.Price == 0);
 
 					if (!isPriceExpired && !isZeroPrice)
@@ -1088,13 +1088,13 @@ namespace EveRefinery
 
 		private void UpdatePricesSettingsHint()
 		{
-			PriceProviderAuto priceProvider = new PriceProviderAuto(m_Engine.m_Settings.PriceLoad.SourceItems, m_Engine.m_Settings.PriceLoad.ItemsHistoryDays);
+			PriceProviderAuto priceProvider = new PriceProviderAuto(m_Engine.m_Settings.PriceLoad.Items);
 			TlbLblPricesType.Text = priceProvider.GetCurrentFilterHint(m_EveDatabase);
 		}
 
 		private void TlbBtnPricesType_Click(object sender, EventArgs e)
 		{
-			FrmPriceType dialog = new FrmPriceType(m_EveDatabase, m_Engine.m_Settings.PriceLoad.SourceItems);
+			FrmPriceType dialog = new FrmPriceType(m_EveDatabase, m_Engine.m_Settings.PriceLoad.Items);
 			if (DialogResult.OK != dialog.ShowDialog(this))
 				return;
 

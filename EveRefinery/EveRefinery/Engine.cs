@@ -287,7 +287,7 @@ namespace EveRefinery
 				result.MarketPrice	= ItemPrice.Unknown;
 				isError = true;
 			}
-			else if (!a_Item.IsPricesOk(m_Settings.PriceLoad.ItemsExpiryDays))
+			else if (!a_Item.IsPricesOk(m_Settings.PriceLoad.Items.ExpiryDays))
 			{
 				result.MarketPrice	= ItemPrice.Outdated;
 				isError = true;

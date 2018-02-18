@@ -130,9 +130,37 @@ namespace EveRefinery
 			}
 		}
 
-        public UInt32				Version					= 1;
+		public class V2
+		{
+			[Serializable]
+			public class _EveCentralCom
+			{
+				public UInt32			RegionID				= (UInt32)EveRegions.Forge;
+				public UInt32			SolarID					= 0;
+				public UInt32			StationID				= 0;
+				public PriceTypes		PriceType				= PriceTypes.SellMedian;
+				public UInt32			HistoryDays				= 14;
+			}
+
+			[Serializable]
+			public class _PriceSettings
+			{
+				public PriceProviders	Provider				= PriceProviders.EveCentral;
+				public _EveCentralCom	EveCentralCom			= new _EveCentralCom();
+				public UInt32			ExpiryDays				= 7;
+			}
+
+			[Serializable]
+			public class _PriceLoad
+			{
+				public _PriceSettings	Minerals				= new _PriceSettings();
+				public _PriceSettings	Items					= new _PriceSettings();
+			}
+		}
+
+		public UInt32				Version					= 2;
         public V1._Options			Options					= new V1._Options();
-        public V1._PriceLoad		PriceLoad				= new V1._PriceLoad();
+        public V2._PriceLoad		PriceLoad				= new V2._PriceLoad();
         public double[]				MaterialPrices			= new double[(UInt32)Materials.MaxMaterials];
 		public V1._ApiAccess		ApiAccess				= new V1._ApiAccess();
 		public V1._Stats			Stats					= new V1._Stats();
@@ -146,9 +174,9 @@ namespace EveRefinery
 		}
     }
 
-    class SettingsStorage
+	public class SettingsStorage
     {
-        public const UInt32         LAST_VERSION_FORMAT     = 1;
+        public const UInt32         LAST_VERSION_FORMAT     = 2;
 
         public static void TryImportSetting<T>(ref T a_Value, XmlNode a_Xml)
         {
@@ -198,26 +226,96 @@ namespace EveRefinery
 
         public class V1
         {
-            public static Settings Load(String a_Path)
+			public static Settings		Load(String a_Path)
+			{
+				SettingsV1 oldSettings	= LoadV1(a_Path);
+
+				Settings result			= new Settings();
+				result.Options			= oldSettings.Options;
+				result.PriceLoad        = Convert_PriceLoad(oldSettings.PriceLoad);
+				result.MaterialPrices   = oldSettings.MaterialPrices;
+				result.ApiAccess        = oldSettings.ApiAccess;
+				result.Stats            = oldSettings.Stats;
+				result.Refining         = oldSettings.Refining;
+				result.Appearance       = oldSettings.Appearance;
+				result.UILocations      = oldSettings.UILocations;
+
+				return result;
+			}
+
+			[Serializable]
+			[XmlRoot("Settings")]
+			public class SettingsV1
+			{
+				public UInt32						Version			= 1;
+				public Settings.V1._Options         Options			= new Settings.V1._Options();
+				public Settings.V1._PriceLoad       PriceLoad		= new Settings.V1._PriceLoad();
+				public double[]						MaterialPrices	= new double[(UInt32)Materials.MaxMaterials];
+				public Settings.V1._ApiAccess       ApiAccess		= new Settings.V1._ApiAccess();
+				public Settings.V1._Stats           Stats			= new Settings.V1._Stats();
+				public Settings.V1._Refining        Refining		= new Settings.V1._Refining();
+				public Settings.V1._Appearance      Appearance		= new Settings.V1._Appearance();
+				public Settings.V1._UILocations     UILocations		= new Settings.V1._UILocations();
+			}
+
+			private static SettingsV1					LoadV1(String a_Path)
             {
-                using (TextReader stream = new StreamReader(a_Path))
+				using (TextReader stream = new StreamReader(a_Path))
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(Settings));
-                    return (Settings)serializer.Deserialize(stream);
+					XmlSerializer serializer = new XmlSerializer(typeof(SettingsV1));
+					return (SettingsV1)serializer.Deserialize(stream);
                 }
             }
 
-            public static void Save(String a_Path, Settings a_Settings)
-            {
-                using (TextWriter stream = new StreamWriter(a_Path))
-                {
-                    XmlSerializer serializer = new XmlSerializer(typeof(Settings));
-                    serializer.Serialize(stream, a_Settings);
-                }
-            }
-        }
+			private static Settings.V2._PriceSettings	Convert_PriceSettings(Settings.V1._PriceSettings a_OldPriceSettings)
+			{
+				Settings.V2._PriceSettings result	= new Settings.V2._PriceSettings();
+				result.EveCentralCom.RegionID		= a_OldPriceSettings.RegionID;
+				result.EveCentralCom.SolarID		= a_OldPriceSettings.SolarID;
+				result.EveCentralCom.StationID		= a_OldPriceSettings.StationID;
+				result.EveCentralCom.PriceType		= a_OldPriceSettings.PriceType;
 
-        private static String GetSettingsPath()
+				return result;
+			}
+
+			private static Settings.V2._PriceLoad		Convert_PriceLoad(Settings.V1._PriceLoad a_OldPriceLoad)
+			{
+				Settings.V2._PriceLoad result   = new Settings.V2._PriceLoad();
+
+				result.Items = Convert_PriceSettings(a_OldPriceLoad.SourceItems);
+				result.Items.ExpiryDays = a_OldPriceLoad.ItemsExpiryDays;
+				result.Items.EveCentralCom.HistoryDays = a_OldPriceLoad.ItemsHistoryDays;
+
+				result.Minerals = Convert_PriceSettings(a_OldPriceLoad.SourceMinerals);
+				result.Minerals.ExpiryDays = a_OldPriceLoad.MineralExpiryDays;
+				result.Minerals.EveCentralCom.HistoryDays = a_OldPriceLoad.ItemsHistoryDays;
+
+				return result;
+			}
+		}
+
+		public class V2
+		{
+			public static Settings		Load(String a_Path)
+			{
+				using (TextReader stream = new StreamReader(a_Path))
+				{
+					XmlSerializer serializer = new XmlSerializer(typeof(Settings));
+					return (Settings)serializer.Deserialize(stream);
+				}
+			}
+
+			public static void			Save(String a_Path, Settings a_Settings)
+			{
+				using (TextWriter stream = new StreamWriter(a_Path))
+				{
+					XmlSerializer serializer = new XmlSerializer(typeof(Settings));
+					serializer.Serialize(stream, a_Settings);
+				}
+			}
+		}
+
+		private static String GetSettingsPath()
         {
             return "settings.xml";
         }
@@ -236,6 +334,9 @@ namespace EveRefinery
                 {
 					case 1:
 						result = V1.Load(settingsPath);
+						break;
+					case 2:
+						result = V2.Load(settingsPath);
 						break;
 					case 0:
 					default:
@@ -278,7 +379,7 @@ namespace EveRefinery
         public static void Save(Settings a_Settings)
         {
             BackupOldSettings();
-            V1.Save(GetSettingsPath(), a_Settings);
+            V2.Save(GetSettingsPath(), a_Settings);
         }
     }
 }

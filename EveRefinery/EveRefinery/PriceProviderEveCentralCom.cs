@@ -8,19 +8,17 @@ namespace EveRefinery
 {
 	class PriceProviderEveCentralCom : IPriceProvider
 	{
-		private Settings.V1._PriceSettings  m_Settings;
-		private UInt32                      m_HistoryDays;
+		private Settings.V2._EveCentralCom  m_Settings;
 
-		public							PriceProviderEveCentralCom(Settings.V1._PriceSettings a_Settings, UInt32 a_HistoryDays)
+		public							PriceProviderEveCentralCom(Settings.V2._EveCentralCom a_Settings)
 		{
 			m_Settings = a_Settings;
-			m_HistoryDays = a_HistoryDays;
 		}
 
 		public List<PriceRecord>		GetPrices(List<UInt32> a_TypeIDs)
 		{
 			StringBuilder marketXmlUrl = new StringBuilder();
-			marketXmlUrl.AppendFormat("http://api.eve-central.com/api/marketstat?hours={0:d}", m_HistoryDays * 24);
+			marketXmlUrl.AppendFormat("http://api.eve-central.com/api/marketstat?hours={0:d}", m_Settings.HistoryDays * 24);
 
 			if (0 != m_Settings.SolarID)
 			{

@@ -8,12 +8,12 @@ namespace EveRefinery
 	{
 		private IPriceProvider          m_Provider;
 
-		public							PriceProviderAuto(Settings.V1._PriceSettings a_Settings, UInt32 a_HistoryDays)
+		public							PriceProviderAuto(Settings.V2._PriceSettings a_Settings)
 		{
 			switch (a_Settings.Provider)
 			{
 				case PriceProviders.EveCentral:
-					m_Provider = new PriceProviderEveCentralCom(a_Settings, a_HistoryDays);
+					m_Provider = new PriceProviderEveCentralCom(a_Settings.EveCentralCom);
 					break;
 				default:
 					Debug.Assert(false, "Invalid price provider");

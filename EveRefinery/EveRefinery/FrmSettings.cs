@@ -151,7 +151,7 @@ namespace EveRefinery
 			loadPricesFor.Add((UInt32)EveTypeIDs.Megacyte);
 			loadPricesFor.Add((UInt32)EveTypeIDs.Morphite);
 
-			IPriceProvider provider = new PriceProviderAuto(m_Settings.PriceLoad.SourceMinerals, m_Settings.PriceLoad.ItemsHistoryDays);
+			IPriceProvider provider = new PriceProviderAuto(m_Settings.PriceLoad.Minerals);
 
 			// @@@@ Check for exceptions?
 			List<PriceRecord> prices = provider.GetPrices(loadPricesFor);
@@ -193,13 +193,13 @@ namespace EveRefinery
 
 		private void UpdateMineralPricesTypeLabel()
 		{
-			PriceProviderAuto priceProvider = new PriceProviderAuto(m_Settings.PriceLoad.SourceMinerals, m_Settings.PriceLoad.ItemsHistoryDays);
-			BtnMineralPricesType.Text = priceProvider.GetCurrentFilterHint(m_EveDatabase);
+			PriceProviderAuto priceProvider = new PriceProviderAuto(m_Settings.PriceLoad.Minerals);
+			LblMineralPricesType.Text = priceProvider.GetCurrentFilterHint(m_EveDatabase);
 		}
 
 		private void BtnMineralPricesType_Click(object sender, EventArgs e)
 		{
-			FrmPriceType dialog = new FrmPriceType(m_EveDatabase, m_Settings.PriceLoad.SourceMinerals);
+			FrmPriceType dialog = new FrmPriceType(m_EveDatabase, m_Settings.PriceLoad.Minerals);
 			if (DialogResult.OK != dialog.ShowDialog(this))
 				return;
 
@@ -884,18 +884,16 @@ namespace EveRefinery
 		#region Page Other
 		private void InitPage_Other()
 		{
-			ChkCheckUpdates.Checked			= m_Settings.Options.CheckUpdates;
-			TxtPriceHistory.Value			= m_Settings.PriceLoad.ItemsHistoryDays;
-			TxtPricesExpiryDays.Value		= m_Settings.PriceLoad.ItemsExpiryDays;
-			TxtMineralPricesExpiryDays.Value = m_Settings.PriceLoad.MineralExpiryDays;
+			ChkCheckUpdates.Checked				= m_Settings.Options.CheckUpdates;
+			TxtPricesExpiryDays.Value			= m_Settings.PriceLoad.Items.ExpiryDays;
+			TxtMineralPricesExpiryDays.Value	= m_Settings.PriceLoad.Minerals.ExpiryDays;
 		}
 		
 		private bool SavePage_Other()
 		{
-			m_Settings.Options.CheckUpdates		= ChkCheckUpdates.Checked;
-			m_Settings.PriceLoad.ItemsHistoryDays	= (UInt32)TxtPriceHistory.Value;
-			m_Settings.PriceLoad.ItemsExpiryDays	= (UInt32)TxtPricesExpiryDays.Value;
-			m_Settings.PriceLoad.MineralExpiryDays	= (UInt32)TxtMineralPricesExpiryDays.Value;
+			m_Settings.Options.CheckUpdates				= ChkCheckUpdates.Checked;
+			m_Settings.PriceLoad.Items.ExpiryDays		= (UInt32)TxtPricesExpiryDays.Value;
+			m_Settings.PriceLoad.Minerals.ExpiryDays	= (UInt32)TxtMineralPricesExpiryDays.Value;
 			return true;
 		}
 		#endregion

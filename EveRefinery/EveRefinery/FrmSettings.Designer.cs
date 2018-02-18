@@ -50,9 +50,10 @@
 			this.TxtMegacyte = new System.Windows.Forms.NumericUpDown();
 			this.TxtMorphite = new System.Windows.Forms.NumericUpDown();
 			this.LblLoadMineralPrices = new System.Windows.Forms.Label();
-			this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+			this.TblLoadMineralPrices = new System.Windows.Forms.TableLayoutPanel();
 			this.BtnLoadMineralPrices = new System.Windows.Forms.Button();
 			this.BtnMineralPricesType = new System.Windows.Forms.Button();
+			this.LblMineralPricesType = new System.Windows.Forms.Label();
 			this.LblMineralPrices = new System.Windows.Forms.Label();
 			this.TbpRefining = new System.Windows.Forms.TabPage();
 			this.TblRefining = new System.Windows.Forms.TableLayoutPanel();
@@ -64,13 +65,13 @@
 			this.TblApiTable = new System.Windows.Forms.TableLayoutPanel();
 			this.LblContextHelp = new System.Windows.Forms.Label();
 			this.LstUsers = new System.Windows.Forms.ListView();
-			this.ClmUserID = new System.Windows.Forms.ColumnHeader();
-			this.ClmApiKey = new System.Windows.Forms.ColumnHeader();
+			this.ClmUserID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.ClmApiKey = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.LstCharacters = new System.Windows.Forms.ListView();
-			this.ClmUserID2 = new System.Windows.Forms.ColumnHeader();
-			this.ClmCharID = new System.Windows.Forms.ColumnHeader();
-			this.ClmCharName = new System.Windows.Forms.ColumnHeader();
-			this.ClmCorporationName = new System.Windows.Forms.ColumnHeader();
+			this.ClmUserID2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.ClmCharID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.ClmCharName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.ClmCorporationName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.BtnUpdateChars = new System.Windows.Forms.Button();
 			this.BtnDeleteApiKey = new System.Windows.Forms.Button();
@@ -98,11 +99,6 @@
 			this.TblOther = new System.Windows.Forms.TableLayoutPanel();
 			this.ChkCheckUpdates = new System.Windows.Forms.CheckBox();
 			this.LblDontDisableUpdates = new System.Windows.Forms.Label();
-			this.LblPriceDays = new System.Windows.Forms.Label();
-			this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-			this.LblPriceHistory = new System.Windows.Forms.Label();
-			this.TxtPriceHistory = new System.Windows.Forms.NumericUpDown();
-			this.LblPriceHistory1 = new System.Windows.Forms.Label();
 			this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
 			this.label12 = new System.Windows.Forms.Label();
 			this.label14 = new System.Windows.Forms.Label();
@@ -136,7 +132,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.TxtZydrine)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.TxtMegacyte)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.TxtMorphite)).BeginInit();
-			this.tableLayoutPanel4.SuspendLayout();
+			this.TblLoadMineralPrices.SuspendLayout();
 			this.TbpRefining.SuspendLayout();
 			this.TblRefining.SuspendLayout();
 			this.TblLoadSkills.SuspendLayout();
@@ -156,8 +152,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.TxtRedIskLoss)).BeginInit();
 			this.TabOther.SuspendLayout();
 			this.TblOther.SuspendLayout();
-			this.tableLayoutPanel5.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.TxtPriceHistory)).BeginInit();
 			this.tableLayoutPanel6.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.TxtPricesExpiryDays)).BeginInit();
 			this.tableLayoutPanel7.SuspendLayout();
@@ -208,7 +202,7 @@
 			this.TblMinerals.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.TblMinerals.Controls.Add(this.TblPricesMinerals, 0, 1);
 			this.TblMinerals.Controls.Add(this.LblLoadMineralPrices, 0, 3);
-			this.TblMinerals.Controls.Add(this.tableLayoutPanel4, 0, 4);
+			this.TblMinerals.Controls.Add(this.TblLoadMineralPrices, 0, 4);
 			this.TblMinerals.Controls.Add(this.LblMineralPrices, 0, 0);
 			this.TblMinerals.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TblMinerals.Location = new System.Drawing.Point(3, 3);
@@ -218,11 +212,8 @@
 			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 235F));
 			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
 			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F));
-			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
 			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.TblMinerals.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.TblMinerals.Size = new System.Drawing.Size(355, 358);
 			this.TblMinerals.TabIndex = 2;
 			// 
@@ -519,30 +510,30 @@
 			this.LblLoadMineralPrices.TabIndex = 2;
 			this.LblLoadMineralPrices.Text = "You can load mineral prices from the market :";
 			// 
-			// tableLayoutPanel4
+			// TblLoadMineralPrices
 			// 
-			this.tableLayoutPanel4.ColumnCount = 2;
-			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 210F));
-			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel4.Controls.Add(this.BtnLoadMineralPrices, 1, 0);
-			this.tableLayoutPanel4.Controls.Add(this.BtnMineralPricesType, 0, 0);
-			this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 275);
-			this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
-			this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-			this.tableLayoutPanel4.RowCount = 1;
-			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel4.Size = new System.Drawing.Size(355, 25);
-			this.tableLayoutPanel4.TabIndex = 3;
+			this.TblLoadMineralPrices.ColumnCount = 3;
+			this.TblLoadMineralPrices.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 250F));
+			this.TblLoadMineralPrices.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+			this.TblLoadMineralPrices.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.TblLoadMineralPrices.Controls.Add(this.BtnLoadMineralPrices, 2, 0);
+			this.TblLoadMineralPrices.Controls.Add(this.BtnMineralPricesType, 1, 0);
+			this.TblLoadMineralPrices.Controls.Add(this.LblMineralPricesType, 0, 0);
+			this.TblLoadMineralPrices.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.TblLoadMineralPrices.Location = new System.Drawing.Point(0, 275);
+			this.TblLoadMineralPrices.Margin = new System.Windows.Forms.Padding(0);
+			this.TblLoadMineralPrices.Name = "TblLoadMineralPrices";
+			this.TblLoadMineralPrices.RowCount = 1;
+			this.TblLoadMineralPrices.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.TblLoadMineralPrices.Size = new System.Drawing.Size(355, 30);
+			this.TblLoadMineralPrices.TabIndex = 3;
 			// 
 			// BtnLoadMineralPrices
 			// 
 			this.BtnLoadMineralPrices.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.BtnLoadMineralPrices.Location = new System.Drawing.Point(213, 3);
+			this.BtnLoadMineralPrices.Location = new System.Drawing.Point(293, 3);
 			this.BtnLoadMineralPrices.Name = "BtnLoadMineralPrices";
-			this.BtnLoadMineralPrices.Size = new System.Drawing.Size(139, 19);
+			this.BtnLoadMineralPrices.Size = new System.Drawing.Size(59, 24);
 			this.BtnLoadMineralPrices.TabIndex = 2;
 			this.BtnLoadMineralPrices.Text = "Load";
 			this.BtnLoadMineralPrices.UseVisualStyleBackColor = true;
@@ -551,13 +542,24 @@
 			// BtnMineralPricesType
 			// 
 			this.BtnMineralPricesType.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.BtnMineralPricesType.Location = new System.Drawing.Point(3, 3);
+			this.BtnMineralPricesType.Location = new System.Drawing.Point(253, 3);
 			this.BtnMineralPricesType.Name = "BtnMineralPricesType";
-			this.BtnMineralPricesType.Size = new System.Drawing.Size(204, 19);
+			this.BtnMineralPricesType.Size = new System.Drawing.Size(34, 24);
 			this.BtnMineralPricesType.TabIndex = 3;
-			this.BtnMineralPricesType.Text = "[Price settings hint]";
+			this.BtnMineralPricesType.Text = "[...]";
 			this.BtnMineralPricesType.UseVisualStyleBackColor = true;
 			this.BtnMineralPricesType.Click += new System.EventHandler(this.BtnMineralPricesType_Click);
+			// 
+			// LblMineralPricesType
+			// 
+			this.LblMineralPricesType.AutoSize = true;
+			this.LblMineralPricesType.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LblMineralPricesType.Location = new System.Drawing.Point(3, 0);
+			this.LblMineralPricesType.Name = "LblMineralPricesType";
+			this.LblMineralPricesType.Size = new System.Drawing.Size(244, 30);
+			this.LblMineralPricesType.TabIndex = 4;
+			this.LblMineralPricesType.Text = "[Price settings hint]";
+			this.LblMineralPricesType.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// LblMineralPrices
 			// 
@@ -1098,17 +1100,12 @@
 			this.TblOther.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.TblOther.Controls.Add(this.ChkCheckUpdates, 0, 1);
 			this.TblOther.Controls.Add(this.LblDontDisableUpdates, 0, 0);
-			this.TblOther.Controls.Add(this.LblPriceDays, 0, 3);
-			this.TblOther.Controls.Add(this.tableLayoutPanel5, 0, 4);
-			this.TblOther.Controls.Add(this.tableLayoutPanel6, 0, 6);
-			this.TblOther.Controls.Add(this.tableLayoutPanel7, 0, 7);
+			this.TblOther.Controls.Add(this.tableLayoutPanel6, 0, 3);
+			this.TblOther.Controls.Add(this.tableLayoutPanel7, 0, 4);
 			this.TblOther.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TblOther.Location = new System.Drawing.Point(3, 3);
 			this.TblOther.Name = "TblOther";
-			this.TblOther.RowCount = 9;
-			this.TblOther.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 75F));
-			this.TblOther.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-			this.TblOther.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.TblOther.RowCount = 6;
 			this.TblOther.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 75F));
 			this.TblOther.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
 			this.TblOther.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
@@ -1139,79 +1136,6 @@
 			this.LblDontDisableUpdates.TabIndex = 1;
 			this.LblDontDisableUpdates.Text = resources.GetString("LblDontDisableUpdates.Text");
 			// 
-			// LblPriceDays
-			// 
-			this.LblPriceDays.AutoSize = true;
-			this.LblPriceDays.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LblPriceDays.Location = new System.Drawing.Point(3, 120);
-			this.LblPriceDays.Name = "LblPriceDays";
-			this.LblPriceDays.Size = new System.Drawing.Size(349, 75);
-			this.LblPriceDays.TabIndex = 2;
-			this.LblPriceDays.Text = resources.GetString("LblPriceDays.Text");
-			// 
-			// tableLayoutPanel5
-			// 
-			this.tableLayoutPanel5.ColumnCount = 3;
-			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 195F));
-			this.tableLayoutPanel5.Controls.Add(this.LblPriceHistory, 0, 0);
-			this.tableLayoutPanel5.Controls.Add(this.TxtPriceHistory, 1, 0);
-			this.tableLayoutPanel5.Controls.Add(this.LblPriceHistory1, 2, 0);
-			this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 195);
-			this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(0);
-			this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-			this.tableLayoutPanel5.RowCount = 1;
-			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel5.Size = new System.Drawing.Size(355, 25);
-			this.tableLayoutPanel5.TabIndex = 3;
-			// 
-			// LblPriceHistory
-			// 
-			this.LblPriceHistory.AutoSize = true;
-			this.LblPriceHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LblPriceHistory.Location = new System.Drawing.Point(3, 0);
-			this.LblPriceHistory.Name = "LblPriceHistory";
-			this.LblPriceHistory.Size = new System.Drawing.Size(74, 25);
-			this.LblPriceHistory.TabIndex = 0;
-			this.LblPriceHistory.Text = "Price history :";
-			this.LblPriceHistory.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// TxtPriceHistory
-			// 
-			this.TxtPriceHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.TxtPriceHistory.Location = new System.Drawing.Point(83, 3);
-			this.TxtPriceHistory.Maximum = new decimal(new int[] {
-            31,
-            0,
-            0,
-            0});
-			this.TxtPriceHistory.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.TxtPriceHistory.Name = "TxtPriceHistory";
-			this.TxtPriceHistory.Size = new System.Drawing.Size(74, 20);
-			this.TxtPriceHistory.TabIndex = 1;
-			this.TxtPriceHistory.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			// 
-			// LblPriceHistory1
-			// 
-			this.LblPriceHistory1.AutoSize = true;
-			this.LblPriceHistory1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LblPriceHistory1.Location = new System.Drawing.Point(163, 0);
-			this.LblPriceHistory1.Name = "LblPriceHistory1";
-			this.LblPriceHistory1.Size = new System.Drawing.Size(189, 25);
-			this.LblPriceHistory1.TabIndex = 2;
-			this.LblPriceHistory1.Text = "days";
-			this.LblPriceHistory1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// tableLayoutPanel6
 			// 
 			this.tableLayoutPanel6.ColumnCount = 3;
@@ -1222,7 +1146,7 @@
 			this.tableLayoutPanel6.Controls.Add(this.label14, 0, 0);
 			this.tableLayoutPanel6.Controls.Add(this.TxtPricesExpiryDays, 1, 0);
 			this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel6.Location = new System.Drawing.Point(0, 240);
+			this.tableLayoutPanel6.Location = new System.Drawing.Point(0, 120);
 			this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel6.Name = "tableLayoutPanel6";
 			this.tableLayoutPanel6.RowCount = 1;
@@ -1285,7 +1209,7 @@
 			this.tableLayoutPanel7.Controls.Add(this.label15, 0, 0);
 			this.tableLayoutPanel7.Controls.Add(this.TxtMineralPricesExpiryDays, 1, 0);
 			this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel7.Location = new System.Drawing.Point(0, 265);
+			this.tableLayoutPanel7.Location = new System.Drawing.Point(0, 145);
 			this.tableLayoutPanel7.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel7.Name = "tableLayoutPanel7";
 			this.tableLayoutPanel7.RowCount = 1;
@@ -1540,7 +1464,8 @@
 			((System.ComponentModel.ISupportInitialize)(this.TxtZydrine)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.TxtMegacyte)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.TxtMorphite)).EndInit();
-			this.tableLayoutPanel4.ResumeLayout(false);
+			this.TblLoadMineralPrices.ResumeLayout(false);
+			this.TblLoadMineralPrices.PerformLayout();
 			this.TbpRefining.ResumeLayout(false);
 			this.TblRefining.ResumeLayout(false);
 			this.TblLoadSkills.ResumeLayout(false);
@@ -1565,9 +1490,6 @@
 			this.TabOther.ResumeLayout(false);
 			this.TblOther.ResumeLayout(false);
 			this.TblOther.PerformLayout();
-			this.tableLayoutPanel5.ResumeLayout(false);
-			this.tableLayoutPanel5.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.TxtPriceHistory)).EndInit();
 			this.tableLayoutPanel6.ResumeLayout(false);
 			this.tableLayoutPanel6.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.TxtPricesExpiryDays)).EndInit();
@@ -1653,7 +1575,7 @@
 		private System.Windows.Forms.CheckBox ChkCheckUpdates;
 		private System.Windows.Forms.TableLayoutPanel TblMinerals;
 		private System.Windows.Forms.Label LblLoadMineralPrices;
-		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+		private System.Windows.Forms.TableLayoutPanel TblLoadMineralPrices;
 		private System.Windows.Forms.Button BtnLoadMineralPrices;
 		private System.Windows.Forms.Label LblMineralPrices;
 		private System.Windows.Forms.Label LblContextHelp;
@@ -1664,11 +1586,6 @@
 		private System.Windows.Forms.Label LblRedIskLoss;
 		private System.Windows.Forms.NumericUpDown TxtGreenIskLoss;
 		private System.Windows.Forms.NumericUpDown TxtRedIskLoss;
-		private System.Windows.Forms.Label LblPriceDays;
-		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
-		private System.Windows.Forms.Label LblPriceHistory;
-		private System.Windows.Forms.NumericUpDown TxtPriceHistory;
-		private System.Windows.Forms.Label LblPriceHistory1;
 		private System.Windows.Forms.TabPage TabDeveloper;
 		private System.Windows.Forms.TableLayoutPanel TblDeveloper;
 		private System.Windows.Forms.Button BtnStripDatabase;
@@ -1687,5 +1604,6 @@
 		private System.Windows.Forms.TableLayoutPanel TblLoadSkills;
 		private System.Windows.Forms.ComboBox CmbLoadSkills;
 		private System.Windows.Forms.Button BtnLoadSkills;
+		private System.Windows.Forms.Label LblMineralPricesType;
 	}
 }
