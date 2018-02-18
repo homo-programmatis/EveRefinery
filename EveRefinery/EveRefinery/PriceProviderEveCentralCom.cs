@@ -60,6 +60,12 @@ namespace EveRefinery
 			return "eve-central.com - " + m_Settings.PriceType.ToString() + " - " + a_Database.GetLocationName(m_Settings.RegionID, m_Settings.SolarID, m_Settings.StationID);
 		}
 
+		public UInt32					GetRequestBlockSize()
+		{
+			// Historically used value, not sure if it's still good
+			return 32;
+		}
+
 		public static PriceTypes[]		GetSupportedPriceTypes()
 		{
 			PriceTypes[] result =

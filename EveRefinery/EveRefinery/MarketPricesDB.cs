@@ -225,15 +225,15 @@ namespace EveRefinery
 
 			for (; !m_EndUpdateThread; )
 			{
-				const int blockSize = 32;
-				List<UInt32> queriedItems = new List<UInt32>(blockSize);
+				UInt32 blockSize = a_Param.PriceProvider.GetRequestBlockSize();
+				List<UInt32> queriedItems = new List<UInt32>(a_Param.UpdateQueue.Count);
 
 				lock (a_Param.UpdateQueue)
 				{
 					if (0 == a_Param.UpdateQueue.Count)
 						return;
 
-					for (int i = 0; i < blockSize; i++)
+					for (UInt32 i = 0; i < blockSize; i++)
 					{
 						if (0 == a_Param.UpdateQueue.Count)
 							break;

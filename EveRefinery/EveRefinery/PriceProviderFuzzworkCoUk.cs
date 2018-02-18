@@ -63,6 +63,14 @@ namespace EveRefinery
 				return "market.fuzzwork.co.uk - " + m_Settings.PriceType.ToString() + " - " + a_Database.GetLocationName(0, 0, m_Settings.StationID);
 		}
 
+		public UInt32					GetRequestBlockSize()
+		{
+			// From https://market.fuzzwork.co.uk/api/
+			// "I highly recommend pulling all the aggregates into one sheet, and then using vlookup to retrieve them. It's more efficient for both you and me"
+			// However, trying to fit all item in one request results in "(414) Request-URI Too Large."
+			return 1024;
+		}
+
 		public static PriceTypes[]		GetSupportedPriceTypes()
 		{
 			PriceTypes[] result =

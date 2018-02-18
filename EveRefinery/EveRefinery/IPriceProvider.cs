@@ -47,5 +47,8 @@ namespace EveRefinery
 
 		// Human-readable hint for currently requested filter.
 		String						GetCurrentFilterHint(EveDatabase a_Database);
+
+		// How many items to load in one go
+		UInt32						GetRequestBlockSize();
 	}
 }
