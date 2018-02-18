@@ -62,6 +62,27 @@ namespace EveRefinery
 			return "eve-central.com - " + m_Settings.PriceType.ToString() + " - " + a_Database.GetLocationName(m_Settings.RegionID, m_Settings.SolarID, m_Settings.StationID);
 		}
 
+		public static PriceTypes[]		GetSupportedPriceTypes()
+		{
+			PriceTypes[] result =
+			{
+				PriceTypes.AllAvg,
+				PriceTypes.AllMax,
+				PriceTypes.AllMin,
+				PriceTypes.AllMedian,
+				PriceTypes.BuyAvg,
+				PriceTypes.BuyMax,
+				PriceTypes.BuyMin,
+				PriceTypes.BuyMedian,
+				PriceTypes.SellAvg,
+				PriceTypes.SellMax,
+				PriceTypes.SellMin,
+				PriceTypes.SellMedian,
+			};
+
+			return result;
+		}
+
 		private static double			ReadInnerDouble(XmlNode a_Node)
 		{
 			return Convert.ToDouble(a_Node.InnerText, CultureInfo.InvariantCulture);

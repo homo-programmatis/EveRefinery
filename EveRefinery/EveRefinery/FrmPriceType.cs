@@ -77,10 +77,10 @@ namespace EveRefinery
 			ComboBox currCombo = CmbPriceType;
 			currCombo.Items.Clear();
 
-			for (UInt32 i = 0; i < (UInt32)PriceTypes.MaxPriceTypes; i++)
+			foreach (PriceTypes priceType in PriceProviderEveCentral.GetSupportedPriceTypes())
 			{
-				string enumName = Engine.GetPriceTypeName((PriceTypes)i);
-				TextItemWithUInt32 newItem = new TextItemWithUInt32(enumName, i);
+				string enumName = Engine.GetPriceTypeName(priceType);
+				TextItemWithUInt32 newItem = new TextItemWithUInt32(enumName, (UInt32)priceType);
 				currCombo.Items.Add(newItem);
 
 				if ((PriceTypes)newItem.Data == m_Settings.PriceType)
