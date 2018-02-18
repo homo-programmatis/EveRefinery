@@ -33,7 +33,7 @@ namespace EveRefinery
 			m_Database.CreateTables();
 		}
 
-		public void LoadPrices(IPriceProvider a_PriceProvider, PriceSettings a_Settings, UInt32 a_PriceExpiryDays, bool a_Silent)
+		public void LoadPrices(IPriceProvider a_PriceProvider, Settings.V1._PriceSettings a_Settings, UInt32 a_PriceExpiryDays, bool a_Silent)
 		{
 			StopUpdaterThread();
 			
@@ -66,7 +66,7 @@ namespace EveRefinery
 			TestMarketPrices(a_PriceProvider, a_Settings, a_PriceExpiryDays, a_Silent);
 		}
 
-		public void DropPrices(PriceSettings a_Settings)
+		public void DropPrices(Settings.V1._PriceSettings a_Settings)
 		{
 			StopUpdaterThread();
 
@@ -119,7 +119,7 @@ namespace EveRefinery
 			a_DbRecord.UpdateTime	= a_PriceRecord.UpdateTime;
 		}
 
-		void ApplyPrices(List<PriceRecord> a_Prices, PriceSettings a_Filter)
+		void ApplyPrices(List<PriceRecord> a_Prices, Settings.V1._PriceSettings a_Filter)
 		{
 			ItemPrices.PricesDataTable newDbData = new ItemPrices.PricesDataTable();
 
@@ -139,7 +139,7 @@ namespace EveRefinery
 		protected class UpdateThreadParam
 		{
 			public IPriceProvider	PriceProvider;
-			public PriceSettings	PriceSettings;
+			public Settings.V1._PriceSettings   PriceSettings;
 			public Queue<UInt32>	UpdateQueue;
 		}
 		
@@ -160,7 +160,7 @@ namespace EveRefinery
 			m_UpdateQueue	= null;
 		}
 
-		protected void TestMarketPrices(IPriceProvider a_PriceProvider, PriceSettings a_Settings, UInt32 a_PriceExpiryDays, bool a_Silent)
+		protected void TestMarketPrices(IPriceProvider a_PriceProvider, Settings.V1._PriceSettings a_Settings, UInt32 a_PriceExpiryDays, bool a_Silent)
 		{
 			ItemFilter filter		= new ItemFilter();
 			filter.HasMarketGroup	= TristateFilter.Yes;

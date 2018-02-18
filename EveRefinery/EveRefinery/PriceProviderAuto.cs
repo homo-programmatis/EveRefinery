@@ -20,7 +20,7 @@ namespace EveRefinery
 			return provider;
 		}
 
-		public List<PriceRecord> GetPrices(List<UInt32> a_TypeIDs, PriceSettings a_Settings)
+		public List<PriceRecord> GetPrices(List<UInt32> a_TypeIDs, Settings.V1._PriceSettings a_Settings)
 		{
 			IPriceProvider provider = null;
 

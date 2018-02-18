@@ -16,7 +16,7 @@ namespace EveRefinery
 		protected EveDatabase	m_EveDatabase;
 		protected Pages			m_StartPage;
 		protected ListView.ColumnHeaderCollection m_ListColumns;
-		protected PriceSettings	m_MineralPriceSettings;
+		protected Settings.V1._PriceSettings      m_MineralPriceSettings;
 		
 		public enum Pages
 		{
@@ -229,7 +229,7 @@ namespace EveRefinery
 		{
 			CmbLoadSkills.Items.Clear();
 
-			foreach (Settings._ApiAccess.Char currChar in m_Settings.ApiAccess.Chars)
+			foreach (Settings.V1._ApiChar currChar in m_Settings.ApiAccess.Chars)
 			{
 				TextItemWithUInt32 newItem = new TextItemWithUInt32(currChar.CharacterName, currChar.CharacterID);
 				CmbLoadSkills.Items.Add(newItem);
@@ -551,7 +551,7 @@ namespace EveRefinery
 		}
 		#endregion
 
-		private bool LoadSkills(Settings._ApiAccess.Key a_ApiKey, UInt32 a_UserID, Dictionary<UInt32, UInt32> a_Result)
+		private bool LoadSkills(Settings.V1._ApiKey a_ApiKey, UInt32 a_UserID, Dictionary<UInt32, UInt32> a_Result)
 		{
 			String errorHeader = "Failed to load skills";
 			XmlDocument xmlReply = EveApi.MakeRequest("char/CharacterSheet.xml.aspx", a_ApiKey, a_UserID, errorHeader);
@@ -587,7 +587,7 @@ namespace EveRefinery
 				return;
 
 			UInt32 userID = TextItemWithUInt32.GetData(CmbLoadSkills.SelectedItem);
-			Settings._ApiAccess.Key apiKey = Engine.GetCharacterKey(m_Settings, userID);
+			Settings.V1._ApiKey apiKey = Engine.GetCharacterKey(m_Settings, userID);
 			if (null == apiKey)
 			{
 				ErrorMessageBox.Show("Can't find API key for selected character");
@@ -615,13 +615,13 @@ namespace EveRefinery
 		#region Page API
 		private void InitPage_ApiKeys()
 		{
-			foreach (Settings._ApiAccess.Key currKey in m_Settings.ApiAccess.Keys)
+			foreach (Settings.V1._ApiKey currKey in m_Settings.ApiAccess.Keys)
 			{
 				ListViewItem newItem = LstUsers.Items.Add(currKey.KeyID.ToString());
 				newItem.SubItems.Add(currKey.Verification);
 			}
 
-            foreach (Settings._ApiAccess.Char currCharacter in m_Settings.ApiAccess.Chars)
+            foreach (Settings.V1._ApiChar currCharacter in m_Settings.ApiAccess.Chars)
 			{
 				ListViewItem newItem = LstCharacters.Items.Add(currCharacter.KeyID.ToString());
 				newItem.SubItems.Add(currCharacter.CharacterID.ToString());
@@ -645,7 +645,7 @@ namespace EveRefinery
 				string userID	= currItem.Text;
 				string apiKey	= currItem.SubItems[1].Text;
 
-				Settings._ApiAccess.Key newRow = new Settings._ApiAccess.Key();
+				Settings.V1._ApiKey newRow = new Settings.V1._ApiKey();
 				newRow.KeyID		= Convert.ToUInt32(userID);
 				newRow.Verification	= apiKey;
 				m_Settings.ApiAccess.Keys.Add(newRow);
@@ -660,7 +660,7 @@ namespace EveRefinery
 				string charName = currItem.SubItems[2].Text;
 				string charCorp = currItem.SubItems[3].Text;
 
-				Settings._ApiAccess.Char newRow = new Settings._ApiAccess.Char();
+				Settings.V1._ApiChar newRow = new Settings.V1._ApiChar();
 				newRow.KeyID			= Convert.ToUInt32(keyID);
 				newRow.CharacterID		= Convert.ToUInt32(charID);
 				newRow.CharacterName	= charName;
@@ -716,7 +716,7 @@ namespace EveRefinery
 
 		private void UpdateSingleUser(string a_KeyID, string a_Verification)
 		{
-			Settings._ApiAccess.Key tempKey = new Settings._ApiAccess.Key();
+			Settings.V1._ApiKey tempKey = new Settings.V1._ApiKey();
 			UInt32.TryParse(a_KeyID, out tempKey.KeyID);
 			tempKey.Verification = a_Verification;
 

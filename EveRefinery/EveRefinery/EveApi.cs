@@ -8,7 +8,7 @@ namespace EveRefinery
 {
 	class EveApi
 	{
-		public static XmlDocument MakeRequest(String a_ApiUrl, Settings._ApiAccess.Key a_ApiKey, UInt32 a_ApiUser, String a_FailMessage)
+		public static XmlDocument MakeRequest(String a_ApiUrl, Settings.V1._ApiKey a_ApiKey, UInt32 a_ApiUser, String a_FailMessage)
 		{
 			try
 			{
@@ -55,7 +55,7 @@ namespace EveRefinery
 			}
 		}
 
-		private static String MakeUrl(String a_ApiUrl, Settings._ApiAccess.Key a_ApiKey, UInt32 a_ApiUser)
+		private static String MakeUrl(String a_ApiUrl, Settings.V1._ApiKey a_ApiKey, UInt32 a_ApiUser)
 		{
 			List<String> parameters = new List<String>();
 

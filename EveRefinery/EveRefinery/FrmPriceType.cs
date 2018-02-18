@@ -8,7 +8,7 @@ namespace EveRefinery
 	public partial class FrmPriceType : Form
 	{
 		protected	EveDatabase		m_EveDatabase;
-		public		PriceSettings	m_Settings;
+		public      Settings.V1._PriceSettings  m_Settings;
 
 		public FrmPriceType(EveDatabase a_EveDatabase)
 		{

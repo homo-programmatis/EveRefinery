@@ -386,7 +386,7 @@ namespace EveRefinery
 			newItem = new TextItemWithUInt32("[Edit list...]", character_EditApiKeys);
 			currCombo.Items.Add(newItem);
 
-			foreach (Settings._ApiAccess.Char currChar in m_Engine.m_Settings.ApiAccess.Chars)
+			foreach (Settings.V1._ApiChar currChar in m_Engine.m_Settings.ApiAccess.Chars)
 			{
 				newItem = new TextItemWithUInt32(currChar.CharacterName, currChar.CharacterID);
 				currCombo.Items.Add(newItem);
@@ -520,7 +520,7 @@ namespace EveRefinery
 		{
 			try
 			{
-				PriceSettings settings	= m_Engine.m_Settings.PriceLoad.SourceItems;
+				Settings.V1._PriceSettings settings	= m_Engine.m_Settings.PriceLoad.SourceItems;
 
 				if (a_DeleteOld)
 					m_MarketPrices.DropPrices(settings);
@@ -563,7 +563,7 @@ namespace EveRefinery
 
 		private void LoadSettings_Columns()
 		{
-			foreach (Settings._UILocations.Column currRow in m_Engine.m_Settings.UILocations.Columns)
+			foreach (Settings.V1._UIColumn currRow in m_Engine.m_Settings.UILocations.Columns)
 			{
 				Columns currColumnID = Columns_EnumFromString(currRow.Name);
 				if (Columns.MaxColumns == currColumnID)
@@ -623,7 +623,7 @@ namespace EveRefinery
 			return null;
 		}
 		
-		private void LoadSettings_SingleToolbar(Settings._UILocations.Toolbar a_Toolbar)
+		private void LoadSettings_SingleToolbar(Settings.V1._UIToolbar a_Toolbar)
 		{
 			Control currTool	= RemoveToolbarTool(a_Toolbar.Name);
 			if (currTool == null)
@@ -649,7 +649,7 @@ namespace EveRefinery
 			foreach (Control currControl in suspendList)
 				currControl.SuspendLayout();
 				
-			foreach (Settings._UILocations.Toolbar currRow in m_Engine.m_Settings.UILocations.Toolbars)
+			foreach (Settings.V1._UIToolbar currRow in m_Engine.m_Settings.UILocations.Toolbars)
 			{
 				LoadSettings_SingleToolbar(currRow);
 			}
@@ -676,7 +676,7 @@ namespace EveRefinery
 		
 		private void UpdateSettings_SingleToolbar(Control a_ToolControl, ToolbarLocations a_Panel)
 		{
-			Settings._UILocations.Toolbar currToolbar = new Settings._UILocations.Toolbar();
+			Settings.V1._UIToolbar currToolbar = new Settings.V1._UIToolbar();
 			currToolbar.Name		= a_ToolControl.Name;
 			currToolbar.Location.X0	= a_ToolControl.Location.X;
             currToolbar.Location.Y0	= a_ToolControl.Location.Y;
@@ -721,7 +721,7 @@ namespace EveRefinery
 				ColumnHeader currColumnHdr = LstRefinery.Columns[i];
 				Columns currColumnID = (Columns)i;
 
-				Settings._UILocations.Column currColumn = new Settings._UILocations.Column();
+				Settings.V1._UIColumn currColumn = new Settings.V1._UIColumn();
 				currColumn.Name		= currColumnID.ToString();
 				currColumn.Index	= (UInt32)currColumnHdr.DisplayIndex;
 				currColumn.Visible	= ListViewEx.IsColumnVisible(currColumnHdr);

@@ -73,7 +73,7 @@ namespace EveRefinery
 			LoadSettings();
 		}
 
-        private bool IsCharacterOrphaned(Settings._ApiAccess.Char a_Character)
+        private bool IsCharacterOrphaned(Settings.V1._ApiChar a_Character)
         {
             return !m_Settings.ApiAccess.Keys.Exists(a => (a.KeyID == a_Character.KeyID));
         }
@@ -129,17 +129,17 @@ namespace EveRefinery
 			}
 		}
 
-		public static Settings._ApiAccess.Key GetCharacterKey(Settings a_Settings, UInt32 a_CharacterID)
+		public static Settings.V1._ApiKey GetCharacterKey(Settings a_Settings, UInt32 a_CharacterID)
 		{
-            Settings._ApiAccess.Char character = a_Settings.ApiAccess.Chars.FirstOrDefault(a => a.CharacterID == a_CharacterID);
+            Settings.V1._ApiChar character = a_Settings.ApiAccess.Chars.FirstOrDefault(a => a.CharacterID == a_CharacterID);
 			if (null == character)
 				return null;
 
-            Settings._ApiAccess.Key key = a_Settings.ApiAccess.Keys.FirstOrDefault(a => a.KeyID == character.KeyID);
+            Settings.V1._ApiKey key = a_Settings.ApiAccess.Keys.FirstOrDefault(a => a.KeyID == character.KeyID);
 			return key;
 		}
 
-		public Settings._ApiAccess.Key GetCharacterKey(UInt32 a_CharacterID)
+		public Settings.V1._ApiKey GetCharacterKey(UInt32 a_CharacterID)
 		{
 			return GetCharacterKey(m_Settings, a_CharacterID);
 		}

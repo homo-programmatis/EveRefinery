@@ -10,7 +10,7 @@ namespace EveRefinery
 	{
 		public UInt32	m_PriceHistoryDays;
 
-		List<PriceRecord> IPriceProvider.GetPrices(List<UInt32> a_TypeIDs, PriceSettings a_Settings)
+		List<PriceRecord> IPriceProvider.GetPrices(List<UInt32> a_TypeIDs, Settings.V1._PriceSettings a_Settings)
 		{
 			StringBuilder marketXmlUrl = new StringBuilder();
 			marketXmlUrl.AppendFormat("http://api.eve-central.com/api/marketstat?hours={0:d}", m_PriceHistoryDays * 24);
@@ -104,7 +104,7 @@ namespace EveRefinery
 			}
 		}
 
-		protected static List<PriceRecord> ParseReplyXML(XmlDocument a_Xml, PriceSettings a_Filter)
+		protected static List<PriceRecord> ParseReplyXML(XmlDocument a_Xml, Settings.V1._PriceSettings a_Filter)
 		{
 			XmlNodeList xmlItems = a_Xml.GetElementsByTagName("type");
 			List<PriceRecord> result = new List<PriceRecord>();

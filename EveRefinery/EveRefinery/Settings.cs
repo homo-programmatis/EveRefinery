@@ -11,115 +11,148 @@ namespace EveRefinery
 	[Serializable]
     public class Settings
     {
-		[Serializable]
-        public class _ApiAccess
-        {
+		public class V1
+		{
 			[Serializable]
-            public class Key
-            {
-                public UInt32       KeyID;
-                public string       Verification;
-            }
-
-			[Serializable]
-            public class Char
-            {
-                public UInt32       KeyID;
-                public UInt32       CharacterID;
-                public String       CharacterName;
-                public String       CorporationName;
-            }
-
-            public List<Key>        Keys                    = new List<Key>();
-            public List<Char>       Chars                   = new List<Char>();
-        }
-
-		[Serializable]
-        public class _UILocations
-        {
-			[Serializable]
-            public struct Rect
-            {
-                public Int32        X0;
-                public Int32        Y0;
-                public Int32        CX;
-                public Int32        CY;
-            }
+			[XmlType("Key")]
+			public class _ApiKey
+			{
+				public UInt32			KeyID;
+				public string			Verification;
+			}
 
 			[Serializable]
-            public class Column
-            {
-                public String       Name;
-                public UInt32       Index;
-                public bool         Visible;
-                public UInt32       Width;
-            }
+			[XmlType("Char")]
+			public class _ApiChar
+			{
+				public UInt32			KeyID;
+				public UInt32			CharacterID;
+				public String			CharacterName;
+				public String			CorporationName;
+			}
 
 			[Serializable]
-            public class Toolbar
-            {
-                public String       Name;
-                public Rect         Location;
-                public UInt32       Panel;
-            }
+			public class _ApiAccess
+			{
+				public List<_ApiKey>	Keys					= new List<_ApiKey>();
+				public List<_ApiChar>	Chars					= new List<_ApiChar>();
+			}
 
-            public Rect             MainWindow;
-            public List<Column>     Columns                 = new List<Column>();
-            public List<Toolbar>    Toolbars                = new List<Toolbar>();
-        }
+			[Serializable]
+			[XmlType("Rect")]
+			public struct _UIRect
+			{
+				public Int32			X0;
+				public Int32			Y0;
+				public Int32			CX;
+				public Int32			CY;
+			}
 
-		[Serializable]
-        public class _PriceLoad
-        {
-            public PriceSettings    SourceMinerals          = new PriceSettings{Provider = PriceProviders.EveCentral, RegionID = (UInt32)EveRegions.Forge, PriceType = PriceTypes.SellMedian};
-            public PriceSettings    SourceItems             = new PriceSettings{Provider = PriceProviders.EveCentral, RegionID = (UInt32)EveRegions.Forge, PriceType = PriceTypes.SellMedian};
-            public UInt32           ItemsHistoryDays        = 14;
-            public UInt32           ItemsExpiryDays         = 7;
-            public UInt32           MineralExpiryDays       = 7;
-        }
+			[Serializable]
+			[XmlType("Column")]
+			public class _UIColumn
+			{
+				public String			Name;
+				public UInt32			Index;
+				public bool				Visible;
+				public UInt32			Width;
+			}
 
-		[Serializable]
-        public class _Appearance
-        {
-            public double           RedPrice                = 0.50;
-            public double           GreenPrice              = 1.00;
-            public double           RedIskLoss              = 100000;
-            public double           GreenIskLoss            = 10000;
-            public bool             UseAssetQuantities      = true;
-            public bool             OverrideAssetsColors    = true;
-        }
+			[Serializable]
+			[XmlType("Toolbar")]
+			public class _UIToolbar
+			{
+				public String			Name;
+				public _UIRect			Location;
+				public UInt32			Panel;
+			}
 
-		[Serializable]
-        public class _Options
-        {
-            public String           DBPath                  = "EveDatabase.db";
-            public bool             CheckUpdates            = true;
-        }
+			[Serializable]
+			public class _UILocations
+			{
+				public _UIRect			MainWindow;
+				public List<_UIColumn>	Columns					= new List<_UIColumn>();
+				public List<_UIToolbar>	Toolbars				= new List<_UIToolbar>();
+			}
 
-		[Serializable]
-        public class _Stats
-        {
-            public DateTime         LastMineralPricesEdit   = DateTime.FromFileTime(0);
-        }
+			[Serializable]
+			public struct _PriceSettings
+			{
+				public PriceProviders	Provider;
+				public UInt32			RegionID;
+				public UInt32			SolarID;
+				public UInt32			StationID;
+				public PriceTypes		PriceType;
 
-		[Serializable]
-        public class _Refining
-        {
-			public SkillDictionary	Skills					= new SkillDictionary();
-			public double			BaseYield				= 0.30;
-			public double			TaxMultiplier			= 1.00;
-			public double			ImplantBonus			= 0;
+				public bool Matches(_PriceSettings a_Rhs)
+				{
+					return
+						(Provider   == a_Rhs.Provider) &&
+						(RegionID   == a_Rhs.RegionID) &&
+						(SolarID    == a_Rhs.SolarID) &&
+						(StationID  == a_Rhs.StationID) &&
+						(PriceType  == a_Rhs.PriceType);
+				}
+
+				public String GetHintText(EveDatabase a_Database)
+				{
+					return PriceType.ToString() + " - " + a_Database.GetLocationName(RegionID, SolarID, StationID);
+				}
+			}
+
+			[Serializable]
+			public class _PriceLoad
+			{
+				public _PriceSettings	SourceMinerals			= new _PriceSettings{Provider = PriceProviders.EveCentral, RegionID = (UInt32)EveRegions.Forge, PriceType = PriceTypes.SellMedian};
+				public _PriceSettings	SourceItems				= new _PriceSettings{Provider = PriceProviders.EveCentral, RegionID = (UInt32)EveRegions.Forge, PriceType = PriceTypes.SellMedian};
+				public UInt32			ItemsHistoryDays		= 14;
+				public UInt32			ItemsExpiryDays			= 7;
+				public UInt32			MineralExpiryDays		= 7;
+			}
+
+			[Serializable]
+			public class _Appearance
+			{
+				public double			RedPrice				= 0.50;
+				public double			GreenPrice				= 1.00;
+				public double			RedIskLoss				= 100000;
+				public double			GreenIskLoss			= 10000;
+				public bool				UseAssetQuantities		= true;
+				public bool				OverrideAssetsColors	= true;
+			}
+
+			[Serializable]
+			public class _Options
+			{
+				public String			DBPath					= "EveDatabase.db";
+				public bool				CheckUpdates			= true;
+			}
+
+			[Serializable]
+			public class _Stats
+			{
+				public DateTime			LastMineralPricesEdit	= DateTime.FromFileTime(0);
+			}
+
+			[Serializable]
+			public class _Refining
+			{
+				public SkillDictionary	Skills					= new SkillDictionary();
+				public double			BaseYield				= 0.30;
+				public double			TaxMultiplier			= 1.00;
+				public double			ImplantBonus			= 0;
+			}
 		}
 
-        public UInt32               Version                 = 1;
-        public _Options             Options                 = new _Options();
-        public _PriceLoad           PriceLoad               = new _PriceLoad();
-        public double[]             MaterialPrices          = new double[(UInt32)Materials.MaxMaterials];
-		public _ApiAccess           ApiAccess               = new _ApiAccess();
-		public _Stats               Stats                   = new _Stats();
-		public _Refining			Refining				= new _Refining();
-        public _Appearance          Appearance              = new _Appearance();
-        public _UILocations         UILocations             = new _UILocations();
+        public UInt32				Version					= 1;
+        public V1._Options			Options					= new V1._Options();
+        public V1._PriceLoad		PriceLoad				= new V1._PriceLoad();
+        public double[]				MaterialPrices			= new double[(UInt32)Materials.MaxMaterials];
+		public V1._ApiAccess		ApiAccess				= new V1._ApiAccess();
+		public V1._Stats			Stats					= new V1._Stats();
+		public V1._Refining			Refining				= new V1._Refining();
+        public V1._Appearance		Appearance				= new V1._Appearance();
+        public V1._UILocations		UILocations				= new V1._UILocations();
 
 		public Settings				Clone()
 		{
