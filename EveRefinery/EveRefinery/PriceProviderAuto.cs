@@ -6,21 +6,21 @@ namespace EveRefinery
 {
 	class PriceProviderAuto : IPriceProvider
 	{
-		protected Settings		m_Settings;
+		protected Settings				m_Settings;
 
-		public PriceProviderAuto(Settings a_Settings)
+		public							PriceProviderAuto(Settings a_Settings)
 		{
 			m_Settings = a_Settings;
 		}
 
 		public static IPriceProvider CreateEveCentralProvider(UInt32 a_PriceHistoryDays)
 		{
-			PriceProviderEveCentral provider = new PriceProviderEveCentral();
+			PriceProviderEveCentralCom provider = new PriceProviderEveCentralCom();
 			provider.m_PriceHistoryDays = a_PriceHistoryDays;
 			return provider;
 		}
 
-		public List<PriceRecord> GetPrices(List<UInt32> a_TypeIDs, Settings.V1._PriceSettings a_Settings)
+		public List<PriceRecord>		GetPrices(List<UInt32> a_TypeIDs, Settings.V1._PriceSettings a_Settings)
 		{
 			IPriceProvider provider = null;
 

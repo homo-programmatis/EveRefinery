@@ -160,7 +160,7 @@
     <Compile Include="ItemsDB.cs" />
     <Compile Include="MarketPricesDB.cs" />
     <Compile Include="PriceProviderAuto.cs" />
-    <Compile Include="PriceProviderEveCentral.cs" />
+    <Compile Include="PriceProviderEveCentralCom.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AboutBox.resx">

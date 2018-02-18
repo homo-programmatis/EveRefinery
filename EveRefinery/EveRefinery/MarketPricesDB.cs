@@ -20,7 +20,8 @@ namespace EveRefinery
 		protected Boolean			m_EndUpdateThread;
 		protected Queue<UInt32>		m_UpdateQueue;
 
-		public MarketPricesDB(ItemsDB a_ItemsDB)
+		#region public
+		public						MarketPricesDB(ItemsDB a_ItemsDB)
 		{
 			SQLiteConnectionStringBuilder connectionString = new SQLiteConnectionStringBuilder();
 			connectionString.DataSource		= Program.GetCacheFolder() + "MarketPrices_v1.db3";
@@ -33,7 +34,7 @@ namespace EveRefinery
 			m_Database.CreateTables();
 		}
 
-		public void LoadPrices(IPriceProvider a_PriceProvider, Settings.V1._PriceSettings a_Settings, UInt32 a_PriceExpiryDays, bool a_Silent)
+		public void					LoadPrices(IPriceProvider a_PriceProvider, Settings.V1._PriceSettings a_Settings, UInt32 a_PriceExpiryDays, bool a_Silent)
 		{
 			StopUpdaterThread();
 			
@@ -66,7 +67,7 @@ namespace EveRefinery
 			TestMarketPrices(a_PriceProvider, a_Settings, a_PriceExpiryDays, a_Silent);
 		}
 
-		public void DropPrices(Settings.V1._PriceSettings a_Settings)
+		public void					DropPrices(Settings.V1._PriceSettings a_Settings)
 		{
 			StopUpdaterThread();
 
@@ -89,7 +90,20 @@ namespace EveRefinery
 			sqlCommand.ExecuteNonQuery();
 		}
 		
-		protected void DbRecordToItemRecord(ItemPrices.PricesRow a_DbRecord)
+		public UInt32				GetQueueSize()
+		{
+			if (null == m_UpdateQueue)
+				return 0;
+
+			lock (m_UpdateQueue)
+			{
+				return (UInt32)m_UpdateQueue.Count;
+			}
+		}
+		#endregion
+
+		#region private
+		private void				DbRecordToItemRecord(ItemPrices.PricesRow a_DbRecord)
 		{
 			ItemRecord currItem = m_ItemsDB.GetItemByTypeID(a_DbRecord.TypeID);
 			if (currItem == null)
@@ -98,7 +112,7 @@ namespace EveRefinery
 			DbRecordToItemRecord(a_DbRecord, currItem);
 		}
 
-		protected static void DbRecordToItemRecord(ItemPrices.PricesRow a_DbRecord, ItemRecord a_ItemRecord)
+		private static void			DbRecordToItemRecord(ItemPrices.PricesRow a_DbRecord, ItemRecord a_ItemRecord)
 		{
 			lock (a_ItemRecord)
 			{
@@ -107,7 +121,7 @@ namespace EveRefinery
 			}
 		}
 
-		protected static void PriceRecordToDbRecord(PriceRecord a_PriceRecord, ItemPrices.PricesRow a_DbRecord)
+		private static void			PriceRecordToDbRecord(PriceRecord a_PriceRecord, ItemPrices.PricesRow a_DbRecord)
 		{
 			a_DbRecord.ProviderID	= (UInt32)a_PriceRecord.Settings.Provider;
 			a_DbRecord.RegionID		= a_PriceRecord.Settings.RegionID;
@@ -119,7 +133,7 @@ namespace EveRefinery
 			a_DbRecord.UpdateTime	= a_PriceRecord.UpdateTime;
 		}
 
-		void ApplyPrices(List<PriceRecord> a_Prices, Settings.V1._PriceSettings a_Filter)
+		private void				ApplyPrices(List<PriceRecord> a_Prices, Settings.V1._PriceSettings a_Filter)
 		{
 			ItemPrices.PricesDataTable newDbData = new ItemPrices.PricesDataTable();
 
@@ -129,21 +143,24 @@ namespace EveRefinery
 				PriceRecordToDbRecord(currRecord, dbRecord);
 				newDbData.Rows.Add(dbRecord);
 
+				// Price provider can return more data then requested (for example, all price types at once, or all regions at once).
+				// If data matches currently selected filter, apply it to loaded items.
 				if (currRecord.Settings.Matches(a_Filter))
 					DbRecordToItemRecord(dbRecord);
 			}
 
+			// Store everything in database
 			m_Database.ReplaceRows(newDbData, newDbData.Rows);
 		}
 
-		protected class UpdateThreadParam
+		private class				UpdateThreadParam
 		{
 			public IPriceProvider	PriceProvider;
 			public Settings.V1._PriceSettings   PriceSettings;
 			public Queue<UInt32>	UpdateQueue;
 		}
 		
-		protected void StopUpdaterThread()
+		private void				StopUpdaterThread()
 		{
 			if (m_UpdateThread == null)
 				return;
@@ -160,7 +177,7 @@ namespace EveRefinery
 			m_UpdateQueue	= null;
 		}
 
-		protected void TestMarketPrices(IPriceProvider a_PriceProvider, Settings.V1._PriceSettings a_Settings, UInt32 a_PriceExpiryDays, bool a_Silent)
+		private void				TestMarketPrices(IPriceProvider a_PriceProvider, Settings.V1._PriceSettings a_Settings, UInt32 a_PriceExpiryDays, bool a_Silent)
 		{
 			ItemFilter filter		= new ItemFilter();
 			filter.HasMarketGroup	= TristateFilter.Yes;
@@ -202,7 +219,7 @@ namespace EveRefinery
 			m_UpdateThread.Start();
 		}
 
-		protected void ThreadQueryMarketPrices(Object a_ParamObj)
+		private void				ThreadQueryMarketPrices(Object a_ParamObj)
 		{
 			UpdateThreadParam a_Param = (UpdateThreadParam)a_ParamObj;
 
@@ -249,16 +266,6 @@ namespace EveRefinery
 			
 			Debug.WriteLine(String.Format("Stopped updating prices for region {0:d}", a_Param.PriceSettings.RegionID));
 		}
-
-		public UInt32 GetQueueSize()
-		{
-			if (null == m_UpdateQueue)
-				return 0;
-		
-			lock (m_UpdateQueue)
-			{
-				return (UInt32)m_UpdateQueue.Count;
-			}
-		}
+		#endregion
 	}
 }

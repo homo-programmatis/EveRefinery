@@ -6,11 +6,12 @@ using System.Xml;
 
 namespace EveRefinery
 {
-	class PriceProviderEveCentral : IPriceProvider
+	class PriceProviderEveCentralCom : IPriceProvider
 	{
 		public UInt32	m_PriceHistoryDays;
 
-		List<PriceRecord> IPriceProvider.GetPrices(List<UInt32> a_TypeIDs, Settings.V1._PriceSettings a_Settings)
+
+		public List<PriceRecord>		GetPrices(List<UInt32> a_TypeIDs, Settings.V1._PriceSettings a_Settings)
 		{
 			StringBuilder marketXmlUrl = new StringBuilder();
 			marketXmlUrl.AppendFormat("http://api.eve-central.com/api/marketstat?hours={0:d}", m_PriceHistoryDays * 24);
@@ -32,23 +33,21 @@ namespace EveRefinery
 			}
 
 			XmlDocument xmlReply = Engine.LoadXmlWithUserAgent(marketXmlUrl.ToString());
-
-			ItemPrices.PricesDataTable result = new ItemPrices.PricesDataTable();
 			return ParseReplyXML(xmlReply, a_Settings);
 		}
 
-		protected static double ReadInnerDouble(XmlNode a_Node)
+		private static double			ReadInnerDouble(XmlNode a_Node)
 		{
 			return Convert.ToDouble(a_Node.InnerText, CultureInfo.InvariantCulture);
 		}
 
-		protected static UInt64 ReadInnerUInt64(XmlNode a_Node)
+		private static UInt64			ReadInnerUInt64(XmlNode a_Node)
 		{
 			string value = a_Node.InnerText.Replace(".00", "");
 			return Convert.ToUInt64(value, CultureInfo.InvariantCulture);
 		}
 
-		protected static PriceRecord ComposePrice(XmlNode a_ItemNode, PriceRecord a_Template, PriceTypes a_Type)
+		private static PriceRecord		ComposePrice(XmlNode a_ItemNode, PriceRecord a_Template, PriceTypes a_Type)
 		{
 			PriceRecord result			= new PriceRecord();
 			result.Settings				= a_Template.Settings;
@@ -60,7 +59,7 @@ namespace EveRefinery
 			return result;
 		}
 
-		protected static void ParsePriceNode(XmlNode a_ItemNode, PriceRecord a_Template, List<PriceRecord> a_Result, PriceTypes a_MaxType, PriceTypes a_MinType, PriceTypes a_AvgType, PriceTypes a_MedType)
+		private static void				ParsePriceNode(XmlNode a_ItemNode, PriceRecord a_Template, List<PriceRecord> a_Result, PriceTypes a_MaxType, PriceTypes a_MinType, PriceTypes a_AvgType, PriceTypes a_MedType)
 		{
 			foreach (XmlNode childNode in a_ItemNode.ChildNodes)
 			{
@@ -85,7 +84,7 @@ namespace EveRefinery
 			}
 		}
 
-		protected static void ParseItemNode(XmlNode a_ItemNode, PriceRecord a_Template, List<PriceRecord> a_Result)
+		private static void				ParseItemNode(XmlNode a_ItemNode, PriceRecord a_Template, List<PriceRecord> a_Result)
 		{
 			foreach (XmlNode childNode in a_ItemNode.ChildNodes)
 			{
@@ -104,7 +103,7 @@ namespace EveRefinery
 			}
 		}
 
-		protected static List<PriceRecord> ParseReplyXML(XmlDocument a_Xml, Settings.V1._PriceSettings a_Filter)
+		private static List<PriceRecord> ParseReplyXML(XmlDocument a_Xml, Settings.V1._PriceSettings a_Filter)
 		{
 			XmlNodeList xmlItems = a_Xml.GetElementsByTagName("type");
 			List<PriceRecord> result = new List<PriceRecord>();
