@@ -1,4 +1,13 @@
-2.1 [13jan17]
+2.2 [19feb18]
+* EveRefinery can now pull prices from market.fuzzwork.co.uk
+  because eve-central.com is dead.
+  All praise Bless (Valery Kornilovich), who provided code and forced me to integrate it (sigh)!
+* EveRefinery can now pull prices from eve-marketdata.com
+* Database upgrade to 2018-02-14
+* REMINDER: I haven't played EVE for years now, literally.
+  If you want a DB update - let me know by email!
+
+2.1 [05aug17]
 * Database upgrade to 2017-07-12
 * REMINDER: I haven't played EVE for years now, literally.
   If you want a DB update - let me know by email!
