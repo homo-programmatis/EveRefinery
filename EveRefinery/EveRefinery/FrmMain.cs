@@ -521,7 +521,7 @@ namespace EveRefinery
 			try
 			{
 				Settings.V2._PriceSettings settings	= m_Engine.m_Settings.PriceLoad.Items;
-				IPriceProvider provider = new PriceProviderAuto(settings);
+				IPriceProvider provider = PriceProviderAuto.GetPriceProvider(settings);
 
 				if (a_DeleteOld)
 					m_MarketPrices.DropPrices(provider);
@@ -1088,7 +1088,7 @@ namespace EveRefinery
 
 		private void UpdatePricesSettingsHint()
 		{
-			PriceProviderAuto priceProvider = new PriceProviderAuto(m_Engine.m_Settings.PriceLoad.Items);
+			IPriceProvider priceProvider = PriceProviderAuto.GetPriceProvider(m_Engine.m_Settings.PriceLoad.Items);
 			TlbLblPricesType.Text = priceProvider.GetCurrentFilterHint(m_EveDatabase);
 		}
 

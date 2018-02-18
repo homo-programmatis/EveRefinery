@@ -151,7 +151,7 @@ namespace EveRefinery
 			loadPricesFor.Add((UInt32)EveTypeIDs.Megacyte);
 			loadPricesFor.Add((UInt32)EveTypeIDs.Morphite);
 
-			IPriceProvider provider = new PriceProviderAuto(m_Settings.PriceLoad.Minerals);
+			IPriceProvider provider = PriceProviderAuto.GetPriceProvider(m_Settings.PriceLoad.Minerals);
 
 			// @@@@ Check for exceptions?
 			List<PriceRecord> prices = provider.GetPrices(loadPricesFor);
@@ -193,7 +193,7 @@ namespace EveRefinery
 
 		private void UpdateMineralPricesTypeLabel()
 		{
-			PriceProviderAuto priceProvider = new PriceProviderAuto(m_Settings.PriceLoad.Minerals);
+			IPriceProvider priceProvider = PriceProviderAuto.GetPriceProvider(m_Settings.PriceLoad.Minerals);
 			LblMineralPricesType.Text = priceProvider.GetCurrentFilterHint(m_EveDatabase);
 		}
 
