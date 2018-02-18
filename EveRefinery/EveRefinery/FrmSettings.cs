@@ -151,13 +151,14 @@ namespace EveRefinery
 			loadPricesFor.Add((UInt32)EveTypeIDs.Megacyte);
 			loadPricesFor.Add((UInt32)EveTypeIDs.Morphite);
 
-			IPriceProvider provider = new PriceProviderAuto(m_Settings);
+			IPriceProvider provider = new PriceProviderAuto(m_Settings.PriceLoad.SourceMinerals, m_Settings.PriceLoad.ItemsHistoryDays);
 
 			// @@@@ Check for exceptions?
-			List<PriceRecord> prices = provider.GetPrices(loadPricesFor, m_Settings.PriceLoad.SourceMinerals);
+			List<PriceRecord> prices = provider.GetPrices(loadPricesFor);
+			PriceRecord priceFilter = provider.GetCurrentFilter();
 			foreach (PriceRecord currRecord in prices)
 			{
-				if (!currRecord.Settings.Matches(m_Settings.PriceLoad.SourceMinerals))
+				if (!currRecord.IsMatchesFilter(priceFilter))
 					continue;
 
 				switch ((EveTypeIDs)currRecord.TypeID)
@@ -192,7 +193,8 @@ namespace EveRefinery
 
 		private void UpdateMineralPricesTypeLabel()
 		{
-			BtnMineralPricesType.Text = m_Settings.PriceLoad.SourceMinerals.GetHintText(m_EveDatabase);
+			PriceProviderAuto priceProvider = new PriceProviderAuto(m_Settings.PriceLoad.SourceMinerals, m_Settings.PriceLoad.ItemsHistoryDays);
+			BtnMineralPricesType.Text = priceProvider.GetCurrentFilterHint(m_EveDatabase);
 		}
 
 		private void BtnMineralPricesType_Click(object sender, EventArgs e)

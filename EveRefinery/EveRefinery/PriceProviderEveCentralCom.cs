@@ -8,23 +8,29 @@ namespace EveRefinery
 {
 	class PriceProviderEveCentralCom : IPriceProvider
 	{
-		public UInt32	m_PriceHistoryDays;
+		private Settings.V1._PriceSettings  m_Settings;
+		private UInt32                      m_HistoryDays;
 
+		public							PriceProviderEveCentralCom(Settings.V1._PriceSettings a_Settings, UInt32 a_HistoryDays)
+		{
+			m_Settings = a_Settings;
+			m_HistoryDays = a_HistoryDays;
+		}
 
-		public List<PriceRecord>		GetPrices(List<UInt32> a_TypeIDs, Settings.V1._PriceSettings a_Settings)
+		public List<PriceRecord>		GetPrices(List<UInt32> a_TypeIDs)
 		{
 			StringBuilder marketXmlUrl = new StringBuilder();
-			marketXmlUrl.AppendFormat("http://api.eve-central.com/api/marketstat?hours={0:d}", m_PriceHistoryDays * 24);
+			marketXmlUrl.AppendFormat("http://api.eve-central.com/api/marketstat?hours={0:d}", m_HistoryDays * 24);
 
-			if (0 != a_Settings.SolarID)
+			if (0 != m_Settings.SolarID)
 			{
 				marketXmlUrl.Append("&usesystem=");
-				marketXmlUrl.Append(a_Settings.SolarID.ToString());
+				marketXmlUrl.Append(m_Settings.SolarID.ToString());
 			}
-			else if (0 != a_Settings.RegionID)
+			else if (0 != m_Settings.RegionID)
 			{
 				marketXmlUrl.Append("&regionlimit=");
-				marketXmlUrl.Append(a_Settings.RegionID.ToString());
+				marketXmlUrl.Append(m_Settings.RegionID.ToString());
 			}
 
 			foreach (UInt32 currTypeID in a_TypeIDs)
@@ -33,7 +39,27 @@ namespace EveRefinery
 			}
 
 			XmlDocument xmlReply = Engine.LoadXmlWithUserAgent(marketXmlUrl.ToString());
-			return ParseReplyXML(xmlReply, a_Settings);
+			return ParseReplyXML(xmlReply);
+		}
+
+		public PriceRecord				GetCurrentFilter()
+		{
+			PriceRecord filter	= new PriceRecord();
+			filter.Provider		= PriceProviders.EveCentral;
+			filter.RegionID		= m_Settings.RegionID;
+			filter.SolarID		= m_Settings.SolarID;
+			filter.StationID	= m_Settings.StationID;
+			filter.PriceType	= m_Settings.PriceType;
+			filter.TypeID       = 0;
+			filter.Price        = 0;
+			filter.UpdateTime   = 0;
+
+			return filter;
+		}
+
+		public String					GetCurrentFilterHint(EveDatabase a_Database)
+		{
+			return "eve-central.com - " + m_Settings.PriceType.ToString() + " - " + a_Database.GetLocationName(m_Settings.RegionID, m_Settings.SolarID, m_Settings.StationID);
 		}
 
 		private static double			ReadInnerDouble(XmlNode a_Node)
@@ -47,19 +73,18 @@ namespace EveRefinery
 			return Convert.ToUInt64(value, CultureInfo.InvariantCulture);
 		}
 
-		private static PriceRecord		ComposePrice(XmlNode a_ItemNode, PriceRecord a_Template, PriceTypes a_Type)
+		private PriceRecord				ComposePrice(XmlNode a_ItemNode, UInt32 a_TypeID, PriceTypes a_PriceType)
 		{
-			PriceRecord result			= new PriceRecord();
-			result.Settings				= a_Template.Settings;
-			result.Settings.PriceType	= a_Type;
-			result.Price				= ReadInnerDouble(a_ItemNode);
-			result.TypeID				= a_Template.TypeID;
-			result.UpdateTime			= a_Template.UpdateTime;
+			PriceRecord result	= GetCurrentFilter();
+			result.PriceType	= a_PriceType;
+			result.Price		= ReadInnerDouble(a_ItemNode);
+			result.TypeID		= a_TypeID;
+			result.UpdateTime	= (UInt64)DateTime.UtcNow.ToFileTimeUtc();
 
 			return result;
 		}
 
-		private static void				ParsePriceNode(XmlNode a_ItemNode, PriceRecord a_Template, List<PriceRecord> a_Result, PriceTypes a_MaxType, PriceTypes a_MinType, PriceTypes a_AvgType, PriceTypes a_MedType)
+		private void					ParsePriceNode(XmlNode a_ItemNode, UInt32 a_TypeID, List<PriceRecord> a_Result, PriceTypes a_MaxType, PriceTypes a_MinType, PriceTypes a_AvgType, PriceTypes a_MedType)
 		{
 			foreach (XmlNode childNode in a_ItemNode.ChildNodes)
 			{
@@ -69,41 +94,41 @@ namespace EveRefinery
 					case "stddev":
 						break;
 					case "avg":
-						a_Result.Add(ComposePrice(childNode, a_Template, a_AvgType));
+						a_Result.Add(ComposePrice(childNode, a_TypeID, a_AvgType));
 						break;
 					case "max":
-						a_Result.Add(ComposePrice(childNode, a_Template, a_MaxType));
+						a_Result.Add(ComposePrice(childNode, a_TypeID, a_MaxType));
 						break;
 					case "min":
-						a_Result.Add(ComposePrice(childNode, a_Template, a_MinType));
+						a_Result.Add(ComposePrice(childNode, a_TypeID, a_MinType));
 						break;
 					case "median":
-						a_Result.Add(ComposePrice(childNode, a_Template, a_MedType));
+						a_Result.Add(ComposePrice(childNode, a_TypeID, a_MedType));
 						break;
 				}
 			}
 		}
 
-		private static void				ParseItemNode(XmlNode a_ItemNode, PriceRecord a_Template, List<PriceRecord> a_Result)
+		private void					ParseItemNode(XmlNode a_ItemNode, UInt32 a_TypeID, List<PriceRecord> a_Result)
 		{
 			foreach (XmlNode childNode in a_ItemNode.ChildNodes)
 			{
 				switch (childNode.Name)
 				{
 					case "all":
-						ParsePriceNode(childNode, a_Template, a_Result, PriceTypes.AllMax, PriceTypes.AllMin, PriceTypes.AllAvg, PriceTypes.AllMedian);
+						ParsePriceNode(childNode, a_TypeID, a_Result, PriceTypes.AllMax, PriceTypes.AllMin, PriceTypes.AllAvg, PriceTypes.AllMedian);
 						break;
 					case "buy":
-						ParsePriceNode(childNode, a_Template, a_Result, PriceTypes.BuyMax, PriceTypes.BuyMin, PriceTypes.BuyAvg, PriceTypes.BuyMedian);
+						ParsePriceNode(childNode, a_TypeID, a_Result, PriceTypes.BuyMax, PriceTypes.BuyMin, PriceTypes.BuyAvg, PriceTypes.BuyMedian);
 						break;
 					case "sell":
-						ParsePriceNode(childNode, a_Template, a_Result, PriceTypes.SellMax, PriceTypes.SellMin, PriceTypes.SellAvg, PriceTypes.SellMedian);
+						ParsePriceNode(childNode, a_TypeID, a_Result, PriceTypes.SellMax, PriceTypes.SellMin, PriceTypes.SellAvg, PriceTypes.SellMedian);
 						break;
 				}
 			}
 		}
 
-		private static List<PriceRecord> ParseReplyXML(XmlDocument a_Xml, Settings.V1._PriceSettings a_Filter)
+		private List<PriceRecord>		ParseReplyXML(XmlDocument a_Xml)
 		{
 			XmlNodeList xmlItems = a_Xml.GetElementsByTagName("type");
 			List<PriceRecord> result = new List<PriceRecord>();
@@ -113,12 +138,7 @@ namespace EveRefinery
 				XmlNode currNode = xmlItems[i];
 				UInt32 itemTypeID = Convert.ToUInt32(currNode.Attributes[0].Value);
 
-				PriceRecord template = new PriceRecord();
-				template.Settings	= a_Filter;
-				template.TypeID		= itemTypeID;
-				template.UpdateTime	= (UInt64)DateTime.UtcNow.ToFileTimeUtc();
-
-				ParseItemNode(currNode, template, result);
+				ParseItemNode(currNode, itemTypeID, result);
 			}
 
 			return result;

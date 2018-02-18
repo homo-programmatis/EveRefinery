@@ -6,35 +6,34 @@ namespace EveRefinery
 {
 	class PriceProviderAuto : IPriceProvider
 	{
-		protected Settings				m_Settings;
+		private IPriceProvider          m_Provider;
 
-		public							PriceProviderAuto(Settings a_Settings)
+		public							PriceProviderAuto(Settings.V1._PriceSettings a_Settings, UInt32 a_HistoryDays)
 		{
-			m_Settings = a_Settings;
-		}
-
-		public static IPriceProvider CreateEveCentralProvider(UInt32 a_PriceHistoryDays)
-		{
-			PriceProviderEveCentralCom provider = new PriceProviderEveCentralCom();
-			provider.m_PriceHistoryDays = a_PriceHistoryDays;
-			return provider;
-		}
-
-		public List<PriceRecord>		GetPrices(List<UInt32> a_TypeIDs, Settings.V1._PriceSettings a_Settings)
-		{
-			IPriceProvider provider = null;
-
 			switch (a_Settings.Provider)
 			{
 				case PriceProviders.EveCentral:
-					provider = CreateEveCentralProvider(m_Settings.PriceLoad.ItemsHistoryDays);
+					m_Provider = new PriceProviderEveCentralCom(a_Settings, a_HistoryDays);
 					break;
 				default:
 					Debug.Assert(false, "Invalid price provider");
-					return null;
+					break;
 			}
+		}
 
-			return provider.GetPrices(a_TypeIDs, a_Settings);
+		public List<PriceRecord>		GetPrices(List<UInt32> a_TypeIDs)
+		{
+			return m_Provider.GetPrices(a_TypeIDs);
+		}
+
+		public PriceRecord				GetCurrentFilter()
+		{
+			return m_Provider.GetCurrentFilter();
+		}
+
+		public String					GetCurrentFilterHint(EveDatabase a_Database)
+		{
+			return m_Provider.GetCurrentFilterHint(a_Database);
 		}
 	}
 }

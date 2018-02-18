@@ -84,21 +84,6 @@ namespace EveRefinery
 				public UInt32			SolarID;
 				public UInt32			StationID;
 				public PriceTypes		PriceType;
-
-				public bool Matches(_PriceSettings a_Rhs)
-				{
-					return
-						(Provider   == a_Rhs.Provider) &&
-						(RegionID   == a_Rhs.RegionID) &&
-						(SolarID    == a_Rhs.SolarID) &&
-						(StationID  == a_Rhs.StationID) &&
-						(PriceType  == a_Rhs.PriceType);
-				}
-
-				public String GetHintText(EveDatabase a_Database)
-				{
-					return PriceType.ToString() + " - " + a_Database.GetLocationName(RegionID, SolarID, StationID);
-				}
 			}
 
 			[Serializable]

@@ -521,11 +521,11 @@ namespace EveRefinery
 			try
 			{
 				Settings.V1._PriceSettings settings	= m_Engine.m_Settings.PriceLoad.SourceItems;
+				IPriceProvider provider = new PriceProviderAuto(settings, m_Engine.m_Settings.PriceLoad.ItemsHistoryDays);
 
 				if (a_DeleteOld)
-					m_MarketPrices.DropPrices(settings);
+					m_MarketPrices.DropPrices(provider);
 
-				IPriceProvider provider = new PriceProviderAuto(m_Engine.m_Settings);
 				m_MarketPrices.LoadPrices(provider, settings, m_Engine.m_Settings.PriceLoad.ItemsExpiryDays, a_Silent);
 			}
 			catch (System.Exception a_Exception)
@@ -1088,7 +1088,8 @@ namespace EveRefinery
 
 		private void UpdatePricesSettingsHint()
 		{
-			TlbLblPricesType.Text = m_Engine.m_Settings.PriceLoad.SourceItems.GetHintText(m_EveDatabase);
+			PriceProviderAuto priceProvider = new PriceProviderAuto(m_Engine.m_Settings.PriceLoad.SourceItems, m_Engine.m_Settings.PriceLoad.ItemsHistoryDays);
+			TlbLblPricesType.Text = priceProvider.GetCurrentFilterHint(m_EveDatabase);
 		}
 
 		private void TlbBtnPricesType_Click(object sender, EventArgs e)

@@ -50,11 +50,12 @@ namespace EveRefinery
 				"(" + pricesTable.PriceTypeColumn.ColumnName	+ " = @PriceType)";
 
 			SQLiteCommand sqlCommand = new SQLiteCommand(selectSQL, m_DbConnection);
-			sqlCommand.Parameters.AddWithValue("@ProviderID",	(UInt32)a_Settings.Provider);
-			sqlCommand.Parameters.AddWithValue("@RegionID",		a_Settings.RegionID);
-			sqlCommand.Parameters.AddWithValue("@SolarID",		a_Settings.SolarID);
-			sqlCommand.Parameters.AddWithValue("@StationID",	a_Settings.StationID);
-			sqlCommand.Parameters.AddWithValue("@PriceType",	(UInt32)a_Settings.PriceType);
+			PriceRecord priceFilter = a_PriceProvider.GetCurrentFilter();
+			sqlCommand.Parameters.AddWithValue("@ProviderID",	(UInt32)priceFilter.Provider);
+			sqlCommand.Parameters.AddWithValue("@RegionID",		priceFilter.RegionID);
+			sqlCommand.Parameters.AddWithValue("@SolarID",		priceFilter.SolarID);
+			sqlCommand.Parameters.AddWithValue("@StationID",	priceFilter.StationID);
+			sqlCommand.Parameters.AddWithValue("@PriceType",	(UInt32)priceFilter.PriceType);
 
 			SQLiteDataAdapter adapter = new SQLiteDataAdapter(sqlCommand);
 			adapter.Fill(pricesTable);
@@ -67,7 +68,7 @@ namespace EveRefinery
 			TestMarketPrices(a_PriceProvider, a_Settings, a_PriceExpiryDays, a_Silent);
 		}
 
-		public void					DropPrices(Settings.V1._PriceSettings a_Settings)
+		public void					DropPrices(IPriceProvider a_PriceProvider)
 		{
 			StopUpdaterThread();
 
@@ -81,15 +82,16 @@ namespace EveRefinery
 				"(" + pricesTable.PriceTypeColumn.ColumnName	+ " = @PriceType)";
 
 			SQLiteCommand sqlCommand = new SQLiteCommand(selectSQL, m_DbConnection);
-			sqlCommand.Parameters.AddWithValue("@ProviderID",	(UInt32)a_Settings.Provider);
-			sqlCommand.Parameters.AddWithValue("@RegionID",		a_Settings.RegionID);
-			sqlCommand.Parameters.AddWithValue("@SolarID",		a_Settings.SolarID);
-			sqlCommand.Parameters.AddWithValue("@StationID",	a_Settings.StationID);
-			sqlCommand.Parameters.AddWithValue("@PriceType",	(UInt32)a_Settings.PriceType);
+			PriceRecord priceFilter = a_PriceProvider.GetCurrentFilter();
+			sqlCommand.Parameters.AddWithValue("@ProviderID",	(UInt32)priceFilter.Provider);
+			sqlCommand.Parameters.AddWithValue("@RegionID",		priceFilter.RegionID);
+			sqlCommand.Parameters.AddWithValue("@SolarID",		priceFilter.SolarID);
+			sqlCommand.Parameters.AddWithValue("@StationID",	priceFilter.StationID);
+			sqlCommand.Parameters.AddWithValue("@PriceType",	(UInt32)priceFilter.PriceType);
 
 			sqlCommand.ExecuteNonQuery();
 		}
-		
+
 		public UInt32				GetQueueSize()
 		{
 			if (null == m_UpdateQueue)
@@ -123,17 +125,17 @@ namespace EveRefinery
 
 		private static void			PriceRecordToDbRecord(PriceRecord a_PriceRecord, ItemPrices.PricesRow a_DbRecord)
 		{
-			a_DbRecord.ProviderID	= (UInt32)a_PriceRecord.Settings.Provider;
-			a_DbRecord.RegionID		= a_PriceRecord.Settings.RegionID;
-			a_DbRecord.SolarID		= a_PriceRecord.Settings.SolarID;
-			a_DbRecord.StationID	= a_PriceRecord.Settings.StationID;
-			a_DbRecord.PriceType	= (UInt32)a_PriceRecord.Settings.PriceType;
+			a_DbRecord.ProviderID	= (UInt32)a_PriceRecord.Provider;
+			a_DbRecord.RegionID		= a_PriceRecord.RegionID;
+			a_DbRecord.SolarID		= a_PriceRecord.SolarID;
+			a_DbRecord.StationID	= a_PriceRecord.StationID;
+			a_DbRecord.PriceType	= (UInt32)a_PriceRecord.PriceType;
 			a_DbRecord.TypeID		= a_PriceRecord.TypeID;
 			a_DbRecord.Price		= a_PriceRecord.Price;
 			a_DbRecord.UpdateTime	= a_PriceRecord.UpdateTime;
 		}
 
-		private void				ApplyPrices(List<PriceRecord> a_Prices, Settings.V1._PriceSettings a_Filter)
+		private void				ApplyPrices(List<PriceRecord> a_Prices, PriceRecord a_Filter)
 		{
 			ItemPrices.PricesDataTable newDbData = new ItemPrices.PricesDataTable();
 
@@ -145,7 +147,7 @@ namespace EveRefinery
 
 				// Price provider can return more data then requested (for example, all price types at once, or all regions at once).
 				// If data matches currently selected filter, apply it to loaded items.
-				if (currRecord.Settings.Matches(a_Filter))
+				if (currRecord.IsMatchesFilter(a_Filter))
 					DbRecordToItemRecord(dbRecord);
 			}
 
@@ -156,10 +158,9 @@ namespace EveRefinery
 		private class				UpdateThreadParam
 		{
 			public IPriceProvider	PriceProvider;
-			public Settings.V1._PriceSettings   PriceSettings;
 			public Queue<UInt32>	UpdateQueue;
 		}
-		
+
 		private void				StopUpdaterThread()
 		{
 			if (m_UpdateThread == null)
@@ -204,7 +205,6 @@ namespace EveRefinery
 
 			UpdateThreadParam param = new UpdateThreadParam();
 			param.PriceProvider		= a_PriceProvider;
-			param.PriceSettings		= a_Settings;
 			param.UpdateQueue		= pricesQueue;
 
 			ThreadWithParam paramThread = new ThreadWithParam();
@@ -245,8 +245,8 @@ namespace EveRefinery
 
 				try
 				{
-					List<PriceRecord> newPrices = a_Param.PriceProvider.GetPrices(queriedItems, a_Param.PriceSettings);
-					ApplyPrices(newPrices, a_Param.PriceSettings);
+					List<PriceRecord> newPrices = a_Param.PriceProvider.GetPrices(queriedItems);
+					ApplyPrices(newPrices, a_Param.PriceProvider.GetCurrentFilter());
 				}
 				catch (System.Exception a_Exception)
 				{
@@ -264,7 +264,7 @@ namespace EveRefinery
 				}
 			}
 			
-			Debug.WriteLine(String.Format("Stopped updating prices for region {0:d}", a_Param.PriceSettings.RegionID));
+			Debug.WriteLine(String.Format("ThreadQueryMarketPrices: Stopped updating prices"));
 		}
 		#endregion
 	}
