@@ -16,7 +16,6 @@ namespace EveRefinery
 		protected EveDatabase	m_EveDatabase;
 		protected Pages			m_StartPage;
 		protected ListView.ColumnHeaderCollection m_ListColumns;
-		protected Settings.V1._PriceSettings      m_MineralPriceSettings;
 		
 		public enum Pages
 		{
@@ -30,7 +29,7 @@ namespace EveRefinery
 
 		public FrmSettings(Pages a_StartPage, Settings a_Settings, EveDatabase a_EveDatabase, ListView.ColumnHeaderCollection a_ListColumns)
 		{
-			m_Settings		= a_Settings;
+			m_Settings		= Utility.CloneUsingBinary(a_Settings);
 			m_EveDatabase	= a_EveDatabase;
 			m_StartPage		= a_StartPage;
 			m_ListColumns	= a_ListColumns;
@@ -104,8 +103,6 @@ namespace EveRefinery
 			TxtMegacyte.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Megacyte];
 			TxtMorphite.Value	= (decimal)m_Settings.MaterialPrices[(UInt32)Materials.Morphite];
 			
-			m_MineralPriceSettings		= m_Settings.PriceLoad.SourceMinerals;
-			
 			UpdateMineralPricesTypeLabel();
 		}
 
@@ -138,8 +135,6 @@ namespace EveRefinery
 			m_Settings.MaterialPrices[(UInt32)Materials.Megacyte]	= (double)TxtMegacyte.Value;
 			m_Settings.MaterialPrices[(UInt32)Materials.Morphite]	= (double)TxtMorphite.Value;
 
-			m_Settings.PriceLoad.SourceMinerals = m_MineralPriceSettings;
-
 			HandleMineralPricesChange(oldMaterialPrices);
 			return true;
 		}
@@ -159,10 +154,10 @@ namespace EveRefinery
 			IPriceProvider provider = new PriceProviderAuto(m_Settings);
 
 			// @@@@ Check for exceptions?
-			List<PriceRecord> prices = provider.GetPrices(loadPricesFor, m_MineralPriceSettings);
+			List<PriceRecord> prices = provider.GetPrices(loadPricesFor, m_Settings.PriceLoad.SourceMinerals);
 			foreach (PriceRecord currRecord in prices)
 			{
-				if (!currRecord.Settings.Matches(m_MineralPriceSettings))
+				if (!currRecord.Settings.Matches(m_Settings.PriceLoad.SourceMinerals))
 					continue;
 
 				switch ((EveTypeIDs)currRecord.TypeID)
@@ -197,17 +192,15 @@ namespace EveRefinery
 
 		private void UpdateMineralPricesTypeLabel()
 		{
-			BtnMineralPricesType.Text = m_MineralPriceSettings.GetHintText(m_EveDatabase);
+			BtnMineralPricesType.Text = m_Settings.PriceLoad.SourceMinerals.GetHintText(m_EveDatabase);
 		}
 
 		private void BtnMineralPricesType_Click(object sender, EventArgs e)
 		{
-			FrmPriceType dialog = new FrmPriceType(m_EveDatabase);
-			dialog.m_Settings = m_MineralPriceSettings;
+			FrmPriceType dialog = new FrmPriceType(m_EveDatabase, m_Settings.PriceLoad.SourceMinerals);
 			if (DialogResult.OK != dialog.ShowDialog(this))
 				return;
 
-			m_MineralPriceSettings = dialog.m_Settings;
 			UpdateMineralPricesTypeLabel();
 		}
 		#endregion

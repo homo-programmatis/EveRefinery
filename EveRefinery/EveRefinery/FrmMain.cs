@@ -1093,12 +1093,10 @@ namespace EveRefinery
 
 		private void TlbBtnPricesType_Click(object sender, EventArgs e)
 		{
-			FrmPriceType dialog = new FrmPriceType(m_EveDatabase);
-			dialog.m_Settings = m_Engine.m_Settings.PriceLoad.SourceItems;
+			FrmPriceType dialog = new FrmPriceType(m_EveDatabase, m_Engine.m_Settings.PriceLoad.SourceItems);
 			if (DialogResult.OK != dialog.ShowDialog(this))
 				return;
 
-			m_Engine.m_Settings.PriceLoad.SourceItems = dialog.m_Settings;
 			UpdatePricesSettingsHint();
 			LoadMarketPrices(false, false);
 		}
