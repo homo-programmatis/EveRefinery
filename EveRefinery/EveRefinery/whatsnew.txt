@@ -1,4 +1,12 @@
 2.2 [19feb18]
+* New toolbar button: "Always on top".
+  Supposed use: When you select loot for hauling, you open EveRefinery
+  and EVE side by side. Then you sort EveRefinery list the same way as
+  in game, read EveRefinery hints and move items aside in EVE. This new
+  button helps you see both windows at once when they don't fit on screen.
+  This feature's code was prepared by Bless (Valery Kornilovich).
+
+2.2 [19feb18]
 * EveRefinery can now pull prices from market.fuzzwork.co.uk
   because eve-central.com is dead.
   All praise Bless (Valery Kornilovich), who provided code and forced me to integrate it (sigh)!
