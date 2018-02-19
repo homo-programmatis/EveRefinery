@@ -62,6 +62,7 @@
 			this.TlbMainToolbar = new System.Windows.Forms.ToolStrip();
 			this.TlbBtnExport = new System.Windows.Forms.ToolStripButton();
 			this.TlbBtnSettings = new System.Windows.Forms.ToolStripButton();
+            this.TlbChkAlwaysOnTop = new System.Windows.Forms.ToolStripButton();
 			this.TlbBtnAbout = new System.Windows.Forms.ToolStripButton();
 			this.TlbBtnWhatsnew = new System.Windows.Forms.ToolStripButton();
 			this.TlbPrices = new System.Windows.Forms.ToolStrip();
@@ -346,11 +347,12 @@
 			this.TlbMainToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TlbBtnExport,
             this.TlbBtnSettings,
+		    this.TlbChkAlwaysOnTop,
             this.TlbBtnAbout,
             this.TlbBtnWhatsnew});
 			this.TlbMainToolbar.Location = new System.Drawing.Point(3, 0);
 			this.TlbMainToolbar.Name = "TlbMainToolbar";
-			this.TlbMainToolbar.Size = new System.Drawing.Size(104, 25);
+			this.TlbMainToolbar.Size = new System.Drawing.Size(127, 25);
 			this.TlbMainToolbar.TabIndex = 5;
 			this.TlbMainToolbar.Text = "Main Toolbar";
 			// 
@@ -373,6 +375,17 @@
 			this.TlbBtnSettings.Size = new System.Drawing.Size(23, 22);
 			this.TlbBtnSettings.Text = "Configure settings...";
 			this.TlbBtnSettings.Click += new System.EventHandler(this.TlbBtnSettings_Click);
+            // 
+            // TlbChkAlwaysOnTop
+            // 
+            this.TlbChkAlwaysOnTop.CheckOnClick = true;
+            this.TlbChkAlwaysOnTop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.TlbChkAlwaysOnTop.Image = ((System.Drawing.Image)(resources.GetObject("TlbBtnAlwaysOnTop.Image")));
+            this.TlbChkAlwaysOnTop.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.TlbChkAlwaysOnTop.Name = "TlbChkAlwaysOnTop";
+            this.TlbChkAlwaysOnTop.Size = new System.Drawing.Size(23, 22);
+            this.TlbChkAlwaysOnTop.Text = "Always on top";
+            this.TlbChkAlwaysOnTop.Click += new System.EventHandler(this.TlbChkAlwaysOnTop_CheckedChanged);
 			// 
 			// TlbBtnAbout
 			// 
@@ -402,7 +415,7 @@
             this.TlbLblPricesType,
             this.TlbBtnPricesType,
             this.TlbBtnUpdatePrices});
-			this.TlbPrices.Location = new System.Drawing.Point(107, 0);
+			this.TlbPrices.Location = new System.Drawing.Point(130, 0);
 			this.TlbPrices.Name = "TlbPrices";
 			this.TlbPrices.Size = new System.Drawing.Size(221, 25);
 			this.TlbPrices.TabIndex = 8;
@@ -597,6 +610,7 @@
 		private System.Windows.Forms.ColumnHeader ClmMegacyte;
 		private System.Windows.Forms.ColumnHeader ClmMorphite;
 		private System.Windows.Forms.ToolStrip TlbMainToolbar;
+        private System.Windows.Forms.ToolStripButton TlbChkAlwaysOnTop;
 		private System.Windows.Forms.ToolStripButton TlbBtnExport;
 		private System.Windows.Forms.ToolStripButton TlbBtnSettings;
 		private System.Windows.Forms.ToolStripButton TlbBtnAbout;

@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.ComponentModel;
@@ -1056,7 +1056,12 @@ namespace EveRefinery
 			return result;
 		}
 
-		private void TlbBtnExport_Click(object sender, EventArgs e)
+        private void TlbChkAlwaysOnTop_CheckedChanged(object sender, EventArgs e)
+        {
+            TopMost = !TopMost;
+        }
+
+        private void TlbBtnExport_Click(object sender, EventArgs e)
 		{
 			SaveFileDialog fileDialog = new SaveFileDialog();
 			fileDialog.Title = "Select location for exported file";
