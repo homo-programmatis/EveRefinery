@@ -77,7 +77,19 @@ namespace EveRefinery
 			m_RunningListUpdates	= 0;
         
             InitializeComponent();
-		}
+
+            MouseWheelHook.MouseWheelUp += MouseWheelUp;
+            MouseWheelHook.MouseWheelDown += MouseWheelDown;
+            
+            Activated += (sender, args) => MouseWheelHook.Stop();
+            Deactivate += (sender, args) =>
+            {
+                if (TopMost)
+                {
+                    MouseWheelHook.Start();
+                }
+            };
+        }
 		
 		abstract class CompareItemBase : IComparer
 		{
@@ -1061,6 +1073,24 @@ namespace EveRefinery
             TopMost = !TopMost;
         }
 
+        private void MouseWheelUp(object sender, EventArgs e)
+        {
+            int curItem = LstRefinery.TopItem.Index;
+            if (curItem > 0)
+            {
+                LstRefinery.TopItem = LstRefinery.Items[curItem - 1];
+            }
+        }
+
+        private void MouseWheelDown(object sender, EventArgs e)
+        {
+            int curItem = LstRefinery.TopItem.Index;
+            if (curItem < LstRefinery.Items.Count)
+            {
+                LstRefinery.TopItem = LstRefinery.Items[curItem + 1];
+            }
+        }
+        
         private void TlbBtnExport_Click(object sender, EventArgs e)
 		{
 			SaveFileDialog fileDialog = new SaveFileDialog();
