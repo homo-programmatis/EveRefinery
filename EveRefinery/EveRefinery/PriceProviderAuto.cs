@@ -14,6 +14,8 @@ namespace EveRefinery
 					return new PriceProviderEveCentralCom(a_Settings.EveCentralCom);
 			    case PriceProviders.FuzzworkCoUk:
 					return new PriceProviderFuzzworkCoUk(a_Settings.FuzzworkCoUk);
+				case PriceProviders.EveMarketdataCom:
+					return new PriceProviderEveMarketdataCom(a_Settings.EveMarketdataCom);
 			}
 
 			Debug.Assert(false, "Invalid price provider");

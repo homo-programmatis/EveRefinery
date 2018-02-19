@@ -7,6 +7,7 @@ namespace EveRefinery
 	{
 		EveCentral,
 	    FuzzworkCoUk,
+		EveMarketdataCom,
 
 	    MaxPriceProviders,
 	}

@@ -143,6 +143,15 @@ namespace EveRefinery
 			}
 
 			[Serializable]
+			public class _EveMarketdataCom
+			{
+				public UInt32           RegionID                = (UInt32)EveRegions.Forge;
+				public UInt32           SolarID                 = (UInt32)EveSolars.Jita;
+				public UInt32           StationID               = (UInt32)EveStations.Jita_4_4;
+				public PriceTypes       PriceType               = PriceTypes.Sell95Pct;
+			}
+
+			[Serializable]
 			public class _FuzzworkCoUk
 			{
 				public bool             IsRegion				= false;
@@ -156,6 +165,7 @@ namespace EveRefinery
 			{
 				public PriceProviders	Provider				= PriceProviders.FuzzworkCoUk;
 				public _EveCentralCom	EveCentralCom			= new _EveCentralCom();
+				public _EveMarketdataCom EveMarketdataCom       = new _EveMarketdataCom();
 				public _FuzzworkCoUk    FuzzworkCoUk            = new _FuzzworkCoUk();
 				public UInt32			ExpiryDays				= 7;
 			}

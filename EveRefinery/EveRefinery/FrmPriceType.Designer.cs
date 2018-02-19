@@ -55,6 +55,16 @@
 			this.Cmb_FuzzworkCoUk_PriceType = new System.Windows.Forms.ComboBox();
 			this.Rad_FuzzworkCoUk_Region = new System.Windows.Forms.RadioButton();
 			this.Rad_FuzzworkCoUk_Station = new System.Windows.Forms.RadioButton();
+			this.TabEveMarketdataCom = new System.Windows.Forms.TabPage();
+			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.Cmb_EveMarketdataCom_Station = new System.Windows.Forms.ComboBox();
+			this.Lbl_EveMarketdataCom_Region = new System.Windows.Forms.Label();
+			this.Lbl_EveMarketdataCom_Solar = new System.Windows.Forms.Label();
+			this.Cmb_EveMarketdataCom_Region = new System.Windows.Forms.ComboBox();
+			this.Cmb_EveMarketdataCom_Solar = new System.Windows.Forms.ComboBox();
+			this.Cmb_EveMarketdataCom_PriceType = new System.Windows.Forms.ComboBox();
+			this.Lbl_EveMarketdataCom_PriceType = new System.Windows.Forms.Label();
+			this.Lbl_EveMarketdataCom_Station = new System.Windows.Forms.Label();
 			this.TblMain.SuspendLayout();
 			this.SplOkCancel.SuspendLayout();
 			this.TabProviders.SuspendLayout();
@@ -64,6 +74,8 @@
 			((System.ComponentModel.ISupportInitialize)(this.Txt_EveCentralCom_PriceHistory)).BeginInit();
 			this.TabFuzzworkCoUk.SuspendLayout();
 			this.TblFuzzworkCoUk.SuspendLayout();
+			this.TabEveMarketdataCom.SuspendLayout();
+			this.tableLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// TblMain
@@ -128,6 +140,7 @@
 			// 
 			this.TabProviders.Controls.Add(this.TabEveCentralCom);
 			this.TabProviders.Controls.Add(this.TabFuzzworkCoUk);
+			this.TabProviders.Controls.Add(this.TabEveMarketdataCom);
 			this.TabProviders.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TabProviders.Location = new System.Drawing.Point(3, 3);
 			this.TabProviders.Name = "TabProviders";
@@ -423,6 +436,135 @@
 			this.Rad_FuzzworkCoUk_Station.UseVisualStyleBackColor = true;
 			this.Rad_FuzzworkCoUk_Station.CheckedChanged += new System.EventHandler(this.FuzzworkCoUk_RadSource_CheckedChanged);
 			// 
+			// TabEveMarketdataCom
+			// 
+			this.TabEveMarketdataCom.Controls.Add(this.tableLayoutPanel1);
+			this.TabEveMarketdataCom.Location = new System.Drawing.Point(4, 22);
+			this.TabEveMarketdataCom.Name = "TabEveMarketdataCom";
+			this.TabEveMarketdataCom.Size = new System.Drawing.Size(319, 242);
+			this.TabEveMarketdataCom.TabIndex = 2;
+			this.TabEveMarketdataCom.Text = "eve-marketdata.com";
+			this.TabEveMarketdataCom.UseVisualStyleBackColor = true;
+			// 
+			// tableLayoutPanel1
+			// 
+			this.tableLayoutPanel1.ColumnCount = 1;
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel1.Controls.Add(this.Cmb_EveMarketdataCom_Station, 0, 5);
+			this.tableLayoutPanel1.Controls.Add(this.Lbl_EveMarketdataCom_Region, 0, 0);
+			this.tableLayoutPanel1.Controls.Add(this.Lbl_EveMarketdataCom_Solar, 0, 2);
+			this.tableLayoutPanel1.Controls.Add(this.Cmb_EveMarketdataCom_Region, 0, 1);
+			this.tableLayoutPanel1.Controls.Add(this.Cmb_EveMarketdataCom_Solar, 0, 3);
+			this.tableLayoutPanel1.Controls.Add(this.Cmb_EveMarketdataCom_PriceType, 0, 7);
+			this.tableLayoutPanel1.Controls.Add(this.Lbl_EveMarketdataCom_PriceType, 0, 6);
+			this.tableLayoutPanel1.Controls.Add(this.Lbl_EveMarketdataCom_Station, 0, 4);
+			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+			this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(5);
+			this.tableLayoutPanel1.RowCount = 9;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(319, 242);
+			this.tableLayoutPanel1.TabIndex = 2;
+			// 
+			// Cmb_EveMarketdataCom_Station
+			// 
+			this.Cmb_EveMarketdataCom_Station.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Cmb_EveMarketdataCom_Station.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.Cmb_EveMarketdataCom_Station.FormattingEnabled = true;
+			this.Cmb_EveMarketdataCom_Station.Location = new System.Drawing.Point(8, 103);
+			this.Cmb_EveMarketdataCom_Station.Name = "Cmb_EveMarketdataCom_Station";
+			this.Cmb_EveMarketdataCom_Station.Size = new System.Drawing.Size(303, 21);
+			this.Cmb_EveMarketdataCom_Station.Sorted = true;
+			this.Cmb_EveMarketdataCom_Station.TabIndex = 7;
+			// 
+			// Lbl_EveMarketdataCom_Region
+			// 
+			this.Lbl_EveMarketdataCom_Region.AutoSize = true;
+			this.Lbl_EveMarketdataCom_Region.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Lbl_EveMarketdataCom_Region.Location = new System.Drawing.Point(8, 5);
+			this.Lbl_EveMarketdataCom_Region.Name = "Lbl_EveMarketdataCom_Region";
+			this.Lbl_EveMarketdataCom_Region.Size = new System.Drawing.Size(303, 15);
+			this.Lbl_EveMarketdataCom_Region.TabIndex = 0;
+			this.Lbl_EveMarketdataCom_Region.Text = "Region :";
+			this.Lbl_EveMarketdataCom_Region.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+			// 
+			// Lbl_EveMarketdataCom_Solar
+			// 
+			this.Lbl_EveMarketdataCom_Solar.AutoSize = true;
+			this.Lbl_EveMarketdataCom_Solar.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Lbl_EveMarketdataCom_Solar.Location = new System.Drawing.Point(8, 45);
+			this.Lbl_EveMarketdataCom_Solar.Name = "Lbl_EveMarketdataCom_Solar";
+			this.Lbl_EveMarketdataCom_Solar.Size = new System.Drawing.Size(303, 15);
+			this.Lbl_EveMarketdataCom_Solar.TabIndex = 1;
+			this.Lbl_EveMarketdataCom_Solar.Text = "Solar system :";
+			this.Lbl_EveMarketdataCom_Solar.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+			// 
+			// Cmb_EveMarketdataCom_Region
+			// 
+			this.Cmb_EveMarketdataCom_Region.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Cmb_EveMarketdataCom_Region.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.Cmb_EveMarketdataCom_Region.FormattingEnabled = true;
+			this.Cmb_EveMarketdataCom_Region.Location = new System.Drawing.Point(8, 23);
+			this.Cmb_EveMarketdataCom_Region.Name = "Cmb_EveMarketdataCom_Region";
+			this.Cmb_EveMarketdataCom_Region.Size = new System.Drawing.Size(303, 21);
+			this.Cmb_EveMarketdataCom_Region.Sorted = true;
+			this.Cmb_EveMarketdataCom_Region.TabIndex = 3;
+			this.Cmb_EveMarketdataCom_Region.SelectedIndexChanged += new System.EventHandler(this.Cmb_EveMarketdataCom_Region_SelectedIndexChanged);
+			// 
+			// Cmb_EveMarketdataCom_Solar
+			// 
+			this.Cmb_EveMarketdataCom_Solar.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Cmb_EveMarketdataCom_Solar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.Cmb_EveMarketdataCom_Solar.FormattingEnabled = true;
+			this.Cmb_EveMarketdataCom_Solar.Location = new System.Drawing.Point(8, 63);
+			this.Cmb_EveMarketdataCom_Solar.Name = "Cmb_EveMarketdataCom_Solar";
+			this.Cmb_EveMarketdataCom_Solar.Size = new System.Drawing.Size(303, 21);
+			this.Cmb_EveMarketdataCom_Solar.Sorted = true;
+			this.Cmb_EveMarketdataCom_Solar.TabIndex = 4;
+			this.Cmb_EveMarketdataCom_Solar.SelectedIndexChanged += new System.EventHandler(this.Cmb_EveMarketdataCom_Solar_SelectedIndexChanged);
+			// 
+			// Cmb_EveMarketdataCom_PriceType
+			// 
+			this.Cmb_EveMarketdataCom_PriceType.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Cmb_EveMarketdataCom_PriceType.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+			this.Cmb_EveMarketdataCom_PriceType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.Cmb_EveMarketdataCom_PriceType.DropDownWidth = 500;
+			this.Cmb_EveMarketdataCom_PriceType.FormattingEnabled = true;
+			this.Cmb_EveMarketdataCom_PriceType.Location = new System.Drawing.Point(8, 143);
+			this.Cmb_EveMarketdataCom_PriceType.Name = "Cmb_EveMarketdataCom_PriceType";
+			this.Cmb_EveMarketdataCom_PriceType.Size = new System.Drawing.Size(303, 21);
+			this.Cmb_EveMarketdataCom_PriceType.TabIndex = 5;
+			// 
+			// Lbl_EveMarketdataCom_PriceType
+			// 
+			this.Lbl_EveMarketdataCom_PriceType.AutoSize = true;
+			this.Lbl_EveMarketdataCom_PriceType.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Lbl_EveMarketdataCom_PriceType.Location = new System.Drawing.Point(8, 125);
+			this.Lbl_EveMarketdataCom_PriceType.Name = "Lbl_EveMarketdataCom_PriceType";
+			this.Lbl_EveMarketdataCom_PriceType.Size = new System.Drawing.Size(303, 15);
+			this.Lbl_EveMarketdataCom_PriceType.TabIndex = 2;
+			this.Lbl_EveMarketdataCom_PriceType.Text = "Price type :";
+			this.Lbl_EveMarketdataCom_PriceType.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+			// 
+			// Lbl_EveMarketdataCom_Station
+			// 
+			this.Lbl_EveMarketdataCom_Station.AutoSize = true;
+			this.Lbl_EveMarketdataCom_Station.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Lbl_EveMarketdataCom_Station.Location = new System.Drawing.Point(8, 85);
+			this.Lbl_EveMarketdataCom_Station.Name = "Lbl_EveMarketdataCom_Station";
+			this.Lbl_EveMarketdataCom_Station.Size = new System.Drawing.Size(303, 15);
+			this.Lbl_EveMarketdataCom_Station.TabIndex = 6;
+			this.Lbl_EveMarketdataCom_Station.Text = "Station :";
+			// 
 			// FrmPriceType
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -445,6 +587,9 @@
 			this.TabFuzzworkCoUk.ResumeLayout(false);
 			this.TblFuzzworkCoUk.ResumeLayout(false);
 			this.TblFuzzworkCoUk.PerformLayout();
+			this.TabEveMarketdataCom.ResumeLayout(false);
+			this.tableLayoutPanel1.ResumeLayout(false);
+			this.tableLayoutPanel1.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -477,5 +622,15 @@
 		private System.Windows.Forms.ComboBox Cmb_FuzzworkCoUk_PriceType;
 		private System.Windows.Forms.RadioButton Rad_FuzzworkCoUk_Region;
 		private System.Windows.Forms.RadioButton Rad_FuzzworkCoUk_Station;
+		private System.Windows.Forms.TabPage TabEveMarketdataCom;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+		private System.Windows.Forms.Label Lbl_EveMarketdataCom_Region;
+		private System.Windows.Forms.Label Lbl_EveMarketdataCom_Solar;
+		private System.Windows.Forms.Label Lbl_EveMarketdataCom_PriceType;
+		private System.Windows.Forms.ComboBox Cmb_EveMarketdataCom_Region;
+		private System.Windows.Forms.ComboBox Cmb_EveMarketdataCom_Solar;
+		private System.Windows.Forms.ComboBox Cmb_EveMarketdataCom_PriceType;
+		private System.Windows.Forms.ComboBox Cmb_EveMarketdataCom_Station;
+		private System.Windows.Forms.Label Lbl_EveMarketdataCom_Station;
 	}
 }

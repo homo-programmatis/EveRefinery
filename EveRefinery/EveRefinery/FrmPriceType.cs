@@ -29,6 +29,9 @@ namespace EveRefinery
 				case PriceProviders.FuzzworkCoUk:
 					TabProviders.SelectedIndex = 1;
 					break;
+				case PriceProviders.EveMarketdataCom:
+					TabProviders.SelectedIndex = 2;
+					break;
 				default:
 					Debug.Assert(false, "Wrong price provider");
 					break;
@@ -44,6 +47,12 @@ namespace EveRefinery
 			Init_FuzzworkCoUk_CmbRegion();
 			Init_FuzzworkCoUk_CmbStation();
 			Init_FuzzworkCoUk_CmbPriceType();
+
+			Cmb_EveMarketdataCom_PriceType.DrawItem += Engine.DrawPriceTypeItem;
+			EveMarketdataCom_Init_CmbRegion();
+			// EveMarketdataCom_Init_CmbSolar();	// Will be called by SelectedIndexChanged handler
+			// EveMarketdataCom_Init_CmbStation();	// Will be called by SelectedIndexChanged handler
+			EveMarketdataCom_Init_CmbPriceType();
 		}
 
 		private void PopulateCombo(ComboBox a_Combo, List<TextItemWithUInt32> a_Items, UInt32 a_SelectedData)
@@ -70,6 +79,7 @@ namespace EveRefinery
 				a_Combo.SelectedIndex = 0;
 		}
 
+		#region EveCentralCom
 		private void Init_EveCentralCom_CmbRegion()
 		{
 			List<TextItemWithUInt32> items = new List<TextItemWithUInt32>();
@@ -113,7 +123,9 @@ namespace EveRefinery
 		{
 			Init_EveCentralCom_CmbSolar();
 		}
+		#endregion
 
+		#region FuzzworkCoUk
 		private void Init_FuzzworkCoUk_RadSourceType()
 		{
 			if (m_Settings.FuzzworkCoUk.IsRegion)
@@ -169,6 +181,76 @@ namespace EveRefinery
 		{
 			Enable_FuzzworkCoUk_SourceCombo();
 		}
+		#endregion
+
+		#region EveMarketdataCom
+		private void EveMarketdataCom_Init_CmbRegion()
+		{
+			List<TextItemWithUInt32> items = new List<TextItemWithUInt32>();
+			foreach (EveRegion currRegion in m_EveDatabase.GetRegions())
+			{
+				items.Add(new TextItemWithUInt32(currRegion.Name, currRegion.ID));
+			}
+
+			PopulateCombo(Cmb_EveMarketdataCom_Region, items, m_Settings.EveMarketdataCom.RegionID);
+		}
+
+		private void EveMarketdataCom_Init_CmbSolar()
+		{
+			List<TextItemWithUInt32> items = new List<TextItemWithUInt32>();
+			items.Add(new TextItemWithUInt32("[All solar systems]", 0));
+
+			if (null == Cmb_EveMarketdataCom_Region.SelectedItem)
+				return; // Workaround for premature call from PopulateCombo()
+
+			UInt32 regionID = TextItemWithUInt32.GetData(Cmb_EveMarketdataCom_Region.SelectedItem);
+			foreach (EveSolarSystem currSystem in m_EveDatabase.GetSolarSystems(regionID))
+			{
+				items.Add(new TextItemWithUInt32(currSystem.Name, currSystem.ID));
+			}
+
+			PopulateCombo(Cmb_EveMarketdataCom_Solar, items, m_Settings.EveMarketdataCom.SolarID);
+		}
+
+		private void EveMarketdataCom_Init_CmbStation()
+		{
+			List<TextItemWithUInt32> items = new List<TextItemWithUInt32>();
+			items.Add(new TextItemWithUInt32("[All stations]", 0));
+
+			if (null == Cmb_EveMarketdataCom_Solar.SelectedItem)
+				return; // Workaround for premature call from PopulateCombo()
+
+			UInt32 solarID = TextItemWithUInt32.GetData(Cmb_EveMarketdataCom_Solar.SelectedItem);
+			foreach (EveStation currStation in m_EveDatabase.GetStations(solarID))
+			{
+				items.Add(new TextItemWithUInt32(currStation.Name, currStation.ID));
+			}
+
+			PopulateCombo(Cmb_EveMarketdataCom_Station, items, m_Settings.EveMarketdataCom.StationID);
+		}
+
+		private void EveMarketdataCom_Init_CmbPriceType()
+		{
+			List<TextItemWithUInt32> items = new List<TextItemWithUInt32>();
+			foreach (PriceTypes priceType in PriceProviderEveMarketdataCom.GetSupportedPriceTypes())
+			{
+				String enumName = Engine.GetPriceTypeName(priceType);
+				items.Add(new TextItemWithUInt32(enumName, (UInt32)priceType));
+			}
+
+			PopulateCombo(Cmb_EveMarketdataCom_PriceType, items, (UInt32)m_Settings.EveMarketdataCom.PriceType);
+		}
+
+		private void Cmb_EveMarketdataCom_Region_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			EveMarketdataCom_Init_CmbSolar();
+		}
+
+		private void Cmb_EveMarketdataCom_Solar_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			EveMarketdataCom_Init_CmbStation();
+		}
+		#endregion
 
 		private void BtnOk_Click(object sender, EventArgs e)
 		{
@@ -179,6 +261,9 @@ namespace EveRefinery
 					break;
 				case 1:
 					m_Settings.Provider             = PriceProviders.FuzzworkCoUk;
+					break;
+				case 2:
+					m_Settings.Provider             = PriceProviders.EveMarketdataCom;
 					break;
 				default:
 					Debug.Assert(false, "Wrong tab page selected");
@@ -194,6 +279,11 @@ namespace EveRefinery
 			m_Settings.FuzzworkCoUk.RegionID		= TextItemWithUInt32.GetData(Cmb_FuzzworkCoUk_Region.SelectedItem);
 			m_Settings.FuzzworkCoUk.StationID		= TextItemWithUInt32.GetData(Cmb_FuzzworkCoUk_Station.SelectedItem);
 			m_Settings.FuzzworkCoUk.PriceType		= (PriceTypes)TextItemWithUInt32.GetData(Cmb_FuzzworkCoUk_PriceType.SelectedItem);
+
+			m_Settings.EveMarketdataCom.RegionID	= TextItemWithUInt32.GetData(Cmb_EveMarketdataCom_Region.SelectedItem);
+			m_Settings.EveMarketdataCom.SolarID		= TextItemWithUInt32.GetData(Cmb_EveMarketdataCom_Solar.SelectedItem);
+			m_Settings.EveMarketdataCom.StationID	= TextItemWithUInt32.GetData(Cmb_EveMarketdataCom_Station.SelectedItem);
+			m_Settings.EveMarketdataCom.PriceType	= (PriceTypes)TextItemWithUInt32.GetData(Cmb_EveMarketdataCom_PriceType.SelectedItem);
 
 			this.DialogResult = DialogResult.OK;
 			Close();

@@ -28,7 +28,10 @@ namespace EveRefinery
 		SellMax,
 		SellMin,
 		SellMedian,
-		
+
+		Buy95Pct,
+		Sell95Pct,
+
 		MaxPriceTypes,
 	}
 
@@ -321,7 +324,7 @@ namespace EveRefinery
 		
 		public static string GetPriceTypeName(PriceTypes a_PriceType)
 		{
-			Debug.Assert((UInt32)PriceTypes.MaxPriceTypes == 12);
+			Debug.Assert((UInt32)PriceTypes.MaxPriceTypes == 14);
 			string result = a_PriceType.ToString();
 		
 			switch (a_PriceType)
@@ -361,6 +364,12 @@ namespace EveRefinery
 					break;
 				case PriceTypes.SellMedian:
 					result += "\tPopular price people are selling for";
+					break;
+				case PriceTypes.Buy95Pct:
+					result += "\tPrice people are buying for, if 5% items were purchased";
+					break;
+				case PriceTypes.Sell95Pct:
+					result += "\tPrice people are selling for, if 5% items were sold";
 					break;
 			}
 

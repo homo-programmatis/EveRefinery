@@ -19,6 +19,12 @@ namespace EveRefinery
 		public String	Name;
 	}
 
+	public class EveStation
+	{
+		public UInt32   ID;
+		public String   Name;
+	}
+
 	public enum EveTypeIDs
 	{
 		Tritanium	= 34,
@@ -40,6 +46,11 @@ namespace EveRefinery
 	public enum EveRegions
 	{
 		Forge		= 10000002,
+	}
+
+	public enum EveSolars
+	{
+		Jita				= 30000142,
 	}
 
 	public enum EveStations
@@ -310,6 +321,27 @@ namespace EveRefinery
 				newSystem.Name		= dataReader.GetString(1);
 
 				result.Add(newSystem);
+			}
+
+			return result;
+		}
+
+		public List<EveStation> GetStations(UInt32 a_SolarID)
+		{
+			List<EveStation> result = new List<EveStation>();
+
+			String sqlText = "SELECT stationID, stationName FROM " + Tables.staStations + " WHERE solarSystemID=@SolarID";
+			SQLiteCommand sqlCommand = new SQLiteCommand(sqlText, m_DbConnection);
+			sqlCommand.Parameters.AddWithValue("@SolarID", a_SolarID);
+
+			SQLiteDataReader dataReader = sqlCommand.ExecuteReader();
+			while (dataReader.Read())
+			{
+				EveStation newStation = new EveStation();
+				newStation.ID        = (UInt32)dataReader.GetInt32(0);
+				newStation.Name      = dataReader.GetString(1);
+
+				result.Add(newStation);
 			}
 
 			return result;

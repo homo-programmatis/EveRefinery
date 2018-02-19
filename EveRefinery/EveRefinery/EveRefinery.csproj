@@ -164,6 +164,7 @@
     <Compile Include="MarketPricesDB.cs" />
     <Compile Include="PriceProviderAuto.cs" />
     <Compile Include="PriceProviderEveCentralCom.cs" />
+    <Compile Include="PriceProviderEveMarketdataCom.cs" />
     <Compile Include="PriceProviderFuzzworkCoUk.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
