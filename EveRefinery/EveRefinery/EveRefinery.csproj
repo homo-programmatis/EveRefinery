@@ -162,6 +162,7 @@
     </Compile>
     <Compile Include="ItemsDB.cs" />
     <Compile Include="MarketPricesDB.cs" />
+    <Compile Include="MouseWheelHook.cs" />
     <Compile Include="PriceProviderAuto.cs" />
     <Compile Include="PriceProviderEveCentralCom.cs" />
     <Compile Include="PriceProviderEveMarketdataCom.cs" />
