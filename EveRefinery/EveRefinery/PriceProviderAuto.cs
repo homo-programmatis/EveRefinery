@@ -15,6 +15,9 @@ namespace EveRefinery
 				case PriceProviders.EveCentral:
 					m_Provider = new PriceProviderEveCentralCom(a_Settings.EveCentralCom);
 					break;
+			    case PriceProviders.FuzzworkCoUk:
+			        m_Provider = new PriceProviderFuzzworkCoUk(a_Settings.FuzzworkCoUk);
+			        break;
 				default:
 					Debug.Assert(false, "Invalid price provider");
 					break;

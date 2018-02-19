@@ -47,6 +47,14 @@
 			this.Lbl_EveCentralCom_PriceHistory1 = new System.Windows.Forms.Label();
 			this.Txt_EveCentralCom_PriceHistory = new System.Windows.Forms.NumericUpDown();
 			this.Lbl_EveCentralCom_PriceHistory2 = new System.Windows.Forms.Label();
+			this.TabFuzzworkCoUk = new System.Windows.Forms.TabPage();
+			this.TblFuzzworkCoUk = new System.Windows.Forms.TableLayoutPanel();
+			this.Lbl_FuzzworkCoUk_PriceType = new System.Windows.Forms.Label();
+			this.Cmb_FuzzworkCoUk_Region = new System.Windows.Forms.ComboBox();
+			this.Cmb_FuzzworkCoUk_Station = new System.Windows.Forms.ComboBox();
+			this.Cmb_FuzzworkCoUk_PriceType = new System.Windows.Forms.ComboBox();
+			this.Rad_FuzzworkCoUk_Region = new System.Windows.Forms.RadioButton();
+			this.Rad_FuzzworkCoUk_Station = new System.Windows.Forms.RadioButton();
 			this.TblMain.SuspendLayout();
 			this.SplOkCancel.SuspendLayout();
 			this.TabProviders.SuspendLayout();
@@ -54,6 +62,8 @@
 			this.TblEveCentralCom.SuspendLayout();
 			this.Tbl_EveCentralCom_PriceHistory.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.Txt_EveCentralCom_PriceHistory)).BeginInit();
+			this.TabFuzzworkCoUk.SuspendLayout();
+			this.TblFuzzworkCoUk.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// TblMain
@@ -117,6 +127,7 @@
 			// TabProviders
 			// 
 			this.TabProviders.Controls.Add(this.TabEveCentralCom);
+			this.TabProviders.Controls.Add(this.TabFuzzworkCoUk);
 			this.TabProviders.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TabProviders.Location = new System.Drawing.Point(3, 3);
 			this.TabProviders.Name = "TabProviders";
@@ -305,6 +316,113 @@
 			this.Lbl_EveCentralCom_PriceHistory2.Text = "days";
 			this.Lbl_EveCentralCom_PriceHistory2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
+			// TabFuzzworkCoUk
+			// 
+			this.TabFuzzworkCoUk.Controls.Add(this.TblFuzzworkCoUk);
+			this.TabFuzzworkCoUk.Location = new System.Drawing.Point(4, 22);
+			this.TabFuzzworkCoUk.Name = "TabFuzzworkCoUk";
+			this.TabFuzzworkCoUk.Padding = new System.Windows.Forms.Padding(3);
+			this.TabFuzzworkCoUk.Size = new System.Drawing.Size(319, 242);
+			this.TabFuzzworkCoUk.TabIndex = 1;
+			this.TabFuzzworkCoUk.Text = "market.fuzzwork.co.uk";
+			this.TabFuzzworkCoUk.UseVisualStyleBackColor = true;
+			// 
+			// TblFuzzworkCoUk
+			// 
+			this.TblFuzzworkCoUk.ColumnCount = 1;
+			this.TblFuzzworkCoUk.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.TblFuzzworkCoUk.Controls.Add(this.Lbl_FuzzworkCoUk_PriceType, 0, 4);
+			this.TblFuzzworkCoUk.Controls.Add(this.Cmb_FuzzworkCoUk_Region, 0, 1);
+			this.TblFuzzworkCoUk.Controls.Add(this.Cmb_FuzzworkCoUk_Station, 0, 3);
+			this.TblFuzzworkCoUk.Controls.Add(this.Cmb_FuzzworkCoUk_PriceType, 0, 5);
+			this.TblFuzzworkCoUk.Controls.Add(this.Rad_FuzzworkCoUk_Region, 0, 0);
+			this.TblFuzzworkCoUk.Controls.Add(this.Rad_FuzzworkCoUk_Station, 0, 2);
+			this.TblFuzzworkCoUk.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.TblFuzzworkCoUk.Location = new System.Drawing.Point(3, 3);
+			this.TblFuzzworkCoUk.Name = "TblFuzzworkCoUk";
+			this.TblFuzzworkCoUk.Padding = new System.Windows.Forms.Padding(5);
+			this.TblFuzzworkCoUk.RowCount = 7;
+			this.TblFuzzworkCoUk.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+			this.TblFuzzworkCoUk.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+			this.TblFuzzworkCoUk.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+			this.TblFuzzworkCoUk.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+			this.TblFuzzworkCoUk.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+			this.TblFuzzworkCoUk.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+			this.TblFuzzworkCoUk.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.TblFuzzworkCoUk.Size = new System.Drawing.Size(313, 236);
+			this.TblFuzzworkCoUk.TabIndex = 2;
+			// 
+			// Lbl_FuzzworkCoUk_PriceType
+			// 
+			this.Lbl_FuzzworkCoUk_PriceType.AutoSize = true;
+			this.Lbl_FuzzworkCoUk_PriceType.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Lbl_FuzzworkCoUk_PriceType.Location = new System.Drawing.Point(8, 105);
+			this.Lbl_FuzzworkCoUk_PriceType.Name = "Lbl_FuzzworkCoUk_PriceType";
+			this.Lbl_FuzzworkCoUk_PriceType.Size = new System.Drawing.Size(297, 25);
+			this.Lbl_FuzzworkCoUk_PriceType.TabIndex = 2;
+			this.Lbl_FuzzworkCoUk_PriceType.Text = "Price type :";
+			this.Lbl_FuzzworkCoUk_PriceType.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+			// 
+			// Cmb_FuzzworkCoUk_Region
+			// 
+			this.Cmb_FuzzworkCoUk_Region.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Cmb_FuzzworkCoUk_Region.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.Cmb_FuzzworkCoUk_Region.FormattingEnabled = true;
+			this.Cmb_FuzzworkCoUk_Region.Location = new System.Drawing.Point(8, 33);
+			this.Cmb_FuzzworkCoUk_Region.Name = "Cmb_FuzzworkCoUk_Region";
+			this.Cmb_FuzzworkCoUk_Region.Size = new System.Drawing.Size(297, 21);
+			this.Cmb_FuzzworkCoUk_Region.Sorted = true;
+			this.Cmb_FuzzworkCoUk_Region.TabIndex = 3;
+			// 
+			// Cmb_FuzzworkCoUk_Station
+			// 
+			this.Cmb_FuzzworkCoUk_Station.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Cmb_FuzzworkCoUk_Station.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.Cmb_FuzzworkCoUk_Station.FormattingEnabled = true;
+			this.Cmb_FuzzworkCoUk_Station.Location = new System.Drawing.Point(8, 83);
+			this.Cmb_FuzzworkCoUk_Station.Name = "Cmb_FuzzworkCoUk_Station";
+			this.Cmb_FuzzworkCoUk_Station.Size = new System.Drawing.Size(297, 21);
+			this.Cmb_FuzzworkCoUk_Station.Sorted = true;
+			this.Cmb_FuzzworkCoUk_Station.TabIndex = 4;
+			// 
+			// Cmb_FuzzworkCoUk_PriceType
+			// 
+			this.Cmb_FuzzworkCoUk_PriceType.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Cmb_FuzzworkCoUk_PriceType.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+			this.Cmb_FuzzworkCoUk_PriceType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.Cmb_FuzzworkCoUk_PriceType.DropDownWidth = 300;
+			this.Cmb_FuzzworkCoUk_PriceType.FormattingEnabled = true;
+			this.Cmb_FuzzworkCoUk_PriceType.Location = new System.Drawing.Point(8, 133);
+			this.Cmb_FuzzworkCoUk_PriceType.Name = "Cmb_FuzzworkCoUk_PriceType";
+			this.Cmb_FuzzworkCoUk_PriceType.Size = new System.Drawing.Size(297, 21);
+			this.Cmb_FuzzworkCoUk_PriceType.TabIndex = 5;
+			// 
+			// Rad_FuzzworkCoUk_Region
+			// 
+			this.Rad_FuzzworkCoUk_Region.AutoSize = true;
+			this.Rad_FuzzworkCoUk_Region.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Rad_FuzzworkCoUk_Region.Location = new System.Drawing.Point(8, 8);
+			this.Rad_FuzzworkCoUk_Region.Name = "Rad_FuzzworkCoUk_Region";
+			this.Rad_FuzzworkCoUk_Region.Size = new System.Drawing.Size(297, 19);
+			this.Rad_FuzzworkCoUk_Region.TabIndex = 6;
+			this.Rad_FuzzworkCoUk_Region.TabStop = true;
+			this.Rad_FuzzworkCoUk_Region.Text = "Region prices";
+			this.Rad_FuzzworkCoUk_Region.UseVisualStyleBackColor = true;
+			this.Rad_FuzzworkCoUk_Region.CheckedChanged += new System.EventHandler(this.FuzzworkCoUk_RadSource_CheckedChanged);
+			// 
+			// Rad_FuzzworkCoUk_Station
+			// 
+			this.Rad_FuzzworkCoUk_Station.AutoSize = true;
+			this.Rad_FuzzworkCoUk_Station.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Rad_FuzzworkCoUk_Station.Location = new System.Drawing.Point(8, 58);
+			this.Rad_FuzzworkCoUk_Station.Name = "Rad_FuzzworkCoUk_Station";
+			this.Rad_FuzzworkCoUk_Station.Size = new System.Drawing.Size(297, 19);
+			this.Rad_FuzzworkCoUk_Station.TabIndex = 7;
+			this.Rad_FuzzworkCoUk_Station.TabStop = true;
+			this.Rad_FuzzworkCoUk_Station.Text = "Station prices";
+			this.Rad_FuzzworkCoUk_Station.UseVisualStyleBackColor = true;
+			this.Rad_FuzzworkCoUk_Station.CheckedChanged += new System.EventHandler(this.FuzzworkCoUk_RadSource_CheckedChanged);
+			// 
 			// FrmPriceType
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -324,6 +442,9 @@
 			this.Tbl_EveCentralCom_PriceHistory.ResumeLayout(false);
 			this.Tbl_EveCentralCom_PriceHistory.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.Txt_EveCentralCom_PriceHistory)).EndInit();
+			this.TabFuzzworkCoUk.ResumeLayout(false);
+			this.TblFuzzworkCoUk.ResumeLayout(false);
+			this.TblFuzzworkCoUk.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -348,5 +469,13 @@
 		private System.Windows.Forms.Label Lbl_EveCentralCom_PriceHistory1;
 		private System.Windows.Forms.NumericUpDown Txt_EveCentralCom_PriceHistory;
 		private System.Windows.Forms.Label Lbl_EveCentralCom_PriceHistory2;
+		private System.Windows.Forms.TabPage TabFuzzworkCoUk;
+		private System.Windows.Forms.TableLayoutPanel TblFuzzworkCoUk;
+		private System.Windows.Forms.Label Lbl_FuzzworkCoUk_PriceType;
+		private System.Windows.Forms.ComboBox Cmb_FuzzworkCoUk_Region;
+		private System.Windows.Forms.ComboBox Cmb_FuzzworkCoUk_Station;
+		private System.Windows.Forms.ComboBox Cmb_FuzzworkCoUk_PriceType;
+		private System.Windows.Forms.RadioButton Rad_FuzzworkCoUk_Region;
+		private System.Windows.Forms.RadioButton Rad_FuzzworkCoUk_Station;
 	}
 }

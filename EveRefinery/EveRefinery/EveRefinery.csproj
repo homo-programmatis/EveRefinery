@@ -49,6 +49,9 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\ThirdParty\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -161,6 +164,7 @@
     <Compile Include="MarketPricesDB.cs" />
     <Compile Include="PriceProviderAuto.cs" />
     <Compile Include="PriceProviderEveCentralCom.cs" />
+    <Compile Include="PriceProviderFuzzworkCoUk.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AboutBox.resx">

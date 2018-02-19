@@ -42,6 +42,15 @@ namespace EveRefinery
 		Forge		= 10000002,
 	}
 
+	public enum EveStations
+	{
+		Amarr_8				= 60008494,
+		Dodixie_9_20		= 60011866,
+		Hek_8_12			= 60005686,
+		Jita_4_4			= 60003760,
+		Rens_6_8			= 60004588,
+	}
+
 	public enum EveAttributes
 	{
 		RefiningMutator		= 379,

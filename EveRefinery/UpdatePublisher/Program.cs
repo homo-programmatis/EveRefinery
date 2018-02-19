@@ -50,6 +50,7 @@ namespace UpdatePublisher
             publisher.SetOutputDir(a_OutputDir);
             publisher.SetDownloadUrl("http://www.homo-programmatis.com/EveRefinery/Files/");
 
+			publisher.PublishFile(Path.Combine(folderSolution, @"..\ThirdParty\Newtonsoft.Json\Newtonsoft.Json.dll"));
 			publisher.PublishFile(Path.Combine(folderSolution, @"..\ThirdParty\System.Data.SQLite\System.Data.SQLite.dll"));
 			publisher.PublishFile(Path.Combine(folderSolution, @"bin\Release\EveDatabase.db"));
 			publisher.PublishFile(Path.Combine(folderSolution, @"bin\Release\EveRefinery.exe"));

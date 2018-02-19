@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows.Forms;
@@ -408,5 +411,18 @@ namespace EveRefinery
 				return xmlDocument;
 			}
 		}
+	    
+	    public static JObject LoadJsonWithUserAgent(string a_Url)
+	    {
+	        HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(a_Url);
+	        httpRequest.UserAgent = "EveRefinery";
+
+	        using (HttpWebResponse httpResponse = (HttpWebResponse)httpRequest.GetResponse())
+	        {
+				StreamReader streamReader = new StreamReader(httpResponse.GetResponseStream());
+				JsonTextReader jsonReader = new JsonTextReader(streamReader);
+				return (JObject)JToken.ReadFrom(jsonReader);
+	        }
+	    }
 	}
 }
