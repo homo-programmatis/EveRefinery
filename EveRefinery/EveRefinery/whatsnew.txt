@@ -1,7 +1,10 @@
-2.2 [17oct20]
-* Database upgrade to 2020-10-12
+2.2 [10apr21]
+* Database upgrade to 2021-03-10
 * REMINDER: I haven't played EVE for years now, literally.
   If you want a DB update - let me know by email!
+
+2.2 [17oct20]
+* Database upgrade to 2020-10-12
 
 2.2 [19feb18]
 * New toolbar button: "Always on top".
@@ -17,13 +20,9 @@
   All praise Bless (Valery Kornilovich), who provided code and forced me to integrate it (sigh)!
 * EveRefinery can now pull prices from eve-marketdata.com
 * Database upgrade to 2018-02-14
-* REMINDER: I haven't played EVE for years now, literally.
-  If you want a DB update - let me know by email!
 
 2.1 [05aug17]
 * Database upgrade to 2017-07-12
-* REMINDER: I haven't played EVE for years now, literally.
-  If you want a DB update - let me know by email!
 
 2.1 [13jan17]
 * Database upgrade to 2017-01-12 "YC119.1"
