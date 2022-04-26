@@ -454,18 +454,7 @@ namespace EveRefinery
 
 		private void CheckUpdates(bool a_IsSilent)
 		{
-			try
-			{
-				Process updater = new Process();
-				updater.StartInfo.FileName  = "EveRefineryUpdater.exe";
-				updater.StartInfo.Arguments = "/silent";
-				updater.Start();
-			}
-			catch (System.Exception a_Exception)
-			{
-				if (!a_IsSilent)
-					ErrorMessageBox.Show(a_Exception.Message);
-			}
+			// Project discontinued; updater disabled
 		}
 
         private void ShowBuildWarnings()

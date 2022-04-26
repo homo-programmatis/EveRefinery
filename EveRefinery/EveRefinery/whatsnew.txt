@@ -1,3 +1,13 @@
+2.2 [26apr22]
+* Project discontinued.
+* I will no longer pay for web hosting and website will be taken down soon.
+* Before that happens, I'm disabling updates.
+
+2.2 [04nov21]
+* Database upgrade to 2021-11-04
+* REMINDER: I haven't played EVE for years now, literally.
+  If you want a DB update - let me know by email!
+
 2.2 [10apr21]
 * Database upgrade to 2021-03-10
 * REMINDER: I haven't played EVE for years now, literally.
